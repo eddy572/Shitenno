@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<generaux>
+    <general>
+        <nom>Honda</nom>
+        <prenom>Tadakatsu</prenom>
+        <couleur>Rouge</couleur>
+    </general>
+
+    <general>
+        <nom>Sakakibara</nom>
+        <prenom>Yasumasa</prenom>
+        <couleur>Bleu</couleur>
+    </general>
+
+    <general>
+        <nom>Sakai</nom>
+        <prenom>Tadatsugu</prenom>
+        <couleur>Vert</couleur>
+    </general>
+
+    <general>
+        <nom>Li</nom>
+        <prenom>Naomasa</prenom>
+        <couleur>Noir</couleur>
+    </general>
+</generaux>
