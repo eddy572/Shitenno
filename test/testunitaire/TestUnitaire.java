@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package testunitaire;
 
 import java.io.*;
@@ -43,9 +37,6 @@ public class TestUnitaire {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     //@Test
     public void testInitialisationJeu() {
          Set sbonus = new JDom("src/fichierxml/General.xml").initialisationJeu("general");
@@ -54,9 +45,9 @@ public class TestUnitaire {
     
     // @Test
     public void testInitialisationPaquetTroupe() {
-         ArrayList<CarteTroupe> alct = new ArrayList<CarteTroupe>();
+         LinkedList<CarteTroupe> llct = new LinkedList<CarteTroupe>();
          Initialisation init = new Initialisation();
-         alct = init.initialisationPaquetTroupe();
+         llct = init.initialisationPaquetTroupe();
          
          StringBuilder s = new StringBuilder();
          for(int i=0; i<24; i++){
@@ -65,14 +56,22 @@ public class TestUnitaire {
              if(i>11 && i<18){s.append("Cette carte n'a qu'une troupe : ").append("Shinobi");}
              if(i>17){s.append("Cette carte n'a qu'une troupe : ").append("Samouraï");}
          }
-         assertEquals(s, alct.toString());
+         assertEquals(s, llct.toString());
     }
     
-    @Test
+    // @Test
     public void testInitialisationPaquetKokus() {
-         ArrayList<Kokus> alk = new ArrayList<Kokus>();
+         LinkedList<Kokus> llk = new LinkedList<Kokus>();
          Initialisation init = new Initialisation();
-         alk = init.initialisationPaquetKokus();
-         assertEquals("[3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2]", alk.toString());
+         llk = init.initialisationPaquetKokus();
+         assertEquals("[3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2]", llk.toString());
+    }
+    
+    // @Test
+    public void testInitialisationTuileBonus() {
+         LinkedList<TuileBonus> lltb = new LinkedList<TuileBonus>();
+         Initialisation init = new Initialisation();
+         lltb = init.initialisationTuileBonus();
+         assertEquals("[3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2]", lltb.toString());
     }
 }
