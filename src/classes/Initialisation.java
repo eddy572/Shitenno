@@ -30,6 +30,7 @@ public class Initialisation {
         this.hashTitre = new JDom("src/fichierxml/Titre.xml").initialisationJeu("titre");
         this.hashTroupes = new JDom("src/fichierxml/Troupes.xml").initialisationJeu("troupes");
         
+        
         // Affichage des résultats d'initialisation
         System.out.println("*** Les généraux ***");
         for(General g : this.hashGeneral){
@@ -233,6 +234,10 @@ public class Initialisation {
         return llk;
     }
     
+    /**
+     * On créé les tuiles bonus en fonction des troupes et des bonus
+     * @return lltb liste des tuiles bonus
+     */
     public LinkedList<TuileBonus> initialisationTuileBonus(){
         LinkedList<TuileBonus> lltb = new LinkedList<TuileBonus>();
         
@@ -247,5 +252,42 @@ public class Initialisation {
         Collections.shuffle(lltb);
         
         return lltb;
+    }
+    
+    /**
+     * Distribution de 2 cartes Troupes à chaque joueurs
+     * On retire les deux dernières cartes du paquet de troupes
+     */
+    public void distributionCartesDepart(Set<Joueur> hjoueur, LinkedList<CarteTroupe> llct){
+        for(Joueur j : hjoueur){
+            // Distibution des titres aléatoirement
+            distributionTitreDepart(hjoueur, hashTitre);
+            
+            int i = 0;
+            // On prend la liste de carte troupe du joueur
+            ArrayList<CarteTroupe> alct = j.getAlctroupe();
+            
+            // On ne prend que deux cartes troupes (à chaque fois la dernière du paquet)
+            while(i < 2){
+                alct.add(llct.getLast());
+                // On supprime la carte pour ne plus l'avoir dans le paquet
+                llct.removeLast();
+                i++;
+            }
+        }
+    }
+    
+    public void distributionTitreDepart(Set<Joueur> hjoueur, Set<Titre> htitre){
+        // On copie le hashSet des titre dans un tableau
+        // On modifiera donc uniquement le tableau et non le hashSet d'initialisation
+        Titre[] tabtitre = htitre.toArray(new Titre[htitre.size()]);
+        // On convertit le tableau en liste pour mélanger et plus de simplicitée.
+        ArrayList<Titre> list = new ArrayList<Titre>(Arrays.asList(tabtitre));
+        Collections.shuffle(list);
+        
+        for(Joueur j : hjoueur){
+            j.setTitre(list.get(0));
+            list.remove(0);
+        }
     }
 }

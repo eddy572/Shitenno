@@ -32,14 +32,19 @@ public class Joueur {
         this.general = general;
         this.nbkamons = nbkamons;
         this.score = 0;
-        this.alctroupe = null;
-        this.alkokus = null;
+        this.alctroupe = new ArrayList<CarteTroupe>();
+        this.alkokus = new ArrayList<Kokus>();
         this.titre = null;
     }
 
     public Joueur(String pseudo, int nbkamons) {
         this.pseudo = pseudo;
         this.nbkamons = nbkamons;
+        this.general = null;
+        this.score = 0;
+        this.alctroupe = new ArrayList<CarteTroupe>();
+        this.alkokus = new ArrayList<Kokus>();
+        this.titre = null;
     }
 
     /* Getters & Setters */

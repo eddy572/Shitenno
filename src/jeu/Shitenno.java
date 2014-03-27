@@ -23,6 +23,13 @@ public class Shitenno {
         hjoueur = j.pseudoAlreadyUse(nbJoueur());
         // Choix des généraux
         j.choixDuGeneral(hjoueur, init.getHashGeneral());
+        // Distribution de deux cartes Troupes au début du jeu
+        init.distributionCartesDepart(hjoueur, init.getLlctroupe());
+        for(Joueur jo : hjoueur){
+            System.out.println(jo.toString());
+        }
+        
+        init.distributionTitreDepart(hjoueur, init.getHashTitre());
     }
     
 /* Methods */
