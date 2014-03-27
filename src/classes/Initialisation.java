@@ -22,6 +22,7 @@ public class Initialisation {
     
 /* Constructors */
     public Initialisation() {
+        // Lecture des fichiers XML grâce à JDom
         this.hashBonus = new JDom("src/fichierxml/Bonus.xml").initialisationJeu("bonus");
         this.hashGeneral = new JDom("src/fichierxml/General.xml").initialisationJeu("general");
         this.hashKokus = new JDom("src/fichierxml/Kokus.xml").initialisationJeu("kokus");
@@ -29,15 +30,117 @@ public class Initialisation {
         this.hashTitre = new JDom("src/fichierxml/Titre.xml").initialisationJeu("titre");
         this.hashTroupes = new JDom("src/fichierxml/Troupes.xml").initialisationJeu("troupes");
         
+        // Affichage des résultats d'initialisation
+        System.out.println("*** Les généraux ***");
+        for(General g : this.hashGeneral){
+            System.out.println(g.toString());
+        }
+        
+        System.out.println("\n*** Les Titres ***");
+        for(Titre t : this.hashTitre){
+            System.out.println(t.toString());
+        }
+        
+        System.out.println("\n*** Le paquet Troupes (mélangé) ***");
         this.llctroupe = initialisationPaquetTroupe();
+        for(CarteTroupe ct : this.llctroupe){
+            System.out.println(ct.toString());
+        }
+        
+        System.out.println("\n*** Le paquet Kokus (mélangé) ***");
         this.llkokus = initialisationPaquetKokus();
+        for(Kokus k : this.llkokus){
+            System.out.println(k.toString());
+        }
+        
+        System.out.println("\n*** Les Tuiles Bonus (mélangées) ***");
         this.lltbonus = initialisationTuileBonus();
+        for(TuileBonus tb : this.lltbonus){
+            System.out.println(tb.toString());
+        }
+        
+        System.out.println("\n*** Les Provinces ***");
         initialisationFinaleProvince();
         for(Province p : this.hashProvince){
             System.out.println(p.toString());
         }
         
     }
+
+/* Getters & Setters */
+    public Set<Bonus> getHashBonus() {
+        return hashBonus;
+    }
+
+    public void setHashBonus(Set<Bonus> hashBonus) {
+        this.hashBonus = hashBonus;
+    }
+
+    public Set<General> getHashGeneral() {
+        return hashGeneral;
+    }
+
+    public void setHashGeneral(Set<General> hashGeneral) {
+        this.hashGeneral = hashGeneral;
+    }
+
+    public Set<Kokus> getHashKokus() {
+        return hashKokus;
+    }
+
+    public void setHashKokus(Set<Kokus> hashKokus) {
+        this.hashKokus = hashKokus;
+    }
+
+    public Set<Province> getHashProvince() {
+        return hashProvince;
+    }
+
+    public void setHashProvince(Set<Province> hashProvince) {
+        this.hashProvince = hashProvince;
+    }
+
+    public Set<Titre> getHashTitre() {
+        return hashTitre;
+    }
+
+    public void setHashTitre(Set<Titre> hashTitre) {
+        this.hashTitre = hashTitre;
+    }
+
+    public Set<Troupes> getHashTroupes() {
+        return hashTroupes;
+    }
+
+    public void setHashTroupes(Set<Troupes> hashTroupes) {
+        this.hashTroupes = hashTroupes;
+    }
+
+    public LinkedList<CarteTroupe> getLlctroupe() {
+        return llctroupe;
+    }
+
+    public void setLlctroupe(LinkedList<CarteTroupe> llctroupe) {
+        this.llctroupe = llctroupe;
+    }
+
+    public LinkedList<Kokus> getLlkokus() {
+        return llkokus;
+    }
+
+    public void setLlkokus(LinkedList<Kokus> llkokus) {
+        this.llkokus = llkokus;
+    }
+
+    public LinkedList<TuileBonus> getLltbonus() {
+        return lltbonus;
+    }
+
+    public void setLltbonus(LinkedList<TuileBonus> lltbonus) {
+        this.lltbonus = lltbonus;
+    }
+    
+    
     
 /* Methodes */
     /**

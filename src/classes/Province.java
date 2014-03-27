@@ -143,7 +143,7 @@ public class Province {
     /* Methodes */
     @Override
     public String toString() {
-        return "Province{" + "nom=" + nom + ", faveur1=" + faveur1 + ", faveur2=" + faveur2 + ", faveur3=" + faveur3 + ", faveur4=" + faveur4 + ", nbtroupes=" + nbtroupes + ", troupe=" + troupe + '}';
+        return nom + " " + faveur1 + " " + faveur2 + " " + faveur3 + " " + faveur4 + ", " + nbtroupes + " " + troupe;
     }
     
 }
