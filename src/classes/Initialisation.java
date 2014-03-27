@@ -62,8 +62,12 @@ public class Initialisation {
         
         System.out.println("\n*** Les Provinces ***");
         initialisationFinaleProvince();
+        ajoutTroisTuileBonus(hashProvince, lltbonus);
         for(Province p : this.hashProvince){
-            System.out.println(p.toString());
+            System.out.println("\n" + p.toString());
+            for(TuileBonus tb : p.getLltuilebonus()){
+                System.out.println(tb.toString());
+            }
         }
         
     }
@@ -257,6 +261,8 @@ public class Initialisation {
     /**
      * Distribution de 2 cartes Troupes à chaque joueurs
      * On retire les deux dernières cartes du paquet de troupes
+     * @param hjoueur liste des joueurs
+     * @param llct paquet des cartes troupes qui sert à donner des cartes aux joueurs 
      */
     public void distributionCartesDepart(Set<Joueur> hjoueur, LinkedList<CarteTroupe> llct){
         for(Joueur j : hjoueur){
@@ -277,6 +283,12 @@ public class Initialisation {
         }
     }
     
+    /**
+     * On distribue 2 cartes troupes à chaque joueur
+     * Methode appelé dans "distributionCartesDepart(x, y)"
+     * @param hjoueu hashset des joueurs
+     * @param htitre hashset des titres
+     */
     public void distributionTitreDepart(Set<Joueur> hjoueur, Set<Titre> htitre){
         // On copie le hashSet des titre dans un tableau
         // On modifiera donc uniquement le tableau et non le hashSet d'initialisation
@@ -286,8 +298,29 @@ public class Initialisation {
         Collections.shuffle(list);
         
         for(Joueur j : hjoueur){
+            // On affecte le titre au joueur
             j.setTitre(list.get(0));
+            // On supprimer le titre de la liste pour ne pas le redonner
             list.remove(0);
+        }
+    }
+    
+    /**
+     * On ajoute trois tuile bonus par province
+     * @param hprovince hashset de toutes les provinces
+     * @param lltb LinkedList des tuiles bonus (utile pour chopper la dernière tuile de la pile)
+     */
+    public void ajoutTroisTuileBonus(Set<Province> hprovince, LinkedList<TuileBonus> lltb){       
+        for(Province p : hprovince){
+            LinkedList<TuileBonus> llp = new LinkedList<TuileBonus>();
+            int i = 0;
+            
+            while(i < 3){
+                llp.add(lltb.getLast());
+                lltb.removeLast();
+                i++;
+            }
+            p.setLltuilebonus(llp);
         }
     }
 }

@@ -19,6 +19,7 @@ public class Shitenno {
         
         // Initialisation du jeu (hors plateau de jeu)
         Initialisation init = new Initialisation();
+        
         // Choix des pseudos       
         hjoueur = j.pseudoAlreadyUse(nbJoueur());
         // Choix des généraux
@@ -28,8 +29,6 @@ public class Shitenno {
         for(Joueur jo : hjoueur){
             System.out.println(jo.toString());
         }
-        
-        init.distributionTitreDepart(hjoueur, init.getHashTitre());
     }
     
 /* Methods */

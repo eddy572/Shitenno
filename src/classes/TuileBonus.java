@@ -64,7 +64,7 @@ public class TuileBonus {
 /* Methodes */
     @Override
     public String toString() {
-        return new String(new StringBuilder().append(this.troupe.toString()).append("\n").append(this.bonus.toString()));
+        return new String(new StringBuilder().append(this.troupe.toString()).append(" ").append(this.bonus.toString()));
     }
     
     

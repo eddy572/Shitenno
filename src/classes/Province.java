@@ -1,6 +1,6 @@
 package classes;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  *
@@ -15,6 +15,7 @@ public class Province {
     private int faveur4;
     private int nbtroupes;
     private Troupes troupe;
+    private LinkedList<TuileBonus> lltuilebonus;
 
     /* Constructor */
     public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes) {
@@ -24,6 +25,7 @@ public class Province {
         this.faveur3 = faveur3;
         this.faveur4 = faveur4;
         this.nbtroupes = nbtroupes;
+        this.lltuilebonus = new LinkedList<TuileBonus>();
     }
     
     public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes, Troupes troupe) {
@@ -34,6 +36,18 @@ public class Province {
         this.faveur4 = faveur4;
         this.nbtroupes = nbtroupes;
         this.troupe = troupe;
+        this.lltuilebonus = new LinkedList<TuileBonus>();
+    }
+
+    public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes, Troupes troupe, LinkedList<TuileBonus> ltb) {
+        this.nom = nom;
+        this.faveur1 = faveur1;
+        this.faveur2 = faveur2;
+        this.faveur3 = faveur3;
+        this.faveur4 = faveur4;
+        this.nbtroupes = nbtroupes;
+        this.troupe = troupe;
+        this.lltuilebonus = ltb;
     }
 
     /* Getters & Setters */
@@ -93,7 +107,15 @@ public class Province {
         this.troupe = troupe;
     }
 
-    /* HashCode & Equals */
+    public LinkedList<TuileBonus> getLltuilebonus() {
+        return lltuilebonus;
+    }
+
+    public void setLltuilebonus(LinkedList<TuileBonus> lltuilebonus) {
+        this.lltuilebonus = lltuilebonus;
+    }
+    
+/* HashCode & Equals */
     @Override
     public int hashCode() {
         int hash = 3;
@@ -140,10 +162,10 @@ public class Province {
         return true;
     }
 
-    /* Methodes */
+/* Methodes */
     @Override
     public String toString() {
-        return nom + " " + faveur1 + " " + faveur2 + " " + faveur3 + " " + faveur4 + ", " + nbtroupes + " " + troupe;
+        return nom + " - " + faveur1 + ", " + faveur2 + ", " + faveur3 + ", " + faveur4 + " - " + nbtroupes + " troupes - " + troupe;
     }
-    
+   
 }
