@@ -25,7 +25,7 @@ public class Bonus {
     /* Methodes */
     @Override
     public String toString() {
-        return new String(new StringBuilder().append("Effet : ").append(nom).append("\n"));
+        return new String(new StringBuilder().append("Effet : ").append(nom));
     }
     
     
