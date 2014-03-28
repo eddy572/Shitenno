@@ -21,7 +21,7 @@ public class Panneau extends JPanel {
   public void paintComponent(Graphics g){
       
     try {
-      Image img = ImageIO.read(new File("plateau.jpg"));
+      Image img = ImageIO.read(new File("image/plateau.jpg"));
       //g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
 
       g.drawImage(img, 0, 0, this.getWidth(), 515, this);
