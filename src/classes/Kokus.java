@@ -50,5 +50,6 @@ public class Kokus {
         return new String(new StringBuilder().append("Carte ").append(Integer.toString(nbkoku)).append(" kokus"));
     }
     
-    
+  
 }
+
