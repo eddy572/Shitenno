@@ -64,7 +64,7 @@ public class Troupes {
     /* Methodes */
     @Override
     public String toString() {
-        return "Troupes{" + "nom=" + nom + ", couleur=" + couleur + '}';
+        return new String(new StringBuilder().append(nom).append(" ").append(couleur));
     }
     
     
