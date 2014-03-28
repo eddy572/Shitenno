@@ -32,7 +32,7 @@ public class Initialisation {
         this.hashProvince = new JDom("src/fichierxml/Province.xml").initialisationJeu("province");
         this.hashTitre = new JDom("src/fichierxml/Titre.xml").initialisationJeu("titre");
         this.hashTroupes = new JDom("src/fichierxml/Troupes.xml").initialisationJeu("troupes");
-        System.out.println(this.hashBonus.toString());
+        
         this.alctroupe = initialisationPaquetTroupe();
         for(CarteTroupe ct : alctroupe){
             System.out.println(ct.toString());
