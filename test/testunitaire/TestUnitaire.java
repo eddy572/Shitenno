@@ -17,6 +17,8 @@ import classes.*;
  * @author Damien
  */
 public class TestUnitaire {
+    private Iterable<Joueur> hjoueur;
+    private int i;
    
     
     public TestUnitaire() {
@@ -115,9 +117,16 @@ public class TestUnitaire {
         LinkedList<CarteTroupe> lct;
         Initialisation init = new Initialisation();
         lct = init.getLlctroupe();
-  
-        assertEquals(34, lct.size());
-        //assertEquals();
+        
+          assertEquals(34, lct.size());
+        //Chaque main a deux cartes
+     /*   CarteTroupe TabTroupe[] = new CarteTroupe[2];
+      
+        for (int i=0; i<TabTroupe.length;i++) {
+            TabTroupe[i] = lct.element();
+        }
+        assertEquals(2, TabTroupe.length);  
+     */   
     }
     
     /**
@@ -136,8 +145,14 @@ public class TestUnitaire {
     }
     
     
-    //@Test
-   public void ajoutTroisTuileBonus(Set<Province> hprovince, LinkedList<TuileBonus> lltb){ 
+    @Test
+   public void AjoutTroisTuileBonus(){ 
+       Set<Province> hprovince;
+       Initialisation init = new Initialisation();
+       hprovince = init.getHashProvince();
        
+       assertEquals(8, hprovince.size());
    }
+   
+   
 }

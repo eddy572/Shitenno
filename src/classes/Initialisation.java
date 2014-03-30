@@ -286,7 +286,7 @@ public class Initialisation {
     /**
      * On distribue 2 cartes troupes à chaque joueur
      * Methode appelé dans "distributionCartesDepart(x, y)"
-     * @param hjoueu hashset des joueurs
+     * @param hjoueur hashset des joueurs
      * @param htitre hashset des titres
      */
     public void distributionTitreDepart(Set<Joueur> hjoueur, Set<Titre> htitre){
