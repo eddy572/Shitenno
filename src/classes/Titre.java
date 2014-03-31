@@ -75,12 +75,10 @@ public class Titre {
         return true;
     }
 
-    /* Methodes */
+/* Methodes */
     @Override
     public String toString() {
         return new String(new StringBuilder().append(nom).append(", ").append(nbsceaux).append(" sceaux").append(", ").append(bonus));
     }
-    
-    
-    
+           
 }

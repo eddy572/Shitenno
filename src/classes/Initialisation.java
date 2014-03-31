@@ -323,4 +323,16 @@ public class Initialisation {
             p.setLltuilebonus(llp);
         }
     }
+    
+    /**
+     * Fonction qui défini le nombre de cartes troupes à piocher
+     * selon le nombre de joueurs présents
+     * @param hjoueur liste des joueurs utile pour connaître leur nombre
+     * @return 
+     */
+    public int nombreDeCartesTroupesAPiocher(Set<Joueur> hjoueur){
+        // Le nombre de cartes se calcul comme suit :
+        // Nombre de joueur * 2 (ex : 3 joueurs => 6 cartes)
+        return hjoueur.size()*2;
+    }
 }
