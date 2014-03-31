@@ -232,7 +232,7 @@ public class Menu extends JFrame implements ActionListener {
             minipanel1.setBackground(new Color(255, 255, 255,200));
             minipanel1.setBorder(BorderFactory.createLineBorder(Color.black));
             minipanel1.setBounds(230, 10, 90, 110);
-            
+            b1 = new JLabel();
             try
             { 
                 bufmini1 = ImageIO.read(new File("image/blanc.png"));
@@ -417,7 +417,7 @@ public class Menu extends JFrame implements ActionListener {
             this.remove(p1);
             this.remove(p3);
             //retour a l'affichage de base
-            
+
     // bouton lancer partie
     
     this.setLayout(null);
