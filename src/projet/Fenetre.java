@@ -22,6 +22,7 @@ public class Fenetre extends JFrame implements ActionListener {
   public Fenetre(){        
     this.setTitle("Shitenno");
     this.setSize(1200, 700);
+    this.setResizable(false);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLocationRelativeTo(null);
     

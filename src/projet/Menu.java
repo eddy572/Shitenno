@@ -125,7 +125,7 @@ public class Menu extends JFrame implements ActionListener {
     this.setSize(1200, 700);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLocationRelativeTo(null);
-
+    this.setResizable(false);
     this.setContentPane(new Menuimage());
     
     // bouton lancer partie
