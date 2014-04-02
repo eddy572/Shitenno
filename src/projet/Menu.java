@@ -119,6 +119,11 @@ public class Menu extends JFrame implements ActionListener {
 
     };
     
+        
+        // Variable initialisation du jeu
+        
+ 
+        
   public Menu(){        
 
     this.setTitle("Shitenno");

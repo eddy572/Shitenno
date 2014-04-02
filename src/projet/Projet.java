@@ -13,8 +13,8 @@ public class Projet {
     
   public static void main(String[] args)
   {
-   Fenetre fen = new Fenetre();
-   //Menu menu = new Menu();
+   //Fenetre fen = new Fenetre();
+   Menu menu = new Menu();
   } 
   
 }
