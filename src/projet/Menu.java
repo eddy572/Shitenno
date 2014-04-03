@@ -1,5 +1,7 @@
 package projet;
 
+import classes.General;
+import classes.Joueur;
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,6 +11,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Image;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +23,8 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -43,6 +48,7 @@ public class Menu extends JFrame implements ActionListener {
    private JButton fermer = new JButton("Quitter");
    private JButton retour = new JButton("Retour");
    private JButton charger = new JButton("Charger");
+   private JButton go = new JButton("Lancer la partie");
    private JLabel label_credits = new JLabel("",JLabel.CENTER);
    private JTextArea label_credit;
    
@@ -103,9 +109,16 @@ public class Menu extends JFrame implements ActionListener {
             MouseListener listener = new MouseAdapter(){
             public void mousePressed(MouseEvent e)
         {
+            drag = 1;
             JComponent c = (JComponent) e.getSource();
             TransferHandler handler = c.getTransferHandler();
+           // System.out.println(c.getParent().getBounds());
+            Rectangle r =c.getParent().getBounds();
+            //System.out.println(r.x+" "+r.y);
+            Xsource=r.x;
+            Ysource=r.y;
             handler.exportAsDrag(c, e, TransferHandler.COPY);
+            
         }
         };
             
@@ -118,12 +131,132 @@ public class Menu extends JFrame implements ActionListener {
         }
 
     };
-    
+        MouseListener ml = new MouseListener(){
+
+
+       @Override
+       public void mousePressed(MouseEvent me) {}
+
+       @Override
+       public void mouseReleased(MouseEvent me) {
+
+           
+       }
+
+       @Override
+       public void mouseEntered(MouseEvent me) {}
+
+       @Override
+       public void mouseExited(MouseEvent me) {
+           //System.out.println(me.getComponent().getParent().getBounds());
+           Rectangle re = me.getComponent().getParent().getBounds();
+           Xcible=re.x;
+           Ycible=re.y;
+       if(drag == 1)
+       {
+           if(Ycible == 10)
+           {
+               if(Xsource == 30 && Ysource == 90)
+               {
+                   j1 = new Joueur("",g1,0);
+               }
+               if(Xsource == 150 && Ysource == 90)
+               {
+                   j1 = new Joueur("",g2,0);
+               }
+               if(Xsource == 30 && Ysource == 230)
+               {
+                   j1 = new Joueur("",g3,0);
+               }
+               if(Xsource == 150 && Ysource == 230)
+               {
+                   j1 = new Joueur("",g4,0);
+               }
+           }     
+           if(Ycible == 125)
+           {
+               if(Xsource == 30 && Ysource == 90)
+               {
+                   j2 = new Joueur("",g1,0);
+               }
+               if(Xsource == 150 && Ysource == 90)
+               {
+                   j2 = new Joueur("",g2,0);
+               }
+               if(Xsource == 30 && Ysource == 230)
+               {
+                   j2 = new Joueur("",g3,0);
+               }
+               if(Xsource == 150 && Ysource == 230)
+               {
+                   j2 = new Joueur("",g4,0);
+               }
+           } 
+            if(Ycible == 240)
+           {
+               if(Xsource == 30 && Ysource == 90)
+               {
+                   j3 = new Joueur("",g1,0);
+               }
+               if(Xsource == 150 && Ysource == 90)
+               {
+                   j3 = new Joueur("",g2,0);
+               }
+               if(Xsource == 30 && Ysource == 230)
+               {
+                   j3 = new Joueur("",g3,0);
+               }
+               if(Xsource == 150 && Ysource == 230)
+               {
+                   j3 = new Joueur("",g4,0);
+               }
+           } 
+           if(Ycible == 355)
+           {
+               if(Xsource == 30 && Ysource == 90)
+               {
+                   j4 = new Joueur("",g1,0);
+               }
+               if(Xsource == 150 && Ysource == 90)
+               {
+                   j4= new Joueur("",g2,0);
+               }
+               if(Xsource == 30 && Ysource == 230)
+               {
+                   j4 = new Joueur("",g3,0);
+               }
+               if(Xsource == 150 && Ysource == 230)
+               {
+                   j4 = new Joueur("",g4,0);
+               }
+           }
+           drag=0;
+       }
+       }
+
+       @Override
+       public void mouseClicked(MouseEvent me) {}
+   };
         
         // Variable initialisation du jeu
+        int drag = 0;
+        // initialisation des généraux
         
- 
+        General g1 = new General("Yasumasa","Sakakibara","Bleu");
+        General g2 = new General("Naomasa","li","Noir");
+        General g3 = new General("Naomasa","Sakai","Vert");
+        General g4 = new General("Tadakatsu","Honda","Rouge");
         
+        // initialisation des joueurs
+        Joueur j1;
+        Joueur j2;
+        Joueur j3;
+        Joueur j4;
+        int nb_joueur=2;
+        int Xsource;
+        int Ysource;
+        int Xcible;
+        int Ycible;
   public Menu(){        
 
     this.setTitle("Shitenno");
@@ -241,10 +374,13 @@ public class Menu extends JFrame implements ActionListener {
             try
             { 
                 bufmini1 = ImageIO.read(new File("image/blanc.png"));
+                
                 b1 = new JLabel(new ImageIcon(bufmini1));
                 b1.setBounds(0, 0, 90, 110);
+                
                 minipanel1.add(b1);
                 b1.setTransferHandler(new TransferHandler("icon"));
+                b1.addMouseListener(ml);
             } 
             catch (Exception ex) 
             {}
@@ -267,6 +403,7 @@ public class Menu extends JFrame implements ActionListener {
                 b2.setBounds(0, 0, 90, 110);
                 minipanel2.add(b2);
                 b2.setTransferHandler(new TransferHandler("icon"));
+                b2.addMouseListener(ml);
             } 
             catch (Exception ex) 
             {}
@@ -373,13 +510,54 @@ public class Menu extends JFrame implements ActionListener {
             // bouton retour
             retour.addActionListener(this);
             this.add(retour);
-            retour.setBounds(825, 620, 150, 30);
+            retour.setBounds(25, 620, 150, 30);
+            
+            go.addActionListener(this);
+            this.add(go);
+            go.setBounds(930, 620, 200, 30);
+            
             
             this.repaint();
         }
         if(source == fermer)
         {
             this.dispose();
+        }
+        if(source == go)
+        {
+
+                j1.setPseudo(this.jtf1.getText());
+                j2.setPseudo(this.jtf2.getText());
+                if(nb_joueur == 2)
+                {
+                    j1.setNbkamons(12);
+                    j2.setNbkamons(12);
+                    System.out.println(j1.toString());
+                    System.out.println(j2.toString());
+                }
+                if(nb_joueur == 3)
+                {
+                    j3.setPseudo(this.jtf3.getText());
+                    j3.setNbkamons(10);
+                    j2.setNbkamons(10);
+                    j1.setNbkamons(10);
+                    System.out.println(j1.toString());
+                    System.out.println(j2.toString());
+                    System.out.println(j3.toString());
+                }
+                if(nb_joueur == 4)
+                {
+                    j4.setPseudo(this.jtf4.getText());
+                    j4.setNbkamons(8);
+                    j3.setNbkamons(8);
+                    j2.setNbkamons(8);
+                    j1.setNbkamons(8);
+                    System.out.println(j1.toString());
+                    System.out.println(j2.toString());
+                    System.out.println(j3.toString());
+                    System.out.println(j4.toString());
+                }
+
         }
         if(source == credits)
         {
@@ -418,6 +596,7 @@ public class Menu extends JFrame implements ActionListener {
         {
             this.remove(label_credits);
             this.remove(retour);
+            this.remove(go);
             this.remove(p2);
             this.remove(p1);
             this.remove(p3);
@@ -459,6 +638,11 @@ public class Menu extends JFrame implements ActionListener {
         }
         if(source == check1)
         {
+            
+            // on modifie les variable des l'initialisation de la classe jeu
+            
+            nb_joueur=2;
+            
             check2.setSelected(false);
             check3.setSelected(false);
             this.p2.remove(l3);
@@ -481,6 +665,11 @@ public class Menu extends JFrame implements ActionListener {
         }
         if(source == check2)
         {
+            
+            // on modifie les variable des l'initialisation de la classe jeu
+            
+            nb_joueur=3;
+            
             check1.setSelected(false);
             check3.setSelected(false);
             this.p2.remove(l4);
@@ -511,6 +700,7 @@ public class Menu extends JFrame implements ActionListener {
                 b3.setBounds(0, 0, 90, 110);
                 minipanel3.add(b3);
                 b3.setTransferHandler(new TransferHandler("icon"));
+                b3.addMouseListener(ml);
             } 
             catch (Exception ex) 
             {}
@@ -521,6 +711,11 @@ public class Menu extends JFrame implements ActionListener {
         }
         if(source == check3)
         {
+            
+            // on modifie les variable des l'initialisation de la classe jeu
+            
+            nb_joueur=3;
+            
             check1.setSelected(false);
             check2.setSelected(false);
 
@@ -549,6 +744,7 @@ public class Menu extends JFrame implements ActionListener {
                 b3.setBounds(0, 0, 90, 110);
                 minipanel3.add(b3);
                 b3.setTransferHandler(new TransferHandler("icon"));
+                b3.addMouseListener(ml);
             } 
             catch (Exception ex) 
             {}
@@ -570,6 +766,7 @@ public class Menu extends JFrame implements ActionListener {
                 b4.setBounds(0, 0, 90, 110);
                 minipanel4.add(b4);
                 b4.setTransferHandler(new TransferHandler("icon"));
+                b4.addMouseListener(ml);
             } 
             catch (Exception ex) 
             {}
