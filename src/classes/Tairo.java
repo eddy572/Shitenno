@@ -91,7 +91,8 @@ public class Tairo {
             alk.add(llk.getLast());
             llk.removeLast();
         }
-        
     }
+    
+    
     
 }

@@ -65,6 +65,21 @@ public class Shitenno {
             tairo.piocheCartesTroupes(llct, llk, nbcartes);
             System.out.println(tairo.getAlct());
             System.out.println(tairo.getAlk());
+            
+            // Proposition des lots
+            Lot lot = new Lot(tairo.getAlct(), tairo.getAlk());
+            //while((tairo.getAlct().size()>0) && (tairo.getAlk().size()>0)){
+                Lot aSoumettre = new Lot();
+                Joueur receveur = new Joueur();
+                int nbCarteMain = 0;
+                receveur = lot.joueurQuiRecoitLot(hjoueur, tairo);
+                System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + receveur.getPseudo());
+                nbCarteMain = receveur.nombreDeCartesEnMain();
+                System.out.println(" qui a actuellement " + nbCarteMain + " cartes dans sa main.");
+                
+                aSoumettre = lot.compositionLot(init.getHashKokus(), init.getLlctroupe());
+                System.out.println(aSoumettre.toString());
+            //}
             an++;
         //}
         

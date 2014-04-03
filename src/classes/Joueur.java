@@ -14,6 +14,7 @@ public class Joueur {
     private ArrayList<CarteTroupe> alctroupe;
     private ArrayList<Kokus> alkokus;
     private Titre titre;
+    private Titre hierarchie;
 
 /* Constructors */
     public Joueur(){
@@ -103,18 +104,27 @@ public class Joueur {
     public void setTitre(Titre titre) {
         this.titre = titre;
     }
+
+    public Titre getHierarchie() {
+        return hierarchie;
+    }
+
+    public void setHierarchie(Titre hierarchie) {
+        this.hierarchie = hierarchie;
+    }
     
 /* HashCode & Equals */
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 83 * hash + Objects.hashCode(this.pseudo);
-        hash = 83 * hash + this.score;
-        hash = 83 * hash + Objects.hashCode(this.general);
-        hash = 83 * hash + this.nbkamons;
-        hash = 83 * hash + Objects.hashCode(this.alctroupe);
-        hash = 83 * hash + Objects.hashCode(this.alkokus);
-        hash = 83 * hash + Objects.hashCode(this.titre);
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.pseudo);
+        hash = 67 * hash + this.score;
+        hash = 67 * hash + Objects.hashCode(this.general);
+        hash = 67 * hash + this.nbkamons;
+        hash = 67 * hash + Objects.hashCode(this.alctroupe);
+        hash = 67 * hash + Objects.hashCode(this.alkokus);
+        hash = 67 * hash + Objects.hashCode(this.titre);
+        hash = 67 * hash + Objects.hashCode(this.hierarchie);
         return hash;
     }
 
@@ -148,8 +158,12 @@ public class Joueur {
         if (!Objects.equals(this.titre, other.titre)) {
             return false;
         }
+        if (!Objects.equals(this.hierarchie, other.hierarchie)) {
+            return false;
+        }
         return true;
     }
+    
     
 /* Methods */
     @Override
@@ -242,6 +256,14 @@ public class Joueur {
                 if(!isCorrect){System.err.println("Le général que vous avez choisi n'existe pas !");}
             }while(!isCorrect);
         }
+    }
+    
+    /**
+     * Compte le nombre de cartes qu'un joueur a en main
+     * @return 
+     */
+    public int nombreDeCartesEnMain(){
+        return this.alctroupe.size() + this.alkokus.size();
     }
 
 }
