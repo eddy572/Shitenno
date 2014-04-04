@@ -257,6 +257,30 @@ public class Menu extends JFrame implements ActionListener {
         int Ysource;
         int Xcible;
         int Ycible;
+
+    public Joueur getJ1() {
+        return j1;
+    }
+
+    public Joueur getJ2() {
+        return j2;
+    }
+
+    public Joueur getJ3() {
+        return j3;
+    }
+
+    public Joueur getJ4() {
+        return j4;
+    }
+
+    public int getNb_joueur() {
+        return nb_joueur;
+    }
+        
+        
+        
+        
   public Menu(){        
 
     this.setTitle("Shitenno");
@@ -557,6 +581,8 @@ public class Menu extends JFrame implements ActionListener {
                     System.out.println(j3.toString());
                     System.out.println(j4.toString());
                 }
+                Fenetre fen = new Fenetre(this);
+                this.dispose();
 
         }
         if(source == credits)

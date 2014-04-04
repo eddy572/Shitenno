@@ -2,6 +2,7 @@ package projet;
 
 
 
+import classes.Joueur;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -17,9 +18,14 @@ public class Fenetre extends JFrame implements ActionListener {
     JPanel mainjoueur = new JPanel();
     private JButton quitter = new JButton("Menu");
     private JButton passer_tour = new JButton("Passer");
+    private JFrame frame_precedente;
+    private Joueur j1;
+ 
     
+  public Fenetre(JFrame f){     
     
-  public Fenetre(){        
+    frame_precedente = f;
+    
     this.setTitle("Shitenno");
     this.setSize(1200, 700);
     this.setResizable(false);
