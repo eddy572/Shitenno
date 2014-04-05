@@ -62,7 +62,23 @@ public class Lot {
 /* Methodes */
     @Override
     public String toString() {
-        return new String(new StringBuilder().append(alct).append("\n").append(alk).append("\n").append(this.titre));
+        StringBuilder sb = new StringBuilder();
+        // Concaténation de toutes les cartes troupes du lot
+        if(this.alct != null){
+            for(CarteTroupe ct : this.alct){
+                sb.append(ct).append("\n");
+            }
+        }
+        // Concaténation de toutes les cartes kokus du lot
+        if(this.alk != null){
+            for(Kokus k : this.alk){
+                sb.append(k).append("\n");
+            }
+        }
+        // Concaténation de la tuile titre
+        sb.append(this.titre);
+  
+        return new String(sb);
     }
     
     /**
@@ -192,7 +208,12 @@ public class Lot {
         return null;
    }
     
-    
+    /**
+     * Fonction qui permet au tairo de choisir la tuile de hiérarchie à inclure dans le lot à soumettre
+     * La tuile disparait alors de la liste pour ne pas la donner à quelqu'un d'autre dans les futurs lots
+     * @param altitre
+     * @return 
+     */
     public Titre choixTuileHierarchie(ArrayList<Titre> altitre){
         Scanner sc = new Scanner(System.in);
         String reponse = new String();
@@ -212,18 +233,11 @@ public class Lot {
         }
     }
     
-    /**
-     * Composition d'un lot avec saisie manuelle des cartes troupes et kokus
-     * + Vérification d'existence de ces cartes
-     * @return 
-     */
-    public Lot compositionDuLot(ArrayList<Titre> altitre){
+    public ArrayList<CarteTroupe> choixDesCartesTroupes(){
         Scanner sc = new Scanner(System.in);
         ArrayList<CarteTroupe> tempct = new ArrayList<CarteTroupe>();
-        ArrayList<Kokus> tempk = new ArrayList<Kokus>();
-        String reponse = new String();
-        Lot lot = new Lot();
         boolean existe = false, fin = false;
+        String reponse = new String();
         
         // Choix des cartes troupes à soumettre
         System.out.print("Voulez-vous mettre des cartes Troupes dans le lot ? ");
@@ -250,16 +264,21 @@ public class Lot {
                     }
                 }
             }
+            return tempct;
         }
+        return null;
+    }
+    
+    public ArrayList<Kokus> choixDesCartesKokus(){
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Kokus> tempk = new ArrayList<Kokus>();
+        boolean existe = false, fin = false;
+        String reponse = new String();
         
-        fin = false;
-        reponse = "";
-        existe = false;
         // Choix des cartes kokus à soumettre
         System.out.print("Voulez-vous mettre des cartes Kokus dans le lot ? ");
         reponse = ouiOuNon();
         if(reponse.equalsIgnoreCase("oui")){
-           
             while(!fin){
                 System.out.println("\nListe des cartes Kokus à distribuer : " + this.alk.toString());
                 System.out.print("Indiquer le nombre de kokus qu'a la carte choisie : ");
@@ -280,18 +299,70 @@ public class Lot {
                     }
                 }
             }
+            return tempk;
         }
+        return null;
+    }
+    
+    /**
+     * Composition d'un lot avec saisie manuelle des cartes troupes et kokus
+     * + Vérification d'existence de ces cartes
+     * @return 
+     */
+    public Lot compositionDuLot(ArrayList<Titre> altitre){
+        Lot lot = new Lot();
+        
         // On met les cartes troupes sélectionnées dans le vrai lot
-        if(tempct.size() > 0 ){lot.setAlct(tempct);}
-        else{lot.setAlct(null); }
+        lot.setAlct(choixDesCartesTroupes());
         // On met les cartes kokus sélectionnées dans le vrai lot
-        if(tempk.size() > 0 ){lot.setAlk(tempk);}
-        else{lot.setAlk(null); }
+        lot.setAlk(choixDesCartesKokus());
         // On choisit la tuile de hiérarchie à affectuer au lot
         lot.setTitre(choixTuileHierarchie(altitre));
-        
+                
         return lot;
     }
     
-    
+    /**
+     * Fonction qui soumet le lot si le tairo le confirme ou qui le modifie sinon
+     */
+    public void soumettreLeLot(Joueur tairo, Joueur destinataire, ArrayList<Titre> altitre, Lot lot){
+        Scanner sc = new Scanner(System.in);
+        String reponse = new String();
+        
+        // On boucle sur la demande de validation du lot temps que celui-ci ne l'est pas
+        while(!reponse.equalsIgnoreCase("oui")){
+            System.out.print("Désirez-vous soumettre le lot précédemment formé ? ");
+            reponse = ouiOuNon();
+            
+            // Si la validation se fait, on affiche alors un message pour le destinataire
+            if(reponse.equalsIgnoreCase("oui")){
+                System.out.println(destinataire.getPseudo() + ", voici le lot que " + tairo.getPseudo() + " vous propose :");
+                System.out.println(lot.toString());
+            }
+            else{
+                // Sinon on lui demande s'il veut ajouter ou supprimer des cartes du lot précédemment formé
+                // et on fait le traitement en fonction de la réponse souhaitée.
+                do{
+                    System.out.println("Que voulez-vous faire, alors ? Ajouter ou supprimer des cartes ?");
+                    reponse = sc.nextLine();
+                    if(!reponse.equalsIgnoreCase("ajouter") && !reponse.equalsIgnoreCase("supprimer")){
+                        System.err.println("Vous devez 'ajouter' ou 'supprimer' des cartes");
+                    }
+                }while(!reponse.equalsIgnoreCase("ajouter") && !reponse.equalsIgnoreCase("supprimer"));
+
+                if(reponse.equalsIgnoreCase("ajouter")){
+                    // On concatène les listes de cartes troupes si la liste initiale n'est pas vide
+                    // On ajoute les cartes dans la liste drectement, sinon
+                    if(lot.getAlct() != null){lot.getAlct().addAll(this.choixDesCartesTroupes());}
+                    else{lot.setAlct(this.choixDesCartesTroupes());}
+                    // Idem mais pour les cartes kokus
+                    if(lot.getAlk() != null){lot.getAlk().addAll(this.choixDesCartesKokus());}
+                    else{lot.setAlk(this.choixDesCartesKokus());}
+                }
+                else{
+                    
+                }
+            }
+        }
+    }
 }

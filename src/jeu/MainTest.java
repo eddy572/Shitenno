@@ -94,6 +94,7 @@ public class MainTest {
                 
                 aSoumettre = lot.compositionDuLot(altitre);
                 System.out.println("\n" + aSoumettre.toString());
+                lot.soumettreLeLot(tairo.getTairo(), receveur, altitre, aSoumettre);
             //}
             an++;
     }
