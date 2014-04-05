@@ -17,6 +17,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import classes.*;
+import classes.Kokus;
 
 /**
  *
@@ -49,30 +50,43 @@ public class TestUnitaire {
     //@Test
     public void testInitialisationJeu() {
          Set sbonus = new JDom("src/fichierxml/General.xml").initialisationJeu("general");
-         assertEquals("Effet : Echange\nEffet : +1\nEffet : Pioche", sbonus);
+         assertEquals(3, sbonus.size());
+        
+         
     }
     
-    // @Test
+     @Test
     public void testInitialisationPaquetTroupe() {
          ArrayList<CarteTroupe> alct = new ArrayList<CarteTroupe>();
          Initialisation init = new Initialisation();
          alct = init.initialisationPaquetTroupe();
          
-         StringBuilder s = new StringBuilder();
+         assertEquals(34,  alct.size());
+         
+        /* StringBuilder s = new StringBuilder();
          for(int i=0; i<24; i++){
              if(i==0 || (i>0 && i<6)){s.append("Cette carte n'a qu'une troupe : ").append("Sohei");}
              if(i>5 && i<12){s.append("Cette carte n'a qu'une troupe : ").append("Bushi");}
              if(i>11 && i<18){s.append("Cette carte n'a qu'une troupe : ").append("Shinobi");}
              if(i>17){s.append("Cette carte n'a qu'une troupe : ").append("Samouraï");}
          }
-         assertEquals(s, alct.toString());
+         assertEquals(s, alct.toString());*/
     }
     
     @Test
     public void testInitialisationPaquetKokus() {
+     //    Set skokus = new JDom("src/fichierxml/Kokus.xml").initialisationJeu("Kokus");
+       //  assertEquals("3", skokus.size());
+         
          ArrayList<Kokus> alk = new ArrayList<Kokus>();
          Initialisation init = new Initialisation();
          alk = init.initialisationPaquetKokus();
-         assertEquals("[3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2]", alk.toString());
+
+        
+         assertEquals(24,  alk.size());
+       // assertEquals(4, alk.);
+         
+        
     }
+
 }
