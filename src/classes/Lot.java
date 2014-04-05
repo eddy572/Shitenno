@@ -9,6 +9,7 @@ import java.util.*;
 public class Lot {
     ArrayList<CarteTroupe> alct;
     ArrayList<Kokus> alk;
+    Titre titre;
     Set<Joueur> sjoueur;
     
 /* Constructeurs */
@@ -48,11 +49,39 @@ public class Lot {
     public void setAlk(ArrayList<Kokus> alk) {
         this.alk = alk;
     }
+
+    public Titre getTitre() {
+        return titre;
+    }
+
+    public void setTitre(Titre titre) {
+        this.titre = titre;
+    }
+    
     
 /* Methodes */
     @Override
     public String toString() {
-        return new String(new StringBuilder().append(alct).append("\n").append(alk));
+        return new String(new StringBuilder().append(alct).append("\n").append(alk).append("\n").append(this.titre));
+    }
+    
+    /**
+     * Fonction qui vérifie que la saisie à bien retournée 'oui' ou 'non'
+     * Dans le cas contraire, on redemande la saisie
+     * @return 
+     */
+    public String ouiOuNon(){
+        Scanner sc = new Scanner(System.in);
+        String reponse = new String();
+        
+        do{
+            reponse = sc.nextLine();
+            if(!reponse.equalsIgnoreCase("oui") && !reponse.equalsIgnoreCase("non")){
+                System.err.println("Merci de bien vouloir répondre à la question par 'oui' ou 'non' !");
+            }
+        }while(!reponse.equalsIgnoreCase("oui") && !reponse.equalsIgnoreCase("non"));
+        
+        return reponse;
     }
    
     /**
@@ -124,8 +153,8 @@ public class Lot {
      * @param carte nom de la carte
      * @return carte kokus
      */
-    public Kokus convertirStringEnCarteKokus(String carte, Set<Kokus> skokus){      
-        for(Kokus koku : skokus){
+    public Kokus convertirStringEnCarteKokus(String carte){      
+        for(Kokus koku : this.alk){
             if(carte.contains(Integer.toString(koku.getNbkoku()))){
                 return koku;
             }
@@ -138,24 +167,23 @@ public class Lot {
      * @param carte
      * @return 
      */
-    public CarteTroupe convertirStringEnCarteTroupe(String carte, LinkedList<CarteTroupe> llctroupes){
+    public CarteTroupe convertirStringEnCarteTroupe(String carte){
         boolean presque = false;
         if(carte.contains("&")){
             String[] split = carte.split("&");
-            for(CarteTroupe ct : llctroupes){
-                if(split[0].trim().equals(ct.getTroupe1().getNom()) && (!presque)){
-                    System.out.println("1. " + ct.getTroupe1().getNom());
+            for(CarteTroupe ct : this.alct){
+                if(split[0].trim().equalsIgnoreCase(ct.getTroupe1().getNom()) && (!presque)){
                     presque = true;
                 }
                 
-                if((ct.getTroupe2() != null) && (split[1].trim().equals(ct.getTroupe2().getNom())) && presque){
-                    System.out.println(ct.getTroupe2().getNom());
+                if((ct.getTroupe2() != null) && (split[1].trim().equalsIgnoreCase(ct.getTroupe2().getNom())) && presque){
                     return ct;
                 }
+                presque = false;
             }
         }
         else{
-            for(CarteTroupe ct : llctroupes){
+            for(CarteTroupe ct : this.alct){
                 if(carte.equalsIgnoreCase(ct.getTroupe1().getNom())){
                     return ct;
                 }
@@ -164,12 +192,32 @@ public class Lot {
         return null;
    }
     
+    
+    public Titre choixTuileHierarchie(ArrayList<Titre> altitre){
+        Scanner sc = new Scanner(System.in);
+        String reponse = new String();
+        
+        while(true){
+            System.out.println("\nQuelle tuile Hiérarchie voulez-vous associer à ce lot ? ");
+            System.out.println(altitre);
+            reponse = sc.nextLine();
+
+            for(Titre t : altitre){
+                if(t.getNom().equalsIgnoreCase(reponse)){
+                    altitre.remove(t);
+                    return t;
+                }
+            }
+            System.err.println("Ce titre n'existe pas ! Merci d'en choisir un vrai !");
+        }
+    }
+    
     /**
      * Composition d'un lot avec saisie manuelle des cartes troupes et kokus
      * + Vérification d'existence de ces cartes
      * @return 
      */
-    public Lot compositionLot(Set<Kokus> skokus, LinkedList<CarteTroupe> llctroupes){
+    public Lot compositionDuLot(ArrayList<Titre> altitre){
         Scanner sc = new Scanner(System.in);
         ArrayList<CarteTroupe> tempct = new ArrayList<CarteTroupe>();
         ArrayList<Kokus> tempk = new ArrayList<Kokus>();
@@ -178,17 +226,12 @@ public class Lot {
         boolean existe = false, fin = false;
         
         // Choix des cartes troupes à soumettre
-        while(!((reponse.equalsIgnoreCase("oui")) || (reponse.equalsIgnoreCase("non")))){
-            System.out.println("Voulez-vous mettre des Cartes Troupes dans le lot ?");
-            reponse = sc.nextLine();
-            if(!(reponse.equalsIgnoreCase("oui")) && !(reponse.equalsIgnoreCase("non"))){
-                System.err.println("Merci de répondre par 'Oui' ou 'Non'");
-            }
-        }
+        System.out.print("Voulez-vous mettre des cartes Troupes dans le lot ? ");
+        reponse = ouiOuNon();
         if(reponse.equalsIgnoreCase("oui")){
             while(!fin){
-                System.out.println("*** " + this.alct.toString() + " ***");
-                System.out.print("Saisissez le nom de la carte 'Troupes' à sélectionner : ");
+                System.out.println("\nListe des cartes troupes à donner :  " + this.alct.toString());
+                System.out.print("Nom de la carte 'Troupes' à sélectionner : ");
                 reponse = sc.nextLine();
                 
                 // Soit on arrete la saisie des cartes troupes, soit on vérifie que la carte choisie existe bien
@@ -198,7 +241,7 @@ public class Lot {
                 else{
                     existe = verifieExistenceCarte(reponse, "troupe");
                     if(existe){
-                        CarteTroupe tmp = convertirStringEnCarteTroupe(reponse, llctroupes);
+                        CarteTroupe tmp = convertirStringEnCarteTroupe(reponse);
                         tempct.add(tmp);
                         this.alct.remove(tmp);
                     }
@@ -213,17 +256,12 @@ public class Lot {
         reponse = "";
         existe = false;
         // Choix des cartes kokus à soumettre
-        while(!((reponse.equalsIgnoreCase("oui")) || (reponse.equalsIgnoreCase("non")))){
-            System.out.println("Voulez-vous mettre des Cartes Kokus dans le lot ?");
-            reponse = sc.nextLine();
-            if(!(reponse.equalsIgnoreCase("oui")) && !(reponse.equalsIgnoreCase("non"))){
-                System.err.println("Merci de répondre par 'Oui' ou 'Non'");
-            }
-        }
+        System.out.print("Voulez-vous mettre des cartes Kokus dans le lot ? ");
+        reponse = ouiOuNon();
         if(reponse.equalsIgnoreCase("oui")){
            
             while(!fin){
-                System.out.println("*** " + this.alk.toString() + " ***");
+                System.out.println("\nListe des cartes Kokus à distribuer : " + this.alk.toString());
                 System.out.print("Indiquer le nombre de kokus qu'a la carte choisie : ");
                 reponse = sc.nextLine();
                 // Soit on arrete la saisie des cartes troupes, soit on vérifie que la carte choisie existe bien
@@ -233,7 +271,7 @@ public class Lot {
                 else{
                     existe = verifieExistenceCarte(reponse, "koku");
                     if(existe){
-                        Kokus tmp = convertirStringEnCarteKokus(reponse, skokus);
+                        Kokus tmp = convertirStringEnCarteKokus(reponse);
                         tempk.add(tmp);
                         this.alk.remove(tmp);
                     }
@@ -243,10 +281,14 @@ public class Lot {
                 }
             }
         }
+        // On met les cartes troupes sélectionnées dans le vrai lot
         if(tempct.size() > 0 ){lot.setAlct(tempct);}
         else{lot.setAlct(null); }
+        // On met les cartes kokus sélectionnées dans le vrai lot
         if(tempk.size() > 0 ){lot.setAlk(tempk);}
         else{lot.setAlk(null); }
+        // On choisit la tuile de hiérarchie à affectuer au lot
+        lot.setTitre(choixTuileHierarchie(altitre));
         
         return lot;
     }

@@ -32,7 +32,7 @@ public class Initialisation {
         
         
         // Affichage des résultats d'initialisation
-        System.out.println("*** Les généraux ***");
+        /*System.out.println("*** Les généraux ***");
         for(General g : this.hashGeneral){
             System.out.println(g.toString());
         }
@@ -40,35 +40,35 @@ public class Initialisation {
         System.out.println("\n*** Les Titres ***");
         for(Titre t : this.hashTitre){
             System.out.println(t.toString());
-        }
+        }*/
         
-        System.out.println("\n*** Le paquet Troupes (mélangé) ***");
+        //System.out.println("\n*** Le paquet Troupes (mélangé) ***");
         this.llctroupe = initialisationPaquetTroupe();
-        for(CarteTroupe ct : this.llctroupe){
+        /*for(CarteTroupe ct : this.llctroupe){
             System.out.println(ct.toString());
-        }
+        }*/
         
-        System.out.println("\n*** Le paquet Kokus (mélangé) ***");
+        //System.out.println("\n*** Le paquet Kokus (mélangé) ***");
         this.llkokus = initialisationPaquetKokus();
-        for(Kokus k : this.llkokus){
+        /*for(Kokus k : this.llkokus){
             System.out.println(k.toString());
-        }
+        }*/
         
-        System.out.println("\n*** Les Tuiles Bonus (mélangées) ***");
+        //System.out.println("\n*** Les Tuiles Bonus (mélangées) ***");
         this.lltbonus = initialisationTuileBonus();
-        for(TuileBonus tb : this.lltbonus){
+        /*for(TuileBonus tb : this.lltbonus){
             System.out.println(tb.toString());
-        }
+        }*/
         
-        System.out.println("\n*** Les Provinces ***");
+        //System.out.println("\n*** Les Provinces ***");
         initialisationFinaleProvince();
         ajoutTroisTuileBonus(hashProvince, lltbonus);
-        for(Province p : this.hashProvince){
+        /*for(Province p : this.hashProvince){
             System.out.println("\n" + p.toString());
             for(TuileBonus tb : p.getLltuilebonus()){
                 System.out.println(tb.toString());
             }
-        }
+        }*/
         
     }
 
@@ -264,10 +264,13 @@ public class Initialisation {
      * @param hjoueur liste des joueurs
      * @param llct paquet des cartes troupes qui sert à donner des cartes aux joueurs 
      */
-    public void distributionCartesDepart(Set<Joueur> hjoueur, LinkedList<CarteTroupe> llct){
+    public void distributionCartesDepart(Set<Joueur> hjoueur, LinkedList<CarteTroupe> llct, ArrayList<Titre> altitre){
         for(Joueur j : hjoueur){
             // Distibution des titres aléatoirement
-            distributionTitreDepart(hjoueur, hashTitre);
+            // On affecte le titre au joueur
+            j.setTitre(altitre.get(0));
+            // On supprimer le titre de la liste pour ne pas le redonner
+            altitre.remove(0);
             
             int i = 0;
             // On prend la liste de carte troupe du joueur
@@ -282,29 +285,7 @@ public class Initialisation {
             }
         }
     }
-    
-    /**
-     * On distribue 2 cartes troupes à chaque joueur
-     * Methode appelé dans "distributionCartesDepart(x, y)"
-     * @param hjoueur hashset des joueurs
-     * @param htitre hashset des titres
-     */
-    public void distributionTitreDepart(Set<Joueur> hjoueur, Set<Titre> htitre){
-        // On copie le hashSet des titre dans un tableau
-        // On modifiera donc uniquement le tableau et non le hashSet d'initialisation
-        Titre[] tabtitre = htitre.toArray(new Titre[htitre.size()]);
-        // On convertit le tableau en liste pour mélanger et plus de simplicitée.
-        ArrayList<Titre> list = new ArrayList<Titre>(Arrays.asList(tabtitre));
-        Collections.shuffle(list);
         
-        for(Joueur j : hjoueur){
-            // On affecte le titre au joueur
-            j.setTitre(list.get(0));
-            // On supprimer le titre de la liste pour ne pas le redonner
-            list.remove(0);
-        }
-    }
-    
     /**
      * On ajoute trois tuile bonus par province
      * @param hprovince hashset de toutes les provinces

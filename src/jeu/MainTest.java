@@ -1,19 +1,17 @@
 package jeu;
 
 import classes.*;
-import jdom.*;
 import java.util.*;
-import java.io.*;
+
 /**
  *
  * @author Damien
  */
-public class Shitenno {
+public class MainTest {
     static Scanner sc = new Scanner(System.in);
     private static int an = 0;
-    /**
-     * @param args the command line arguments
-     */
+
+    
     public static void main(String[] args) {
     /*************/
     /* Variables */
@@ -37,12 +35,24 @@ public class Shitenno {
         llct = init.initialisationPaquetTroupe();
         llk = init.initialisationPaquetKokus();
         
-        // Choix des pseudos       
-        hjoueur = j.pseudoAlreadyUse(nbJoueur());
+        // Création des joueurs      
+        hjoueur.add(new Joueur("J1", 10));
+        hjoueur.add(new Joueur("J2", 10));
+        hjoueur.add(new Joueur("J3", 10));
         // Initialisation du nombre de cartes troupes à piocher chaque année paire
-        nbcartes = init.nombreDeCartesTroupesAPiocher(hjoueur);
+        nbcartes = 6;
+        int compteur = 1, compteur2 = 1;
         // Choix des généraux pour chaque joueur
-        j.choixDuGeneral(hjoueur, init.getHashGeneral());
+        for(Joueur jo : hjoueur){
+            for(General g : init.getHashGeneral()){
+                if(compteur == compteur2){
+                    jo.setGeneral(g);
+                }
+                compteur2++;
+            }
+            compteur++;
+        }
+        
         // Distribution de deux cartes Troupes au début du jeu
         altitre = SetEnArrayListTitre(init.getHashTitre());
         init.distributionCartesDepart(hjoueur, init.getLlctroupe(), altitre);
@@ -81,15 +91,13 @@ public class Shitenno {
                 System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + receveur.getPseudo());
                 nbCarteMain = receveur.nombreDeCartesEnMain();
                 System.out.println(" qui a actuellement " + nbCarteMain + " cartes dans sa main.");
-
+                
                 aSoumettre = lot.compositionDuLot(altitre);
-                System.out.println(aSoumettre.toString());
+                System.out.println("\n" + aSoumettre.toString());
             //}
             an++;
-        //}
-        
     }
-    
+
 /* Methods */
     public static int nbJoueur() {
         int nb = 0;
@@ -132,5 +140,4 @@ public class Shitenno {
         
         return list;
     }
-    
 }
