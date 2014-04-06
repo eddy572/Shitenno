@@ -88,12 +88,15 @@ public class MainTest {
                 Joueur receveur = new Joueur();
                 int nbCarteMain = 0;
                 receveur = lot.joueurQuiRecoitLot(hjoueur, tairo);
+                
                 System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + receveur.getPseudo());
                 nbCarteMain = receveur.nombreDeCartesEnMain();
                 System.out.println(" qui a actuellement " + nbCarteMain + " cartes dans sa main.");
                 
                 aSoumettre = lot.compositionDuLot(altitre);
-                System.out.println("\n" + aSoumettre.toString());
+                System.out.println("\nLot formé : ");
+                System.out.println(aSoumettre.toString());
+                
                 lot.soumettreLeLot(tairo.getTairo(), receveur, altitre, aSoumettre);
             //}
             an++;
