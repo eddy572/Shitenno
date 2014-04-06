@@ -78,8 +78,7 @@ public class General {
     @Override
     public String toString() {
         
-        return new String(new StringBuilder().append("Nom : ").append(nom).append("\nPrenom : ").append(prenom)
-                .append("\nCouleur=").append(couleur));
+        return new String(new StringBuilder().append(nom).append(" ").append(prenom).append(" ").append(couleur));
     }
     
     

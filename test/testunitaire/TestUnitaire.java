@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package testunitaire;
 
 import java.io.*;
@@ -24,6 +18,10 @@ import classes.Kokus;
  * @author Damien
  */
 public class TestUnitaire {
+    private Iterable<Joueur> hjoueur;
+    private int i;
+    
+   
     
     public TestUnitaire() {
     }
@@ -44,24 +42,32 @@ public class TestUnitaire {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     //@Test
-    public void testInitialisationJeu() {
+   /* public void testInitialisationJeu() {
          Set sbonus = new JDom("src/fichierxml/General.xml").initialisationJeu("general");
          assertEquals(3, sbonus.size());
         
          
     }
+    */
     
+<<<<<<< HEAD
+=======
+    
+    /**
+    *
+    * On teste l'initialisation du paquet Troupe
+    * @assertEquals sur la taille du paquet
+    */
+>>>>>>> Classes
      @Test
     public void testInitialisationPaquetTroupe() {
-         ArrayList<CarteTroupe> alct = new ArrayList<CarteTroupe>();
+         LinkedList<CarteTroupe> alct = new LinkedList<CarteTroupe>();
          Initialisation init = new Initialisation();
          alct = init.initialisationPaquetTroupe();
          
          assertEquals(34,  alct.size());
+<<<<<<< HEAD
          
         /* StringBuilder s = new StringBuilder();
          for(int i=0; i<24; i++){
@@ -71,10 +77,18 @@ public class TestUnitaire {
              if(i>17){s.append("Cette carte n'a qu'une troupe : ").append("Samouraï");}
          }
          assertEquals(s, alct.toString());*/
+=======
+>>>>>>> Classes
     }
     
+        /**
+    *
+    * On teste l'initialisation du paquet Kokus
+    * @assertEquals sur la taille du paquet
+    */
     @Test
     public void testInitialisationPaquetKokus() {
+<<<<<<< HEAD
      //    Set skokus = new JDom("src/fichierxml/Kokus.xml").initialisationJeu("Kokus");
        //  assertEquals("3", skokus.size());
          
@@ -90,3 +104,106 @@ public class TestUnitaire {
     }
 
 }
+=======
+         LinkedList<Kokus> alk = new LinkedList<Kokus>();
+         Initialisation init = new Initialisation();
+         alk = init.initialisationPaquetKokus();
+        
+         assertEquals(24,  alk.size());  
+         assertNotSame("[3,3,3,3,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1]", alk.toString());
+         System.out.println(alk.toString());
+    }
+    
+    
+        /**
+    *
+    * On teste l'initialisation du paquet Tuile Bonus
+    * @assertEquals sur la taille du paquet
+    */
+     @Test
+    public void testInitialisationTuileBonus() {
+         LinkedList<TuileBonus> lltb = new LinkedList<TuileBonus>();
+         Initialisation init = new Initialisation();
+         lltb = init.initialisationTuileBonus();
+         
+         assertEquals(24, lltb.size());
+    }
+    
+    /**
+    *
+    * On teste l'initialisation des différentes provinces
+    * 
+    */
+    @Test
+    public void testinitialisationFinaleProvince() {
+           Set<Province> listp;
+          
+           Initialisation init = new Initialisation();
+      
+           listp = init.getHashProvince();
+           //Nb final de province
+           int resattendu1 = 8;
+           assertEquals(resattendu1, listp.size());
+           
+           
+    }
+    
+    /**
+    *
+    * On teste la distributions de cartes troupes
+    * @assertEquals nombre de cartes troupes
+    * @assertEquals nombre de cartes troupes par main
+    */
+    @Test
+    public void testdistributionCartesDepart(){
+        LinkedList<CarteTroupe> lct;
+        Initialisation init = new Initialisation();
+        lct = init.getLlctroupe();
+        
+          assertEquals(34, lct.size());
+        
+    }
+    
+    /**
+    *
+    * On teste la distribution du titre de départ
+    * @assertEquals sur le nombre de titre à distribuer
+    */
+    @Test
+    public void testdistributionTitreDepart(){
+        Set<Titre> list;
+        Initialisation init = new Initialisation();
+        list = init.getHashTitre();
+  
+        assertEquals(4, list.size());
+        
+    }
+    
+    /**
+    *
+    * On teste l'ajout de trois tuiles bonus sur chaque province
+    * @assertEquals sur le nombre de tuiles bonus sur la province
+    */
+    @Test
+   public void testAjoutTroisTuileBonus(){ 
+       
+       Set<Province> listp;
+       Initialisation init = new Initialisation();
+       listp = init.getHashProvince();
+       LinkedList<TuileBonus> set;
+       set = init.initialisationTuileBonus();
+       
+       //Nb de tuile bonus par province
+       Province instance = new Province();
+       init.ajoutTroisTuileBonus(listp, set);
+       for(Province p : listp){
+           instance.setLltuilebonus(p.getLltuilebonus());
+       }
+        set = instance.getLltuilebonus();
+        assertEquals(3, set.size());
+   }
+   
+   
+   
+}
+>>>>>>> Classes

@@ -16,6 +16,9 @@ public class Joueur {
     private Titre titre;
 
 /* Constructors */
+    public Joueur(){
+        
+    }
     /**
      * Constructeur utile pour l'initialisation du joueur :
      * choix du pseudo, du général et nombre de kamons défini selon le nombre de joueurs
@@ -29,8 +32,18 @@ public class Joueur {
         this.general = general;
         this.nbkamons = nbkamons;
         this.score = 0;
-        this.alctroupe = null;
-        this.alkokus = null;
+        this.alctroupe = new ArrayList<CarteTroupe>();
+        this.alkokus = new ArrayList<Kokus>();
+        this.titre = null;
+    }
+
+    public Joueur(String pseudo, int nbkamons) {
+        this.pseudo = pseudo;
+        this.nbkamons = nbkamons;
+        this.general = null;
+        this.score = 0;
+        this.alctroupe = new ArrayList<CarteTroupe>();
+        this.alkokus = new ArrayList<Kokus>();
         this.titre = null;
     }
 
@@ -144,4 +157,90 @@ public class Joueur {
         return "Joueur{" + "pseudo=" + pseudo + ", score=" + score + ", general=" + general + ", nbkamons=" + nbkamons + ", alctroupe=" + alctroupe + ", alkokus=" + alkokus + ", titre=" + titre + '}';
     }
    
+    public int nombreKamonInitial(int nbjoueur){
+        int nbkamons = 0;
+        
+        if(nbjoueur == 2){
+            nbkamons = 12;
+        }
+        if(nbjoueur == 3){
+            nbkamons = 10;
+        }
+        if(nbjoueur == 4){
+            nbkamons = 8;
+        }
+        
+        return nbkamons;
+    }
+    
+    /**
+     * Demande de saisie des pseudo + vérification d'unicité de celui-ci
+     * @param nbjoueur
+     * @return 
+     */
+    public Set pseudoAlreadyUse(int nbjoueur){
+        Set<Joueur> hjoueur = new HashSet<Joueur>();
+        Scanner sc = new Scanner(System.in);
+        boolean isAlreadyUsed = false;
+        String pseudo = new String();
+        
+        for(int i=1; i<nbjoueur+1; i++){
+            // On demande le pseudo du joueur i jusqu'à ce que celui-ci soit unique
+            do{
+                isAlreadyUsed = false;
+                System.out.print("Pseudo pour le Joueur " + i +" : ");
+                pseudo = sc.nextLine();
+                
+                for(Joueur j : hjoueur){
+                    if(j.getPseudo().equals(pseudo)){
+                        isAlreadyUsed = true;
+                        System.err.println("Ce pseudo a déjà été choisi !");
+                        break;
+                    }
+                }
+            }while(isAlreadyUsed);
+            
+            isAlreadyUsed = false;
+            Joueur j = new Joueur(pseudo, nombreKamonInitial(nbjoueur));
+            hjoueur.add(j);
+        }
+        
+        return hjoueur;
+    }
+    
+    /**
+     * Choix du général pour chaque joueur avec vérification de la saisie
+     * Et impossibilité de prendre un général déjà sélectionné
+     * @param hjoueur liste des joueurs
+     * @param hgeneral liste des généraux
+     */
+    public void choixDuGeneral(Set<Joueur> hjoueur, Set<General> hgeneral){
+        Scanner sc = new Scanner(System.in);
+        String nomgeneral = new String();
+        
+        for(Joueur j : hjoueur){
+            boolean isCorrect = false;
+            // On vérifie que le choix du général est bien possible (pas déjà pris, existant)
+            // Et on affecte ce général au joueur
+            do{
+                System.out.println("\n" + j.getPseudo() + ", quel général désirez-vous être ? ");
+                // Affichage des généraux
+                for(General g : hgeneral){
+                    System.out.println(g.toString());
+                }
+                nomgeneral = sc.nextLine();
+            
+                // On ajoute le général au joueur s'il existe
+                for(General g : hgeneral){
+                    if(nomgeneral.equalsIgnoreCase(g.getNom())){
+                        j.setGeneral(g);
+                        hgeneral.remove(g);
+                        isCorrect = true;
+                        break;
+                    }
+                }
+                if(!isCorrect){System.err.println("Le général que vous avez choisi n'existe pas !");}
+            }while(!isCorrect);
+        }
+    }
 }

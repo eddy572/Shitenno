@@ -47,8 +47,9 @@ public class Kokus {
     /* Methodes */
     @Override
     public String toString() {
-        return Integer.toString(nbkoku);
+        return new String(new StringBuilder().append("Carte ").append(Integer.toString(nbkoku)).append(" kokus"));
     }
     
-    
+  
 }
+

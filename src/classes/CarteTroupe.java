@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package classes;
 
 import java.util.Objects;
@@ -77,10 +71,10 @@ public class CarteTroupe {
     @Override
     public String toString() {
         if(troupe2 == null){
-            return new String(new StringBuilder().append("Cette carte n'a qu'une troupe : ").append(troupe1.getNom()));
+            return new String(new StringBuilder().append(troupe1.getNom()));
         }
         else{
-            return new String(new StringBuilder().append("Cette carte a 2 troupes : ").append(troupe1.getNom()).append(" & ").append(troupe2.getNom()));
+            return new String(new StringBuilder().append(troupe1.getNom()).append(" & ").append(troupe2.getNom()));
         }
     }
     

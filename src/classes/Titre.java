@@ -78,7 +78,7 @@ public class Titre {
     /* Methodes */
     @Override
     public String toString() {
-        return "Titre{" + "nom=" + nom + ", nbsceaux=" + nbsceaux + ", bonus=" + bonus + '}';
+        return new String(new StringBuilder().append(nom).append(", ").append(nbsceaux).append(" sceaux").append(", ").append(bonus));
     }
     
     
