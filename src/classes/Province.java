@@ -27,6 +27,9 @@ public class Province {
         this.nbtroupes = nbtroupes;
         this.lltuilebonus = new LinkedList<TuileBonus>();
     }
+
+    public Province() {
+    }
     
     public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes, Troupes troupe) {
         this.nom = nom;

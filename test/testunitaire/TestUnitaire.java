@@ -19,6 +19,7 @@ import classes.*;
 public class TestUnitaire {
     private Iterable<Joueur> hjoueur;
     private int i;
+    
    
     
     public TestUnitaire() {
@@ -73,7 +74,9 @@ public class TestUnitaire {
          Initialisation init = new Initialisation();
          alk = init.initialisationPaquetKokus();
         
-         assertEquals(24,  alk.size());      
+         assertEquals(24,  alk.size());  
+         assertNotSame("[3,3,3,3,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1]", alk.toString());
+         System.out.println(alk.toString());
     }
     
     
@@ -99,11 +102,15 @@ public class TestUnitaire {
     @Test
     public void testinitialisationFinaleProvince() {
            Set<Province> listp;
+          
            Initialisation init = new Initialisation();
-           listp = init.getHashProvince();
-           
-           assertEquals(8, listp.size());
       
+           listp = init.getHashProvince();
+           //Nb final de province
+           int resattendu1 = 8;
+           assertEquals(resattendu1, listp.size());
+           
+           
     }
     
     /**
@@ -119,14 +126,7 @@ public class TestUnitaire {
         lct = init.getLlctroupe();
         
           assertEquals(34, lct.size());
-        //Chaque main a deux cartes
-     /*   CarteTroupe TabTroupe[] = new CarteTroupe[2];
-      
-        for (int i=0; i<TabTroupe.length;i++) {
-            TabTroupe[i] = lct.element();
-        }
-        assertEquals(2, TabTroupe.length);  
-     */   
+        
     }
     
     /**
@@ -144,15 +144,30 @@ public class TestUnitaire {
         
     }
     
-    
+    /**
+    *
+    * On teste l'ajout de trois tuiles bonus sur chaque province
+    * @assertEquals sur le nombre de tuiles bonus sur la province
+    */
     @Test
-   public void AjoutTroisTuileBonus(){ 
-       Set<Province> hprovince;
-       Initialisation init = new Initialisation();
-       hprovince = init.getHashProvince();
+   public void testAjoutTroisTuileBonus(){ 
        
-       assertEquals(8, hprovince.size());
+       Set<Province> listp;
+       Initialisation init = new Initialisation();
+       listp = init.getHashProvince();
+       LinkedList<TuileBonus> set;
+       set = init.initialisationTuileBonus();
+       
+       //Nb de tuile bonus par province
+       Province instance = new Province();
+       init.ajoutTroisTuileBonus(listp, set);
+       for(Province p : listp){
+           instance.setLltuilebonus(p.getLltuilebonus());
+       }
+        set = instance.getLltuilebonus();
+        assertEquals(3, set.size());
    }
+   
    
    
 }
