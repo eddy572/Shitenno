@@ -1,6 +1,7 @@
 package jeu;
 
 import classes.*;
+import comparateur.*;
 import java.util.*;
 
 /**
@@ -19,6 +20,7 @@ public class MainTest {
         LinkedList<CarteTroupe> llct = new LinkedList<CarteTroupe>();
         LinkedList<Kokus> llk = new LinkedList<Kokus>();
         ArrayList<Titre> altitre = new ArrayList<Titre>();
+        ArrayList<Joueur> aljoueur = new ArrayList<Joueur>();
         int nbcartes = 0;
         // Liste qui récupère toutes les cartes troupes jouées.
         // Utile si le jeu n'est pas fini mais qu'il n'y a plus (assez) de cartes troupes à la pioche
@@ -44,6 +46,7 @@ public class MainTest {
         int compteur = 1, compteur2 = 1;
         // Choix des généraux pour chaque joueur
         for(Joueur jo : hjoueur){
+            compteur2 = 1;
             for(General g : init.getHashGeneral()){
                 if(compteur == compteur2){
                     jo.setGeneral(g);
@@ -54,7 +57,7 @@ public class MainTest {
         }
         
         // Distribution de deux cartes Troupes au début du jeu
-        altitre = SetEnArrayListTitre(init.getHashTitre());
+        altitre = new ArrayList(init.getHashTitre());
         init.distributionCartesDepart(hjoueur, init.getLlctroupe(), altitre);
         for(Joueur jo : hjoueur){
             System.out.println(jo.toString());
@@ -70,9 +73,13 @@ public class MainTest {
             System.out.println("***************************");
             System.out.println("*** Début de l'an " + an + " ***");
             System.out.println("***************************");
+            // On cast les hashSet en ArrayList pour pouvoir effectuer des modifications, tout en gardant l'initialisation intact
+            altitre = new ArrayList(init.getHashTitre());
+            aljoueur = new ArrayList(hjoueur);
+            Collections.sort(aljoueur);
             // On initialise le tairo
             Tairo tairo = new Tairo();
-            tairo.devientLeTairo(hjoueur);
+            tairo.devientLeTairo(aljoueur);
             // Tests de bon fonctionnement
             System.out.println(tairo.getTairo());
             tairo.piocheCartesTroupes(llct, llk, nbcartes);
@@ -82,23 +89,45 @@ public class MainTest {
             
             // Proposition des lots
             Lot lot = new Lot(tairo.getAlct(), tairo.getAlk());
-            altitre = SetEnArrayListTitre(init.getHashTitre());
-            //while((tairo.getAlct().size()>0) && (tairo.getAlk().size()>0)){
+
+            while((tairo.getAlct().size()>0) && (tairo.getAlk().size()>0)){
                 Lot aSoumettre = new Lot();
-                Joueur receveur = new Joueur();
                 int nbCarteMain = 0;
-                receveur = lot.joueurQuiRecoitLot(hjoueur, tairo);
-                
-                System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + receveur.getPseudo());
-                nbCarteMain = receveur.nombreDeCartesEnMain();
-                System.out.println(" qui a actuellement " + nbCarteMain + " cartes dans sa main.");
-                
-                aSoumettre = lot.compositionDuLot(altitre);
-                System.out.println("\nLot formé : ");
-                System.out.println(aSoumettre.toString());
-                
-                lot.soumettreLeLot(tairo.getTairo(), receveur, altitre, aSoumettre);
-            //}
+                boolean isAccepted = false;
+
+                for(Joueur player : aljoueur){  
+                    // Le traitement ne se fait que s'il ne s'agit pas du Tairo et qu'il n'a pas encore reçu de lot
+                    if(!player.getPseudo().equals(tairo.getTairo().getPseudo()) && player.getTitre() != null){
+                        if(aSoumettre.getTitre() == null){
+                            System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + player.getPseudo());
+                            nbCarteMain = player.nombreDeCartesEnMain();
+                            System.out.println(" qui a actuellement " + nbCarteMain + " cartes dans sa main.");
+
+                            aSoumettre = lot.compositionDuLot(altitre);
+                            System.out.println("\n** Lot formé : **");
+                            System.out.println(aSoumettre.toString());
+                            lot.soumettreLeLot(altitre, aSoumettre);
+                        }
+
+                        if(player.accepterRefuserLot(tairo.getTairo(), aSoumettre).equalsIgnoreCase("accepter")){
+                            isAccepted = true;
+                            break;
+                        }
+                    }
+                }
+                if(!isAccepted){
+                    System.out.println(tairo.getTairo().getPseudo() + ", ce lot vous reviens puisque personne ne le veut.");
+                    tairo.getTairo().cartesAcceptees(aSoumettre);
+                    System.out.println("Voici votre nouvelle main : ");
+                    System.out.println(tairo.getTairo().getAlctroupe().toString());
+                    System.out.println(tairo.getTairo().getAlkokus().toString());
+                    System.out.println(tairo.getTairo().getHierarchie().toString());
+                    aljoueur.remove(tairo.getTairo());
+                    tairo.devientLeTairo(aljoueur);
+                    System.out.println("Le nouveau Tairo est maintenant : " + tairo.getTairo().getPseudo());
+                }
+
+            }
             an++;
     }
 
@@ -129,19 +158,4 @@ public class MainTest {
         return nb;
     }
     
-    /**
-     * Convertit un Set<Titre> en ArrayList<Titre> pour pouvoir faire des manipulations sans risquer de toucher au set d'initialisation
-     * @param htitre Hashset de titre
-     * @return une ArrayList de titre
-     */
-    public static ArrayList<Titre> SetEnArrayListTitre(Set<Titre> htitre){
-        // On copie le hashSet des titre dans un tableau
-        // On modifiera donc uniquement le tableau et non le hashSet d'initialisation
-        Titre[] tabtitre = htitre.toArray(new Titre[htitre.size()]);
-        // On convertit le tableau en liste pour mélanger et plus de simplicitée.
-        ArrayList<Titre> list = new ArrayList<Titre>(Arrays.asList(tabtitre));
-        Collections.shuffle(list);
-        
-        return list;
-    }
 }

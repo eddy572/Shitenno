@@ -21,6 +21,7 @@ public class Shitenno {
         LinkedList<CarteTroupe> llct = new LinkedList<CarteTroupe>();
         LinkedList<Kokus> llk = new LinkedList<Kokus>();
         ArrayList<Titre> altitre = new ArrayList<Titre>();
+        ArrayList<Joueur> aljoueur = new ArrayList<Joueur>();
         int nbcartes = 0;
         // Liste qui récupère toutes les cartes troupes jouées.
         // Utile si le jeu n'est pas fini mais qu'il n'y a plus (assez) de cartes troupes à la pioche
@@ -44,7 +45,7 @@ public class Shitenno {
         // Choix des généraux pour chaque joueur
         j.choixDuGeneral(hjoueur, init.getHashGeneral());
         // Distribution de deux cartes Troupes au début du jeu
-        altitre = SetEnArrayListTitre(init.getHashTitre());
+        altitre = new ArrayList(init.getHashTitre());
         init.distributionCartesDepart(hjoueur, init.getLlctroupe(), altitre);
         for(Joueur jo : hjoueur){
             System.out.println(jo.toString());
@@ -60,9 +61,12 @@ public class Shitenno {
             System.out.println("***************************");
             System.out.println("*** Début de l'an " + an + " ***");
             System.out.println("***************************");
+            // On cast les hashSet en ArrayList pour pouvoir effectuer des modifications, tout en gardant l'initialisation intact
+            altitre = new ArrayList(init.getHashTitre());
+            aljoueur = new ArrayList(hjoueur);
             // On initialise le tairo
             Tairo tairo = new Tairo();
-            tairo.devientLeTairo(hjoueur);
+            tairo.devientLeTairo(aljoueur);
             // Tests de bon fonctionnement
             System.out.println(tairo.getTairo());
             tairo.piocheCartesTroupes(llct, llk, nbcartes);
@@ -72,18 +76,36 @@ public class Shitenno {
             
             // Proposition des lots
             Lot lot = new Lot(tairo.getAlct(), tairo.getAlk());
-            altitre = SetEnArrayListTitre(init.getHashTitre());
+           
             //while((tairo.getAlct().size()>0) && (tairo.getAlk().size()>0)){
                 Lot aSoumettre = new Lot();
-                Joueur receveur = new Joueur();
                 int nbCarteMain = 0;
-                receveur = lot.joueurQuiRecoitLot(hjoueur, tairo);
-                System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + receveur.getPseudo());
-                nbCarteMain = receveur.nombreDeCartesEnMain();
-                System.out.println(" qui a actuellement " + nbCarteMain + " cartes dans sa main.");
+                boolean isAccepted = false;
+                
+                for(Joueur player : aljoueur){  
+                // Le traitement ne se fait que s'il ne s'agit pas du Tairo et qu'il n'a pas encore reçu de lot
+                    if(!player.getPseudo().equals(tairo.getTairo().getPseudo()) && player.getTitre() != null){
+                        if(aSoumettre.getTitre() == null){
+                            System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + player.getPseudo());
+                            nbCarteMain = player.nombreDeCartesEnMain();
+                            System.out.println(" qui a actuellement " + nbCarteMain + " cartes dans sa main.");
 
-                aSoumettre = lot.compositionDuLot(altitre);
-                System.out.println(aSoumettre.toString());
+                            aSoumettre = lot.compositionDuLot(altitre);
+                            System.out.println("\n** Lot formé : **");
+                            System.out.println(aSoumettre.toString());
+                            lot.soumettreLeLot(altitre, aSoumettre);
+                        }
+                        // On demande au joueur s'il accepte ou non le lot et on affecte les cartes à sa main si oui
+                        if(player.accepterRefuserLot(tairo.getTairo(), aSoumettre).equalsIgnoreCase("accepter")){
+                            isAccepted = true;
+                            break;
+                        }
+                    }
+                }
+                if(!isAccepted){
+                    tairo.getTairo().cartesAcceptees(aSoumettre);
+                    aljoueur.remove(tairo.getTairo());
+                }
             //}
             an++;
         //}
@@ -115,22 +137,5 @@ public class Shitenno {
         }
         
         return nb;
-    }
-    
-    /**
-     * Convertit un Set<Titre> en ArrayList<Titre> pour pouvoir faire des manipulations sans risquer de toucher au set d'initialisation
-     * @param htitre Hashset de titre
-     * @return une ArrayList de titre
-     */
-    public static ArrayList<Titre> SetEnArrayListTitre(Set<Titre> htitre){
-        // On copie le hashSet des titre dans un tableau
-        // On modifiera donc uniquement le tableau et non le hashSet d'initialisation
-        Titre[] tabtitre = htitre.toArray(new Titre[htitre.size()]);
-        // On convertit le tableau en liste pour mélanger et plus de simplicitée.
-        ArrayList<Titre> list = new ArrayList<Titre>(Arrays.asList(tabtitre));
-        Collections.shuffle(list);
-        
-        return list;
-    }
-    
+    }    
 }

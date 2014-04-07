@@ -61,15 +61,8 @@ public class Tairo {
      * Le joueur nommé Tairo est celui avec la titre ayant le plus de sceaux bakufus
      * @param hjoueur 
      */
-    public void devientLeTairo(Set<Joueur> hjoueur){
-        int nbsceaux = 0;
-        
-        for(Joueur j : hjoueur){
-            if(j.getTitre().getNbsceaux() > nbsceaux){
-                nbsceaux = j.getTitre().getNbsceaux();
-                this.tairo = j;
-            }
-        }
+    public void devientLeTairo(ArrayList<Joueur> aljoueur){
+        this.tairo = aljoueur.get(0);
     }
     
     /**

@@ -218,7 +218,8 @@ public class Lot {
         String reponse = new String();
         
         while(true){
-            System.out.println("\nQuelle tuile Hiérarchie voulez-vous associer à ce lot ? ");
+            System.out.println("");
+            System.out.println("Quelle tuile Hiérarchie voulez-vous associer à ce lot ? ");
             System.out.println(altitre);
             reponse = sc.nextLine();
 
@@ -247,7 +248,8 @@ public class Lot {
         reponse = ouiOuNon();
         if(reponse.equalsIgnoreCase("oui")){
             while(!fin){
-                System.out.println("\nListe des cartes troupes à donner :  " + this.alct.toString());
+                System.out.println("");
+                System.out.println("Liste des cartes troupes à donner :  " + this.alct.toString());
                 System.out.print("Nom de la carte 'Troupes' à sélectionner : ");
                 reponse = sc.nextLine();
                 
@@ -283,11 +285,13 @@ public class Lot {
         String reponse = new String();
         
         // Choix des cartes kokus à soumettre
+        System.out.println("");
         System.out.print("Voulez-vous mettre des cartes Kokus dans le lot ? ");
         reponse = ouiOuNon();
         if(reponse.equalsIgnoreCase("oui")){
             while(!fin){
-                System.out.println("\nListe des cartes Kokus à distribuer : " + this.alk.toString());
+                System.out.println("");
+                System.out.println("Liste des cartes Kokus à distribuer : " + this.alk.toString());
                 System.out.print("Indiquer le nombre de kokus qu'a la carte choisie : ");
                 reponse = sc.nextLine();
                 // Soit on arrete la saisie des cartes troupes, soit on vérifie que la carte choisie existe bien
@@ -384,7 +388,7 @@ public class Lot {
      * @param altitre ArrayList des Titres pour pouvoir effectuer des actions dessus
      * @param lot lot qui a été créé et qui est susceptible d'être modifié si non soumis
      */
-    public void soumettreLeLot(Joueur tairo, Joueur destinataire, ArrayList<Titre> altitre, Lot lot){
+    public void soumettreLeLot(ArrayList<Titre> altitre, Lot lot){
         Scanner sc = new Scanner(System.in);
         String reponse = new String();
         String question = new String();
@@ -395,13 +399,7 @@ public class Lot {
             reponse = ouiOuNon();
             
             // Si la validation se fait, on affiche alors un message pour le destinataire
-            if(reponse.equalsIgnoreCase("oui")){
-                System.out.println("\n" + destinataire.getPseudo() + ", voici le lot que " + tairo.getPseudo() + " vous propose :");
-                System.out.println(lot.toString());
-                System.out.println("\nEt voici les cartes à distribuer restantes : ");
-                System.out.println(this.toString());
-            }
-            else{
+            if(reponse.equalsIgnoreCase("non")){
                 // Sinon on lui demande s'il veut ajouter ou supprimer des cartes du lot précédemment formé
                 // et on fait le traitement en fonction de la réponse souhaitée.
                 do{
@@ -437,4 +435,6 @@ public class Lot {
             }
         }
     }
+    
+    
 }

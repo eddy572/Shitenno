@@ -6,7 +6,7 @@ import java.util.*;
  * @author Damien
  * @version 1.0
  */
-public class Joueur {
+public class Joueur implements Comparable<Joueur>{
     private String pseudo;
     private int score;
     private General general;
@@ -163,12 +163,20 @@ public class Joueur {
         }
         return true;
     }
-    
-    
-/* Methods */
+
+/* Methods */   
     @Override
     public String toString() {
         return "Joueur{" + "pseudo=" + pseudo + ", score=" + score + ", general=" + general + ", nbkamons=" + nbkamons + ", alctroupe=" + alctroupe + ", alkokus=" + alkokus + ", titre=" + titre + '}';
+    }
+
+    @Override
+    public int compareTo(Joueur j) {
+        if(this.getTitre().getNbsceaux() < j.getTitre().getNbsceaux())
+            return 1;
+        if(this.getTitre().getNbsceaux() > j.getTitre().getNbsceaux())
+            return -1;
+        return 0;
     }
    
     public int nombreKamonInitial(int nbjoueur){
@@ -264,6 +272,71 @@ public class Joueur {
      */
     public int nombreDeCartesEnMain(){
         return this.alctroupe.size() + this.alkokus.size();
+    }
+    
+    /**
+     * Fonction qui vérifie la saisie et la redemande si le mot inscrit est différent de 'accepter' ou 'refuser'
+     * @return le mot saisie correctement
+     */
+    public String accepterOuRefuser(){
+        Scanner sc = new Scanner(System.in);
+        String rep = new String();
+        
+        while(!rep.equalsIgnoreCase("accepter") && !rep.equalsIgnoreCase("refuser")){
+            System.out.println("");
+            System.out.print("Désirez-vous l'accepter ou le refuser ? ");
+            rep = sc.next();
+            if(!rep.equalsIgnoreCase("accepter") && !rep.equalsIgnoreCase("refuser")){System.err.println("Seul les mot 'accepter' et 'refuser' sont autorisés ! ");}
+        }
+        return rep;
+    } 
+    
+    /**
+     * Fonction qui ajoute les cartes du lot soumis à la main du joueur, ainsi que la tuile de hiérarchie et enlève la tuile titre
+     * @param lot 
+     */
+    public void cartesAcceptees(Lot lot){
+        // On ajoute les nouvelles cartes à la main et on les tries
+        if (lot.getAlct() != null) {
+            this.alctroupe.addAll(lot.getAlct());
+        }
+        if (lot.getAlk() != null) {
+            this.alkokus.addAll(lot.getAlk());
+        }
+        // On affecte la tuile hiérachie du lot
+        this.hierarchie = lot.getTitre();
+        // On retire la tuile titre pour ne pas reproser le lot
+        this.titre = null;
+    }
+    /**
+     * Fonction qui ajoute les cartes du lot soumis par le tairo, aux cartes que le joueur a déjà en main
+     * Ou affiche un message si le joueur a refusé le lot.
+     * @param tairo
+     * @param lot
+     * @return 
+     */
+    public String accepterRefuserLot(Joueur tairo, Lot lot){
+        System.out.println(this.pseudo + ", votre Tairo " + tairo.getPseudo() + " vous propose le lot suivant : ");
+        System.out.println(lot.toString());
+        String rep = this.accepterOuRefuser();
+        
+        if(rep.equalsIgnoreCase("accepter")){
+            System.out.println("");
+            System.out.println("Vous venez d'accepter le lot !");
+            System.out.println("Voici votre nouvelle main : ");
+            // On met à jours les cartes dans la main du joueur
+            this.cartesAcceptees(lot);
+            // On affiche la nouvelle main et le nouveau titre
+            System.out.println(this.alctroupe.toString());
+            System.out.println(this.alkokus);
+            System.out.println("Et vous passerez " + this.hierarchie + " à la fin de l'année.");
+        }
+        else{
+            System.out.println("");
+            System.out.println("Vous venez de refuser le lot ! Impossible de revenir sur votre décision !");
+        }
+        
+        return rep;
     }
 
 }
