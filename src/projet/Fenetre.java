@@ -4,10 +4,15 @@ package projet;
 
 import classes.Initialisation;
 import classes.Joueur;
+import classes.Province;
+import classes.TuileBonus;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,15 +24,35 @@ public class Fenetre extends JFrame implements ActionListener {
     JPanel mainjoueur = new JPanel();
     private JButton quitter = new JButton("Menu");
     private JButton passer_tour = new JButton("Passer");
-    private JFrame frame_precedente;
+    
+    
+        MouseListener ml = new MouseListener(){
+
+       @Override
+       public void mousePressed(MouseEvent me) {
+      
+           PanelProvince p = (PanelProvince)me.getSource();
+           System.out.println(p);
+       }
+
+       @Override
+       public void mouseReleased(MouseEvent me) {}
+
+       @Override
+       public void mouseEntered(MouseEvent me) {}
+
+       @Override
+       public void mouseExited(MouseEvent me) { }
+
+       @Override
+       public void mouseClicked(MouseEvent me) {}
+   };
     private Joueur j1;
     private Initialisation init;
- 
+    private Set<Province> Provinces;
     
   public Fenetre(JFrame f){     
-    
-    frame_precedente = f;
-    
+      
     this.setTitle("Shitenno");
     this.setSize(1200, 750);
     this.setResizable(false);
@@ -35,6 +60,47 @@ public class Fenetre extends JFrame implements ActionListener {
     this.setLocationRelativeTo(null);
     this.setContentPane(new Panneau());
     this.setLayout(null);
+    
+// initialisation des provinces et mise en place des panels sur chaque province !
+      
+      init = new Initialisation();
+      Provinces = init.getHashProvince();
+      int parcours=0;
+              for(Province pro : Provinces){
+            //System.out.println("\n" + p.toString());
+                  PanelProvince pp = new PanelProvince();
+                  pp.p=pro;
+                  pp.addMouseListener(ml);
+                  pp.setOpaque(false);
+                  this.add(pp);
+                  if(pro.getNom().equals("Chugoku"))
+                  pp.setBounds(67, 43, 297, 158);
+                  
+                  if(pro.getNom().equals("Chubu"))
+                  pp.setBounds(399, 56, 297, 158);
+           
+                  if(pro.getNom().equals("Hokkaido"))
+                  pp.setBounds(732, 45, 297, 158);
+                  
+                  if(pro.getNom().equals("Kyushu"))
+                  pp.setBounds(51, 224, 297, 158);
+               
+                  if(pro.getNom().equals("Tohoku"))
+                  pp.setBounds(857, 218, 297, 158);
+                  
+                  if(pro.getNom().equals("Shikoku"))
+                  pp.setBounds(178, 400, 297, 158);
+                  
+                  if(pro.getNom().equals("Kansai"))
+                  pp.setBounds(509, 378, 297, 158);
+                  
+                  if(pro.getNom().equals("Kanto"))
+                  pp.setBounds(838, 394, 297, 158);
+                  
+            for(TuileBonus tb : pro.getLltuilebonus()){
+                System.out.println(tb.toString());
+            }
+        }
 
     // personnalisation du panel recouvrant toute la frame
     panelplateau.setOpaque(false);
@@ -49,6 +115,7 @@ public class Fenetre extends JFrame implements ActionListener {
     passer_tour.addActionListener(this);
     this.add(passer_tour);
     passer_tour.setBounds(1080,670,80,30);
+    
     
     
     //this.setContentPane(new Panneau());
