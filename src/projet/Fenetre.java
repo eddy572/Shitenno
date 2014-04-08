@@ -2,6 +2,8 @@ package projet;
 
 
 
+import classes.Initialisation;
+import classes.Joueur;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -17,40 +19,49 @@ public class Fenetre extends JFrame implements ActionListener {
     JPanel mainjoueur = new JPanel();
     private JButton quitter = new JButton("Menu");
     private JButton passer_tour = new JButton("Passer");
+    private JFrame frame_precedente;
+    private Joueur j1;
+    private Initialisation init;
+ 
     
+  public Fenetre(JFrame f){     
     
-  public Fenetre(){        
+    frame_precedente = f;
+    
     this.setTitle("Shitenno");
-    this.setSize(1200, 700);
+    this.setSize(1200, 750);
+    this.setResizable(false);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLocationRelativeTo(null);
+    this.setContentPane(new Panneau());
+    this.setLayout(null);
+
+    // personnalisation du panel recouvrant toute la frame
+    panelplateau.setOpaque(false);
+    panelplateau.setBounds(0, 0, 1200, 800);
+    this.add(panelplateau);
     
-    // personnalisation de l'affichage du plateau
-    
-    Panneau p = new Panneau();
-    
-    // personnalisation de l'affichage de la main du joueur
-    Mainjoueur m = new Mainjoueur();
-    m.setLayout(null);
+    // ajout des boutons passer sont tour et menu
     quitter.addActionListener(this);
-    m.add(quitter);
-    quitter.setBounds(1080,20,80,30);
+    this.add(quitter);
+    quitter.setBounds(1080,620,80,30);
     
     passer_tour.addActionListener(this);
-    m.add(passer_tour);
-    passer_tour.setBounds(1080,70,80,30);
-   
-    //parametrage du jpanel
+    this.add(passer_tour);
+    passer_tour.setBounds(1080,670,80,30);
     
-    JSplitPane contenu = new JSplitPane(JSplitPane.VERTICAL_SPLIT,p,m);
-    contenu.setResizeWeight(0.8);
-
-    // ajouter bouton retour
-
-    this.add(contenu);
+    
     //this.setContentPane(new Panneau());
     //this.setContentPane(new Mainjoueur());
+    
+    // affichage de la frame 
+    
     this.setVisible(true);
+    
+    
+    
+    
+    
   }
 
     @Override
