@@ -24,8 +24,8 @@ public class Fenetre extends JFrame implements ActionListener {
     JPanel mainjoueur = new JPanel();
     private JButton quitter = new JButton("Menu");
     private JButton passer_tour = new JButton("Passer");
-    
-    
+    private PanelInvasion pi;
+    private JFrame f = this;
         MouseListener ml = new MouseListener(){
 
        @Override
@@ -33,6 +33,7 @@ public class Fenetre extends JFrame implements ActionListener {
       
            PanelProvince p = (PanelProvince)me.getSource();
            System.out.println(p);
+           PanelInvasion pi = new PanelInvasion(f,p);
        }
 
        @Override
@@ -65,7 +66,6 @@ public class Fenetre extends JFrame implements ActionListener {
       
       init = new Initialisation();
       Provinces = init.getHashProvince();
-      int parcours=0;
               for(Province pro : Provinces){
             //System.out.println("\n" + p.toString());
                   PanelProvince pp = new PanelProvince();
@@ -100,6 +100,7 @@ public class Fenetre extends JFrame implements ActionListener {
             for(TuileBonus tb : pro.getLltuilebonus()){
                 System.out.println(tb.toString());
             }
+            
         }
 
     // personnalisation du panel recouvrant toute la frame
