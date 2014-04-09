@@ -69,15 +69,16 @@ public class Shitenno {
             tairo.devientLeTairo(aljoueur);
             // Tests de bon fonctionnement
             System.out.println(tairo.getTairo());
-            tairo.piocheCartesTroupes(llct, llk, nbcartes);
+            tairo.piocheCartes(llct, llk, nbcartes);
             System.out.println("Paquet de cartes Troupes piochées : " + tairo.getAlct());
             System.out.println("Paquet de cartes Kokus piochées : " + tairo.getAlk());
             System.out.println("");
             
             // Proposition des lots
             Lot lot = new Lot(tairo.getAlct(), tairo.getAlk());
-           
-            //while((tairo.getAlct().size()>0) && (tairo.getAlk().size()>0)){
+            int dernier = hjoueur.size();
+            
+            while(dernier > 0){
                 Lot aSoumettre = new Lot();
                 int nbCarteMain = 0;
                 boolean isAccepted = false;
@@ -97,19 +98,48 @@ public class Shitenno {
                         }
                         // On demande au joueur s'il accepte ou non le lot et on affecte les cartes à sa main si oui
                         if(player.accepterRefuserLot(tairo.getTairo(), aSoumettre).equalsIgnoreCase("accepter")){
+                            dernier--;
                             isAccepted = true;
                             break;
                         }
                     }
                 }
                 if(!isAccepted){
-                    tairo.getTairo().cartesAcceptees(aSoumettre);
+                    System.out.println(tairo.getTairo().getPseudo() + ", ce lot vous reviens puisque personne ne le veut.");
+                    if(dernier > 1){tairo.getTairo().cartesAcceptees(aSoumettre);}
+                    else{
+                        tairo.getTairo().cartesAcceptees(lot);
+                        tairo.getTairo().setTitre(null);
+                        tairo.getTairo().setHierarchie(altitre.get(0));
+                    }
+                    System.out.println("Voici votre nouvelle main : ");
+                    System.out.println(tairo.getTairo().getAlctroupe().toString());
+                    System.out.println(tairo.getTairo().getAlkokus().toString());
+                    System.out.println(tairo.getTairo().getHierarchie().toString());
                     aljoueur.remove(tairo.getTairo());
+                    if(dernier > 1){
+                        tairo.devientLeTairo(aljoueur);
+                        System.out.println("");
+                        System.out.println("Le nouveau Tairo est maintenant : " + tairo.getTairo().getPseudo());
+                    }
+                    dernier--;
                 }
-            //}
+
+            }
+            System.out.println("************************");
+            System.out.println("*** Fin de l'an " + an + " ***");
+            System.out.println("************************");
             an++;
-        //}
-        
+            
+            // A supprimer : vérification que les listes de cartes de chaque joueurs ont bien été modifiées
+            for(Joueur jou : hjoueur){
+                System.out.println(jou.getPseudo());
+                System.out.println(jou.getAlctroupe().toString());
+                System.out.println(jou.getAlkokus().toString());
+                System.out.println(jou.getHierarchie().toString());
+                System.out.println("");
+            }
+       //}
     }
     
 /* Methods */

@@ -302,12 +302,14 @@ public class Joueur implements Comparable<Joueur>{
         }
         if (lot.getAlk() != null) {
             this.alkokus.addAll(lot.getAlk());
+            Collections.sort(this.alkokus);
         }
         // On affecte la tuile hiérachie du lot
         this.hierarchie = lot.getTitre();
         // On retire la tuile titre pour ne pas reproser le lot
         this.titre = null;
     }
+    
     /**
      * Fonction qui ajoute les cartes du lot soumis par le tairo, aux cartes que le joueur a déjà en main
      * Ou affiche un message si le joueur a refusé le lot.

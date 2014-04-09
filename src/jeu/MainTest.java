@@ -41,8 +41,9 @@ public class MainTest {
         hjoueur.add(new Joueur("J1", 10));
         hjoueur.add(new Joueur("J2", 10));
         hjoueur.add(new Joueur("J3", 10));
+        hjoueur.add(new Joueur("J4", 10));
         // Initialisation du nombre de cartes troupes à piocher chaque année paire
-        nbcartes = 6;
+        nbcartes = 8;
         int compteur = 1, compteur2 = 1;
         // Choix des généraux pour chaque joueur
         for(Joueur jo : hjoueur){
@@ -82,22 +83,27 @@ public class MainTest {
             tairo.devientLeTairo(aljoueur);
             // Tests de bon fonctionnement
             System.out.println(tairo.getTairo());
-            tairo.piocheCartesTroupes(llct, llk, nbcartes);
+            tairo.piocheCartes(llct, llk, nbcartes);
             System.out.println("Paquet de cartes Troupes piochées : " + tairo.getAlct());
             System.out.println("Paquet de cartes Kokus piochées : " + tairo.getAlk());
             System.out.println("");
             
             // Proposition des lots
             Lot lot = new Lot(tairo.getAlct(), tairo.getAlk());
-
-            while((tairo.getAlct().size()>0) && (tairo.getAlk().size()>0)){
+            // Variable qu'on décrémente a chaque fois qu'on change de Tairo ou que le lot soumis est accepté
+            int dernier = hjoueur.size();
+            
+            // On propose des lots tant qu'on est pas arrivé au dernier joueur
+            while(dernier > 0){
                 Lot aSoumettre = new Lot();
                 int nbCarteMain = 0;
                 boolean isAccepted = false;
+                
 
                 for(Joueur player : aljoueur){  
                     // Le traitement ne se fait que s'il ne s'agit pas du Tairo et qu'il n'a pas encore reçu de lot
                     if(!player.getPseudo().equals(tairo.getTairo().getPseudo()) && player.getTitre() != null){
+                        // Formation d'un lot uniquement si on n'a pas encore de lot de formé ou non accepté
                         if(aSoumettre.getTitre() == null){
                             System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + player.getPseudo());
                             nbCarteMain = player.nombreDeCartesEnMain();
@@ -108,8 +114,10 @@ public class MainTest {
                             System.out.println(aSoumettre.toString());
                             lot.soumettreLeLot(altitre, aSoumettre);
                         }
-
+                        // Si le joueur accepte le lot, on lui attribue les cartes de celui-ci et on affiche la nouvelle main
+                        // On mais le booléen à true et on casse la boucle pour ne pas soumettre le lot accepté aux autres joueurs
                         if(player.accepterRefuserLot(tairo.getTairo(), aSoumettre).equalsIgnoreCase("accepter")){
+                            dernier--;
                             isAccepted = true;
                             break;
                         }
@@ -117,21 +125,46 @@ public class MainTest {
                 }
                 if(!isAccepted){
                     System.out.println(tairo.getTairo().getPseudo() + ", ce lot vous reviens puisque personne ne le veut.");
-                    tairo.getTairo().cartesAcceptees(aSoumettre);
+                    if(dernier > 1){tairo.getTairo().cartesAcceptees(aSoumettre);}
+                    else{
+                        tairo.getTairo().cartesAcceptees(lot);
+                        tairo.getTairo().setTitre(null);
+                        tairo.getTairo().setHierarchie(altitre.get(0));
+                    }
                     System.out.println("Voici votre nouvelle main : ");
                     System.out.println(tairo.getTairo().getAlctroupe().toString());
                     System.out.println(tairo.getTairo().getAlkokus().toString());
                     System.out.println(tairo.getTairo().getHierarchie().toString());
                     aljoueur.remove(tairo.getTairo());
-                    tairo.devientLeTairo(aljoueur);
-                    System.out.println("Le nouveau Tairo est maintenant : " + tairo.getTairo().getPseudo());
+                    if(dernier > 1){
+                        tairo.devientLeTairo(aljoueur);
+                        System.out.println("");
+                        System.out.println("Le nouveau Tairo est maintenant : " + tairo.getTairo().getPseudo());
+                    }
+                    dernier--;
                 }
 
             }
+            System.out.println("************************");
+            System.out.println("*** Fin de l'an " + an + " ***");
+            System.out.println("************************");
             an++;
+            
+            // A supprimer : vérification que les listes de cartes de chaque joueurs ont bien été modifiées
+            for(Joueur jou : hjoueur){
+                System.out.println(jou.getPseudo());
+                System.out.println(jou.getAlctroupe().toString());
+                System.out.println(jou.getAlkokus().toString());
+                System.out.println(jou.getHierarchie().toString());
+                System.out.println("");
+            }
     }
 
 /* Methods */
+    /**
+     * Choix du nombre de joueurs dans la partie
+     * @return 
+     */
     public static int nbJoueur() {
         int nb = 0;
         boolean isNumber = false;

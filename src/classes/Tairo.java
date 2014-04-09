@@ -62,7 +62,12 @@ public class Tairo {
      * @param hjoueur 
      */
     public void devientLeTairo(ArrayList<Joueur> aljoueur){
-        this.tairo = aljoueur.get(0);
+        int i = 0;
+        
+        while(aljoueur.get(i).getTitre() == null){
+            i++;
+        }
+        this.tairo = aljoueur.get(i);
     }
     
     /**
@@ -72,7 +77,7 @@ public class Tairo {
      * @param llk paquet de cartes kokus
      * @param nbcartes nombre de cartes à piocher
      */
-    public void piocheCartesTroupes(LinkedList<CarteTroupe> llct, LinkedList<Kokus> llk, int nbcartes){
+    public void piocheCartes(LinkedList<CarteTroupe> llct, LinkedList<Kokus> llk, int nbcartes){
         // On pioche x cartes troupes où x dépend selon le nombre de joueurs
         for(int i=0; i<nbcartes; i++){
             alct.add(llct.getLast());

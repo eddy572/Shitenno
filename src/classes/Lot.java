@@ -247,7 +247,7 @@ public class Lot {
         System.out.print("Voulez-vous mettre des cartes Troupes dans le lot ? ");
         reponse = ouiOuNon();
         if(reponse.equalsIgnoreCase("oui")){
-            while(!fin){
+            while(!fin && this.alct.size() > 0){
                 System.out.println("");
                 System.out.println("Liste des cartes troupes à donner :  " + this.alct.toString());
                 System.out.print("Nom de la carte 'Troupes' à sélectionner : ");
@@ -289,7 +289,7 @@ public class Lot {
         System.out.print("Voulez-vous mettre des cartes Kokus dans le lot ? ");
         reponse = ouiOuNon();
         if(reponse.equalsIgnoreCase("oui")){
-            while(!fin){
+            while(!fin && this.alk.size() > 0){
                 System.out.println("");
                 System.out.println("Liste des cartes Kokus à distribuer : " + this.alk.toString());
                 System.out.print("Indiquer le nombre de kokus qu'a la carte choisie : ");
