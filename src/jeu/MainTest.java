@@ -99,7 +99,6 @@ public class MainTest {
                 int nbCarteMain = 0;
                 boolean isAccepted = false;
                 
-
                 for(Joueur player : aljoueur){  
                     // Le traitement ne se fait que s'il ne s'agit pas du Tairo et qu'il n'a pas encore reçu de lot
                     if(!player.getPseudo().equals(tairo.getTairo().getPseudo()) && player.getTitre() != null){
@@ -152,10 +151,11 @@ public class MainTest {
             
             // A supprimer : vérification que les listes de cartes de chaque joueurs ont bien été modifiées
             for(Joueur jou : hjoueur){
+                jou.changerHierachieEnTitre();
                 System.out.println(jou.getPseudo());
                 System.out.println(jou.getAlctroupe().toString());
                 System.out.println(jou.getAlkokus().toString());
-                System.out.println(jou.getHierarchie().toString());
+                System.out.println(jou.getTitre().toString());
                 System.out.println("");
             }
     }

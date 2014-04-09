@@ -340,5 +340,10 @@ public class Joueur implements Comparable<Joueur>{
         
         return rep;
     }
+    
+    public void changerHierachieEnTitre(){
+        this.titre = this.hierarchie;
+        this.hierarchie = null;
+    }
 
 }

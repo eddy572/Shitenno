@@ -64,6 +64,7 @@ public class Shitenno {
             // On cast les hashSet en ArrayList pour pouvoir effectuer des modifications, tout en gardant l'initialisation intact
             altitre = new ArrayList(init.getHashTitre());
             aljoueur = new ArrayList(hjoueur);
+            Collections.sort(aljoueur);
             // On initialise le tairo
             Tairo tairo = new Tairo();
             tairo.devientLeTairo(aljoueur);
@@ -133,10 +134,11 @@ public class Shitenno {
             
             // A supprimer : vérification que les listes de cartes de chaque joueurs ont bien été modifiées
             for(Joueur jou : hjoueur){
+                jou.changerHierachieEnTitre();
                 System.out.println(jou.getPseudo());
                 System.out.println(jou.getAlctroupe().toString());
                 System.out.println(jou.getAlkokus().toString());
-                System.out.println(jou.getHierarchie().toString());
+                System.out.println(jou.getTitre().toString());
                 System.out.println("");
             }
        //}

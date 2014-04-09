@@ -324,11 +324,15 @@ public class Lot {
         Lot lot = new Lot();
         
         // On met les cartes troupes sélectionnées dans le vrai lot
-        ArrayList<CarteTroupe> alct = choixDesCartesTroupes();
-        if(alct != null){lot.setAlct(alct);}
+        if(this.alct.size() > 0){
+            ArrayList<CarteTroupe> alct = choixDesCartesTroupes();
+            if(alct != null){lot.setAlct(alct);}
+        }
         // On met les cartes kokus sélectionnées dans le vrai lot
-        ArrayList<Kokus> alk = choixDesCartesKokus();
-        if(alk != null){lot.setAlk(alk);}
+        if(this.alk.size() > 0){
+            ArrayList<Kokus> alk = choixDesCartesKokus();
+            if(alk != null){lot.setAlk(alk);}
+        }
         // On choisit la tuile de hiérarchie à affectuer au lot
         lot.setTitre(choixTuileHierarchie(altitre));
                 
