@@ -25,15 +25,20 @@ public class Fenetre extends JFrame implements ActionListener {
     private JButton quitter = new JButton("Menu");
     private JButton passer_tour = new JButton("Passer");
     private PanelInvasion pi;
-    private JFrame f = this;
+    private Fenetre f = this;
         MouseListener ml = new MouseListener(){
 
        @Override
        public void mousePressed(MouseEvent me) {
-      
+    
            PanelProvince p = (PanelProvince)me.getSource();
            System.out.println(p);
+           f.panelplateau.setVisible(false);
+           //f.panelplateau.setEnabled(false);
+           f.repaint();
            PanelInvasion pi = new PanelInvasion(f,p);
+           
+         
        }
 
        @Override
@@ -52,7 +57,7 @@ public class Fenetre extends JFrame implements ActionListener {
     private Initialisation init;
     private Set<Province> Provinces;
     
-  public Fenetre(JFrame f){     
+  public Fenetre(Menu m){     
       
     this.setTitle("Shitenno");
     this.setSize(1200, 750);
@@ -61,6 +66,14 @@ public class Fenetre extends JFrame implements ActionListener {
     this.setLocationRelativeTo(null);
     this.setContentPane(new Panneau());
     this.setLayout(null);
+    this.add(new PanelMainJoueur(m.j1));
+    
+    // personnalisation du panel recouvrant toute la frame
+    panelplateau.setOpaque(false);
+    panelplateau.setBounds(0, 0, 1200, 588);
+    panelplateau.setLayout(null);
+    this.add(panelplateau);
+    
     
 // initialisation des provinces et mise en place des panels sur chaque province !
       
@@ -72,13 +85,13 @@ public class Fenetre extends JFrame implements ActionListener {
                   pp.p=pro;
                   pp.addMouseListener(ml);
                   pp.setOpaque(false);
-                  this.add(pp);
+                  panelplateau.add(pp);
                   if(pro.getNom().equals("Chugoku"))
                   pp.setBounds(67, 43, 297, 158);
                   
                   if(pro.getNom().equals("Chubu"))
                   pp.setBounds(399, 56, 297, 158);
-           
+
                   if(pro.getNom().equals("Hokkaido"))
                   pp.setBounds(732, 45, 297, 158);
                   
@@ -103,10 +116,7 @@ public class Fenetre extends JFrame implements ActionListener {
             
         }
 
-    // personnalisation du panel recouvrant toute la frame
-    panelplateau.setOpaque(false);
-    panelplateau.setBounds(0, 0, 1200, 800);
-    this.add(panelplateau);
+
     
     // ajout des boutons passer sont tour et menu
     quitter.addActionListener(this);

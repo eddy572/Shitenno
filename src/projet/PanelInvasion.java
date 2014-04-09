@@ -27,10 +27,13 @@ import javax.swing.JPanel;
 public class PanelInvasion extends JPanel implements ActionListener {
     private Image img;
     private JButton fermer = new JButton("Retour");
-    private JFrame jfglobal;
-    public PanelInvasion(final JFrame jf, PanelProvince p)
+    private Fenetre jfglobal;
+    JPanel panelplateau = new JPanel();
+    public PanelInvasion(final Fenetre jf, PanelProvince p)
     {
+        
          jfglobal=jf;
+         
         // insertion du bouton de retour
         fermer.setBounds(1000, 20, 80, 30);
         fermer.addActionListener(this);
@@ -39,7 +42,6 @@ public class PanelInvasion extends JPanel implements ActionListener {
         this.setBounds(0, 0, 1200, 588);
         String nom=p.p.getNom()+".png";
         try {
-            System.out.println("image/zoom/"+nom);
             img = ImageIO.read (new File("image/zoom/"+nom));
             this.paintComponent(this.getGraphics());
         } catch (IOException ex) {
@@ -58,7 +60,9 @@ public class PanelInvasion extends JPanel implements ActionListener {
         if(source == fermer)
         {
             jfglobal.remove(this);
+                jfglobal.panelplateau.setVisible(true);
             jfglobal.repaint();
+            
 
         }
     }
