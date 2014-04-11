@@ -3,12 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Initialisation.java</file>
-            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/jeu/Shitenno.java</file>
-            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Joueur.java</file>
-            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Lot.java</file>
-            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Tairo.java</file>
-            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/jeu/MainTest.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/test/testunitaire/TestUnitaire.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Titre.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Initialisation.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/test/testunitaire/TestUnitaireSprint2.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Lot.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Troupes.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/fichierxml/Troupes.xml</file>
         </group>
     </open-files>
 </project-private>

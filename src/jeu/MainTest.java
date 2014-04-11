@@ -165,7 +165,7 @@ public class MainTest {
      * Choix du nombre de joueurs dans la partie
      * @return 
      */
-    public static int nbJoueur() {
+    public int nbJoueur() {
         int nb = 0;
         boolean isNumber = false;
 

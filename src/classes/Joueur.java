@@ -48,6 +48,18 @@ public class Joueur implements Comparable<Joueur>{
         this.titre = null;
     }
 
+    public Joueur(String pseudo) {
+        this.pseudo = pseudo;
+        this.nbkamons = 0;
+        this.general = null;
+        this.score = 0;
+        this.alctroupe = new ArrayList<CarteTroupe>();
+        this.alkokus = new ArrayList<Kokus>();
+        this.titre = null;
+    }
+
+    
+    
     /* Getters & Setters */
     public String getPseudo() {
         return pseudo;
