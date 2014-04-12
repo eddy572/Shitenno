@@ -43,29 +43,39 @@ public class TestUnitaireSprint2 {
     }
     
     //SPRINT 2
-    
+    //************ CLASSE LOT ***************
       /**
-    *
+    * TEST EFFECTUE SUR LA REPONSE OUI OU NON EN BRUT ET NON PAS PAR SCANNER
+    * Activer la fonction uniquement pour la reponse en brut
     * On teste si la saisie est bien à oui ou à non
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * @assertEquals sur la valeur de la saisie
     */
-   @Test
+   //@Test
    public void testOuiOuNon(){
              
         //Vérifier la valeur du résultat attendu 
         Lot lot = new Lot();
-        String s1 = null;
-        boolean ok = false;
+        String s1 = "OUI";
+        String s2 = "Non";
+        String s3 = "Bonjour";
+        
+        //Vérifier que ouiOuNon() accepte "OUI" 
+        assertTrue(lot.ouiOuNon().equalsIgnoreCase(s1));
+        //Vérifier que ouiOuNon() accepte "Non" 
+        assertTrue(lot.ouiOuNon().equalsIgnoreCase(s2));        
+        //Vérifier que ouiOuNon() n'accepte pas "Bonjour" 
+        assertFalse(lot.ouiOuNon().equalsIgnoreCase(s3));
+        
+        //  boolean ok = false;
       
         //Condition égalité
-        if (("OUI".equals(s1) || "Oui".equals(s1) || "OUi".equals(s1) || "oui".equals(s1))&&("NON".equals(s1) 
+        /*if (("OUI".equals(s1) || "Oui".equals(s1) || "OUi".equals(s1) || "oui".equals(s1))&&("NON".equals(s1) 
                 || "Non".equals(s1) || "NOn".equals(s1) || "non".equals(s1))){
             ok = true;
             assertTrue(ok);
         }
         assertFalse(ok);
-   
-
+         */
 
         
    }
@@ -75,15 +85,40 @@ public class TestUnitaireSprint2 {
     * On teste quel joueur va recevoir le lot
     * @assertEquals 
     */
-  // @Test
+    // @Test
     public void TestjoueurQuiRecoitLot(){  
-
-    } 
+        //---------------------NULL POINTER EXCEPTION----------------------
+       Set<Joueur> joueur = new HashSet<>();
+ 
+       Lot lot = new Lot();
+       
+       Joueur j1 = new Joueur("J1");
+       Joueur j2 = new Joueur("J2");
+       Joueur j3 = new Joueur("J3");
+       Joueur j4 = new Joueur("J4");
+       Tairo tairo = new Tairo(j1);
+       joueur.add(j1);
+       joueur.add(j2);
+       joueur.add(j3);
+       joueur.add(j4);
+       Titre titre = new Titre();
+       lot.joueurQuiRecoitLot(joueur, tairo);
+       
+       for(Joueur j : joueur){
+           lot.setTitre(lot.getTitre());
+       }
+        titre = lot.getTitre();
+       
+      // assertTrue(lot.joueurQuiRecoitLot(joueur, tairo).equals(j2));
+       assertEquals("Tairo", titre);
+       
+       
+    }
     
     /**
     *
     * On teste l'existence d'une carte selon son type donnée
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * @assertEquals sur l'existence de la carte en fonction du type
     */
    @Test
     public void TestverifieExistenceCarte(){
@@ -119,8 +154,8 @@ public class TestUnitaireSprint2 {
     
     /**
     *
-    * On teste le nombre de cartes troupes à piocher par joueurs
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * On teste la conversion d'un string en carte kokus
+    * @assertEquals sur le retour de la fonction
     */
    @Test
     public void TestconvertirStringEnCarteKokus(){      
@@ -143,8 +178,8 @@ public class TestUnitaireSprint2 {
     
      /**
     *
-    * On teste le nombre de cartes troupes à piocher par joueurs
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * On teste la conversion d'un string en carte troupe
+    * @assertEquals sur le retour de la fonction
     */
    @Test
     public void TestconvertirStringEnCarteTroupe(){
@@ -167,8 +202,8 @@ public class TestUnitaireSprint2 {
     
     /**
     *
-    * On teste le nombre de cartes troupes à piocher par joueurs
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * On teste le choix d'une truile de hierarchie
+    * @assertEquals sur l'existence de la carte voulue
     */
    @Test
     public void TestchoixTuileHierarchie(){
@@ -176,7 +211,7 @@ public class TestUnitaireSprint2 {
         Initialisation init = new Initialisation();
         list = init.getHashTitre();
         ArrayList<Titre> altitre=new ArrayList<Titre>(list); 
-        Lot lot = new Lot();
+        //Lot lot = new Lot();
         
        
         String s1 = "Hatamoto";
@@ -197,30 +232,60 @@ public class TestUnitaireSprint2 {
     }
     
     /**
-    *
-    * On teste le nombre de cartes troupes à piocher par joueurs
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * TEST EFFECTUE SUR L'AJOUT DE CARTES TROUPES EN BRUT ET PAS PAR DES SCANNER
+    * Activer la fonction uniquement pour l'ajout en brut
+    * On teste le retour de la fonction
+    * @assertEquals sur le retour des cartes troupes
     */
-  // @Test
+    //@Test
     public void TestchoixDesCartesTroupes(){
+        //Vérifier cette fonction sans les scanner, données entrées en brut.
+        LinkedList<CarteTroupe> llct = new LinkedList<CarteTroupe>();
+        Initialisation init = new Initialisation();
+        llct = init.initialisationPaquetTroupe();
+        ArrayList<CarteTroupe> alct=new ArrayList<CarteTroupe>(llct);
+        Lot lot = new Lot();
+        
+        lot.setAlct(alct);
+        //Vérifier que l'arraylist n'est pas vide
+        assertNotNull(alct);
+        //Vérifier que le lot n'est pas nul
+        assertNotNull(lot);
+        //Vérifier que le retour de la fonction contient des éléments de alct
+        assertTrue(lot.choixDesCartesTroupes().containsAll(alct));
         
     }
     
      /**
-    *
-    * On teste le nombre de cartes troupes à piocher par joueurs
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * TEST EFFECTUE SUR L'AJOUT DE CARTES KOKUS EN BRUT ET PAS PAR DES SCANNER
+    * Activer la fonction uniquement pour l'ajout en brut
+    * On teste le retour de la fonction
+    * @assertEquals sur le retour des cartes kokus
     */
-  // @Test   
+    //@Test   
     public void TestchoixDesCartesKokus(){
-
+        //Vérifier cette fonction sans les scanner, données entrées en brut.
+        LinkedList<Kokus> llk = new LinkedList<Kokus>();
+        Initialisation init = new Initialisation();
+        llk = init.initialisationPaquetKokus();
+        ArrayList<Kokus> alk=new ArrayList<Kokus>(llk);
+        Lot lot = new Lot();
+        
+        lot.setAlk(alk);
+        //Vérifier que l'arraylist n'est pas vide
+        assertNotNull(alk);
+        //Vérifier que le lot n'est pas nul
+        assertNotNull(lot);
+        //Vérifier que le retour de la fonction contient des éléments de alct
+        assertTrue(lot.choixDesCartesKokus().containsAll(alk));
+       
     }
     
     
     /**
     *
-    * On teste le nombre de cartes troupes à piocher par joueurs
-    * @assertEquals sur le nombre de tuiles bonus sur la province
+    * On teste la composition du lot
+    * @assertEquals sur le fait que le lot composé ne soit pas nul
     */
    @Test
     public void TestcompositionDuLot(){
@@ -239,7 +304,7 @@ public class TestUnitaireSprint2 {
         lot.setAlct(new ArrayList(setList));
         //Vérifier qu'il est pas null
         assertNotNull(lot);
-       // System.out.println(lot.toString());
+
      
     }
     
@@ -292,5 +357,71 @@ public class TestUnitaireSprint2 {
     
     
     
+    //************** CLASSE JOUEUR *************
+    /**
+    * TEST EFFECTUE SUR LA REPONSE ACCEPTER OU REFUSER EN BRUT ET NON PAS PAR SCANNER
+    * Activer la fonction uniquement pour la reponse en brut
+    * On teste si la saisie est bien à oui ou à non
+    * @assertEquals sur la valeur de la saisie
+    */
+    //@Test
+    public void TestaccepterRefuserLot(){
+        //Vérifier la valeur du résultat attendu 
+        Lot lot = new Lot();
+        Joueur joueur = new Joueur();
+        String s1 = "accepter";
+        String s2 = "refuser";
+        String s3 = "Bonjour";
+        
+        //Vérifier que ouiOuNon() accepte "OUI" 
+        assertTrue(joueur.accepterOuRefuser().equalsIgnoreCase(s1));
+        //Vérifier que ouiOuNon() accepte "Non" 
+        assertTrue(joueur.accepterOuRefuser().equalsIgnoreCase(s2));        
+        //Vérifier que ouiOuNon() n'accepte pas "Bonjour" 
+        assertFalse(joueur.accepterOuRefuser().equalsIgnoreCase(s3));
+    }
+    
+    
+    /**
+    * 
+    * On teste le nombre de cartes en main
+    * @assertEquals sur le nb de carte en main
+    */
+    @Test
+    public void testnombreDeCartesEnMain(){
+        Joueur j1 = new Joueur("Pauline");
+        Kokus k1 = new Kokus(1);
+        Kokus k2 = new Kokus(2);
+        Kokus k3 = new Kokus(3);
+        Troupes shinobi = new Troupes("Shinobi", null);
+        Troupes soheishi = new Troupes("Sohei", "Shinobi");
+        CarteTroupe ct1 = new CarteTroupe(shinobi);
+        CarteTroupe ct2 = new CarteTroupe(soheishi);
+        //Ajout à la liste des kokus
+        LinkedList<Kokus> llk = new LinkedList<Kokus>();
+        ArrayList<Kokus> alk=new ArrayList<Kokus>(llk);
+        alk.add(k1);
+        alk.add(k2);
+        alk.add(k1); 
+        alk.add(k3);
+        //Ajout à la liste des cartes troupes
+        LinkedList<CarteTroupe> llct = new LinkedList<CarteTroupe>();
+        ArrayList<CarteTroupe> alct=new ArrayList<CarteTroupe>(llct);
+        alct.add(ct1);
+        alct.add(ct1);
+        alct.add(ct2);
+        //Ajout des listes au joueur
+        j1.setAlctroupe(alct);
+        j1.setAlkokus(alk);
+        
+        //Vérifier que la liste des troupes du joueur n'est pas vide
+        assertNotNull(j1.getAlctroupe());
+        //Vérifier que la liste des kokus du joueur n'est pas vide
+        assertNotNull(j1.getAlkokus());
+        //nb de cartes
+        int nbcartes = j1.nombreDeCartesEnMain();
+        //Vérifie que le joueurs à des cartes
+        assertEquals(7, nbcartes);
+    }
     
 }

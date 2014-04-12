@@ -1,8 +1,6 @@
 package testunitaire;
 
-import java.io.*;
 import java.util.*;
-import jdom.JDom;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -11,7 +9,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import classes.*;
-import jeu.MainTest;
 
 /**
  *
