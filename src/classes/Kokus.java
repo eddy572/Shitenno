@@ -12,9 +12,6 @@ public class Kokus implements Comparable<Kokus>{
         this.nbkoku = nbkoku;
     }
 
-    public Kokus() {
-    }
-
     /* Getters & Setters */
     public int getNbkoku() {
         return nbkoku;

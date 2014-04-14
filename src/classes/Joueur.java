@@ -13,6 +13,7 @@ public class Joueur implements Comparable<Joueur>{
     private int nbkamons;
     private ArrayList<CarteTroupe> alctroupe;
     private ArrayList<Kokus> alkokus;
+    private ArrayList<Bonus> albonus;
     private Titre titre;
     private Titre hierarchie;
 
@@ -35,6 +36,7 @@ public class Joueur implements Comparable<Joueur>{
         this.score = 0;
         this.alctroupe = new ArrayList<CarteTroupe>();
         this.alkokus = new ArrayList<Kokus>();
+        this.albonus = new ArrayList<Bonus>();
         this.titre = null;
     }
 
@@ -45,21 +47,10 @@ public class Joueur implements Comparable<Joueur>{
         this.score = 0;
         this.alctroupe = new ArrayList<CarteTroupe>();
         this.alkokus = new ArrayList<Kokus>();
+        this.albonus = new ArrayList<Bonus>();
         this.titre = null;
     }
 
-    public Joueur(String pseudo) {
-        this.pseudo = pseudo;
-        this.nbkamons = 0;
-        this.general = null;
-        this.score = 0;
-        this.alctroupe = new ArrayList<CarteTroupe>();
-        this.alkokus = new ArrayList<Kokus>();
-        this.titre = null;
-    }
-
-    
-    
     /* Getters & Setters */
     public String getPseudo() {
         return pseudo;
@@ -124,19 +115,29 @@ public class Joueur implements Comparable<Joueur>{
     public void setHierarchie(Titre hierarchie) {
         this.hierarchie = hierarchie;
     }
+
+    public ArrayList<Bonus> getAlbonus() {
+        return albonus;
+    }
+
+    public void setAlbonus(ArrayList<Bonus> albonus) {
+        this.albonus = albonus;
+    }
+    
+    
     
 /* HashCode & Equals */
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.pseudo);
-        hash = 67 * hash + this.score;
-        hash = 67 * hash + Objects.hashCode(this.general);
-        hash = 67 * hash + this.nbkamons;
-        hash = 67 * hash + Objects.hashCode(this.alctroupe);
-        hash = 67 * hash + Objects.hashCode(this.alkokus);
-        hash = 67 * hash + Objects.hashCode(this.titre);
-        hash = 67 * hash + Objects.hashCode(this.hierarchie);
+        hash = 97 * hash + Objects.hashCode(this.pseudo);
+        hash = 97 * hash + this.score;
+        hash = 97 * hash + Objects.hashCode(this.general);
+        hash = 97 * hash + this.nbkamons;
+        hash = 97 * hash + Objects.hashCode(this.alctroupe);
+        hash = 97 * hash + Objects.hashCode(this.alkokus);
+        hash = 97 * hash + Objects.hashCode(this.albonus);
+        hash = 97 * hash + Objects.hashCode(this.titre);
         return hash;
     }
 
@@ -167,6 +168,9 @@ public class Joueur implements Comparable<Joueur>{
         if (!Objects.equals(this.alkokus, other.alkokus)) {
             return false;
         }
+        if (!Objects.equals(this.albonus, other.albonus)) {
+            return false;
+        }
         if (!Objects.equals(this.titre, other.titre)) {
             return false;
         }
@@ -179,7 +183,7 @@ public class Joueur implements Comparable<Joueur>{
 /* Methods */   
     @Override
     public String toString() {
-        return "Joueur{" + "pseudo=" + pseudo + ", score=" + score + ", general=" + general + ", nbkamons=" + nbkamons + ", alctroupe=" + alctroupe + ", alkokus=" + alkokus + ", titre=" + titre + '}';
+        return "Joueur{" + "pseudo=" + pseudo + ", score=" + score + ", general=" + general + ", nbkamons=" + nbkamons + ", alctroupe=" + alctroupe + ", alkokus=" + alkokus + ", albonus=" + albonus + ", titre=" + titre + ", hierarchie=" + hierarchie + '}';
     }
 
     @Override
@@ -191,6 +195,12 @@ public class Joueur implements Comparable<Joueur>{
         return 0;
     }
    
+    /**
+     * Retourn le nombre de Kamon que chaque joueur doit avoir en début de partie
+     * Le nombre se calcul selon le nombre de joueur
+     * @param nbjoueur nombre de joueur dans la partie
+     * @return nbkamons nombre de kamons par joueur
+     */
     public int nombreKamonInitial(int nbjoueur){
         int nbkamons = 0;
         
@@ -304,7 +314,8 @@ public class Joueur implements Comparable<Joueur>{
     } 
     
     /**
-     * Fonction qui ajoute les cartes du lot soumis à la main du joueur, ainsi que la tuile de hiérarchie et enlève la tuile titre
+     * Fonction qui ajoute les cartes du lot soumis à la main du joueur, ainsi que la tuile de hiérarchie 
+     * et enlève la tuile titre
      * @param lot 
      */
     public void cartesAcceptees(Lot lot){
@@ -353,9 +364,54 @@ public class Joueur implements Comparable<Joueur>{
         return rep;
     }
     
+    /**
+     * Echange les tuiles titres en fonction des tuiles hiérarchie
+     * A ne lancer qu'une fois tout les lots formés
+     * Hierarchie devient à null
+     */
     public void changerHierachieEnTitre(){
         this.titre = this.hierarchie;
         this.hierarchie = null;
     }
 
+    /**
+     * On vérifie la saisie quand au fait de vouloir envahir une province ou de vouloir passer son tour
+     * @return rep qui est la réponse donnée (passer ou envahir)
+     */
+    public String envahirOuPasser(){
+        Scanner sc = new Scanner(System.in);
+        String rep = sc.nextLine();
+        boolean envahir = false, passer = false;
+        
+        while(!envahir && !passer){
+            System.err.print("Merci de faire votre choix parmi les deux possibles (Envahir ou Passer votre tour) : ");
+            rep = sc.nextLine();
+            envahir = rep.equalsIgnoreCase("envahir");
+            passer = passer = rep.equalsIgnoreCase("passer");
+        }
+        
+        return rep.toLowerCase();
+    }
+    
+    /**
+     * Soit on passe son tour, soit on prend le contrôle d'une province. Le contrôle se fait tel que :
+     * - on a les troupes nécessaires
+     * - on a les kokus nécessaires
+     * - on a les troupes ou kokus nécessaires et un(des) bonus 
+     */
+    public void passerSonTourOuPas(){
+        String reponse = new String();
+        
+        System.out.print("Voulez-vous envahir une province ou passer votre tour ?");
+        reponse = envahirOuPasser();
+        
+        // Soit on passe son tour, soit on prend le contrôle d'une province
+        if(reponse.equals("passer")){
+            System.out.println(this.pseudo + ", vous avez décidé de passer votre tour !");
+        }
+        else{
+            // TODO
+        }
+    }
+    
 }

@@ -96,6 +96,7 @@ public class MainTest {
             // On propose des lots tant qu'on est pas arrivé au dernier joueur
             while(dernier > 0){
                 Lot aSoumettre = new Lot();
+                System.out.println(aSoumettre.verifieExistenceCarte("1", "koku"));
                 int nbCarteMain = 0;
                 boolean isAccepted = false;
                 
@@ -165,7 +166,7 @@ public class MainTest {
      * Choix du nombre de joueurs dans la partie
      * @return 
      */
-    public int nbJoueur() {
+    public static int nbJoueur() {
         int nb = 0;
         boolean isNumber = false;
 

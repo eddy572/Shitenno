@@ -131,20 +131,24 @@ public class Shitenno {
             System.out.println("*** Fin de l'an " + an + " ***");
             System.out.println("************************");
             an++;
-            
-            // A supprimer : vérification que les listes de cartes de chaque joueurs ont bien été modifiées
-            for(Joueur jou : hjoueur){
-                jou.changerHierachieEnTitre();
-                System.out.println(jou.getPseudo());
-                System.out.println(jou.getAlctroupe().toString());
-                System.out.println(jou.getAlkokus().toString());
-                System.out.println(jou.getTitre().toString());
-                System.out.println("");
+
+            System.out.println("************************");
+            System.out.println("*** Début de l'an " + an + " ***");
+            System.out.println("*** (Prise de contrôle) ***");
+            System.out.println("************************");
+            for(Joueur jo : hjoueur){
+                
             }
        //}
     }
     
 /* Methods */
+    /**
+     * On demande la saisie du nombre de joueur compris entre 2 et 4
+     * Si le nombre saisie n'est pas entre 2 et 4 inclus
+     * ou n'est pas un entier on redemande la saisie
+     * @return nb le nombre de joueurs
+     */
     public static int nbJoueur() {
         int nb = 0;
         boolean isNumber = false;

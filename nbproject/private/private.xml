@@ -1,43 +1,15 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/eddy/Documents/NetBeansProjects/Shitenno/src/projet/Fenetre.java</file>
-            <file>file:/C:/Users/eddy/Documents/NetBeansProjects/Shitenno/src/jeu/Shitenno.java</file>
-            <file>file:/C:/Users/eddy/Documents/NetBeansProjects/Shitenno/src/projet/Projet.java</file>
-            <file>file:/C:/Users/eddy/Documents/NetBeansProjects/Shitenno/src/classes/Joueur.java</file>
-            <file>file:/C:/Users/eddy/Documents/NetBeansProjects/Shitenno/src/projet/Menu.java</file>
-            <file>file:/C:/Users/eddy/Documents/NetBeansProjects/Shitenno/src/classes/Initialisation.java</file>
-            <file>file:/C:/Users/eddy/Documents/NetBeansProjects/Shitenno/src/classes/General.java</file>
+            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Kokus.java</file>
+            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/jeu/Shitenno.java</file>
+            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Initialisation.java</file>
+            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Joueur.java</file>
+            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Lot.java</file>
+            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/classes/Tairo.java</file>
+            <file>file:/C:/Users/Damien/Documents/Miage/M1/S2/Java/Workspace/NetBeansProjects/Shitenno/src/jeu/MainTest.java</file>
         </group>
     </open-files>
 </project-private>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
-        <group>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/test/testunitaire/TestUnitaire.java</file>
-<<<<<<< HEAD
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/jeu/Shitenno.java</file>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Initialisation.java</file>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Troupes.java</file>
-=======
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Titre.java</file>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Initialisation.java</file>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/test/testunitaire/TestUnitaireSprint2.java</file>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Lot.java</file>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Troupes.java</file>
-            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/fichierxml/Troupes.xml</file>
->>>>>>> Partage
-        </group>
-=======
-        <group/>
->>>>>>> Classes
-    </open-files>
-</project-private>
->>>>>>> origin/TestUnitaire

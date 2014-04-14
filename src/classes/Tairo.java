@@ -20,11 +20,6 @@ public class Tairo {
         this.alk = new ArrayList<Kokus>();
     }
 
-    public Tairo(Joueur tairo) {
-        this.tairo = tairo;
-    }
-
-    
     public Tairo(Joueur tairo, ArrayList<CarteTroupe> alct, ArrayList<Kokus> alk) {
         this.tairo = tairo;
         this.alct = alct;

@@ -318,6 +318,7 @@ public class Lot {
     /**
      * Composition d'un lot avec saisie manuelle des cartes troupes et kokus
      * + Vérification d'existence de ces cartes
+     * @param altitre liste des titres
      * @return 
      */
     public Lot compositionDuLot(ArrayList<Titre> altitre){

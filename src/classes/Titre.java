@@ -9,7 +9,7 @@ import java.util.Objects;
  */
 public class Titre {
     private String nom;
-    private int nbsceaux = 3;
+    private int nbsceaux;
     private String bonus;
 
     /* Constructors */
@@ -17,10 +17,6 @@ public class Titre {
         this.nom = nom;
         this.nbsceaux = nbsceaux;
         this.bonus = bonus;
-    }
-
-    public Titre() {
-        
     }
 
     /* Getters & Setters */
