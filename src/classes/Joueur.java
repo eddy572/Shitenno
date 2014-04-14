@@ -381,7 +381,8 @@ public class Joueur implements Comparable<Joueur>{
     public String envahirOuPasser(){
         Scanner sc = new Scanner(System.in);
         String rep = sc.nextLine();
-        boolean envahir = false, passer = false;
+        boolean envahir = rep.equalsIgnoreCase("envahir");
+        boolean passer = rep.equalsIgnoreCase("passer");
         
         while(!envahir && !passer){
             System.err.print("Merci de faire votre choix parmi les deux possibles (Envahir ou Passer votre tour) : ");
@@ -391,6 +392,33 @@ public class Joueur implements Comparable<Joueur>{
         }
         
         return rep.toLowerCase();
+    }
+    
+    /**
+     * On demande le nom de la province à contrôler
+     * Et on vérifie que celle-ci existe, sinon on redemande la saisie.
+     * @return s le nom de la province
+     */
+    public Province demandeProvinceAControler(){
+        Scanner sc = new Scanner(System.in);
+        String s = new String();
+        boolean stop = false;
+        Initialisation init = new Initialisation();
+        
+        while(!stop){
+            s = sc.nextLine();
+            for(Province p : init.getHashProvince()){
+                if(p.getNom().equalsIgnoreCase(s)){
+                    return p;
+                }
+            }
+            if(!stop){
+                System.err.println("Cette province n'est pas connue de nos services !");
+                System.err.print("Veuillez en saisir une de connue : ");
+            }
+        }
+        
+        return null;
     }
     
     /**
@@ -410,6 +438,8 @@ public class Joueur implements Comparable<Joueur>{
             System.out.println(this.pseudo + ", vous avez décidé de passer votre tour !");
         }
         else{
+            // On récupère le nom de la province à contrôler
+            Province provinceAControler = demandeProvinceAControler();
             // TODO
         }
     }

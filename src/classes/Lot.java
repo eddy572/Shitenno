@@ -340,6 +340,10 @@ public class Lot {
         return lot;
     }
     
+    /**
+     * On choisit de retirer une carte précédemment mise dans le lot. On ne veut plus qu'elle fasse partie du lot
+     * @param lotDuTairo comprend toutes les cartes que le tairo a pioché (Troupe / Kokus / Hiérarchie)
+     */
     public void remettreCarteDansPiocheTairo(Lot lotDuTairo){
         Scanner sc = new Scanner(System.in);
         String reponse = new String();
