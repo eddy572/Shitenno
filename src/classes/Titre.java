@@ -9,7 +9,7 @@ import java.util.Objects;
  */
 public class Titre {
     private String nom;
-    private int nbsceaux;
+    private int nbsceaux = 3;
     private String bonus;
 
     /* Constructors */
@@ -17,6 +17,10 @@ public class Titre {
         this.nom = nom;
         this.nbsceaux = nbsceaux;
         this.bonus = bonus;
+    }
+
+    public Titre() {
+        
     }
 
     /* Getters & Setters */
@@ -75,12 +79,10 @@ public class Titre {
         return true;
     }
 
-    /* Methodes */
+/* Methodes */
     @Override
     public String toString() {
-        return new String(new StringBuilder().append(nom).append(", ").append(nbsceaux).append(" sceaux").append(", ").append(bonus));
+        return new String(new StringBuilder().append(nom).append(" (").append(nbsceaux).append(" sceaux").append(", ").append(bonus).append(")"));
     }
-    
-    
-    
+           
 }

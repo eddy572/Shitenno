@@ -1,19 +1,18 @@
 package jeu;
 
 import classes.*;
-import jdom.*;
+import comparateur.*;
 import java.util.*;
-import java.io.*;
+
 /**
  *
  * @author Damien
  */
-public class Shitenno {
+public class MainTest {
     static Scanner sc = new Scanner(System.in);
     private static int an = 0;
-    /**
-     * @param args the command line arguments
-     */
+
+    
     public static void main(String[] args) {
     /*************/
     /* Variables */
@@ -38,12 +37,26 @@ public class Shitenno {
         llct = init.initialisationPaquetTroupe();
         llk = init.initialisationPaquetKokus();
         
-        // Choix des pseudos       
-        hjoueur = j.pseudoAlreadyUse(nbJoueur());
+        // Création des joueurs      
+        hjoueur.add(new Joueur("J1", 10));
+        hjoueur.add(new Joueur("J2", 10));
+        hjoueur.add(new Joueur("J3", 10));
+        hjoueur.add(new Joueur("J4", 10));
         // Initialisation du nombre de cartes troupes à piocher chaque année paire
-        nbcartes = init.nombreDeCartesTroupesAPiocher(hjoueur);
+        nbcartes = 8;
+        int compteur = 1, compteur2 = 1;
         // Choix des généraux pour chaque joueur
-        j.choixDuGeneral(hjoueur, init.getHashGeneral());
+        for(Joueur jo : hjoueur){
+            compteur2 = 1;
+            for(General g : init.getHashGeneral()){
+                if(compteur == compteur2){
+                    jo.setGeneral(g);
+                }
+                compteur2++;
+            }
+            compteur++;
+        }
+        
         // Distribution de deux cartes Troupes au début du jeu
         altitre = new ArrayList(init.getHashTitre());
         init.distributionCartesDepart(hjoueur, init.getLlctroupe(), altitre);
@@ -77,16 +90,19 @@ public class Shitenno {
             
             // Proposition des lots
             Lot lot = new Lot(tairo.getAlct(), tairo.getAlk());
+            // Variable qu'on décrémente a chaque fois qu'on change de Tairo ou que le lot soumis est accepté
             int dernier = hjoueur.size();
             
+            // On propose des lots tant qu'on est pas arrivé au dernier joueur
             while(dernier > 0){
                 Lot aSoumettre = new Lot();
                 int nbCarteMain = 0;
                 boolean isAccepted = false;
                 
                 for(Joueur player : aljoueur){  
-                // Le traitement ne se fait que s'il ne s'agit pas du Tairo et qu'il n'a pas encore reçu de lot
+                    // Le traitement ne se fait que s'il ne s'agit pas du Tairo et qu'il n'a pas encore reçu de lot
                     if(!player.getPseudo().equals(tairo.getTairo().getPseudo()) && player.getTitre() != null){
+                        // Formation d'un lot uniquement si on n'a pas encore de lot de formé ou non accepté
                         if(aSoumettre.getTitre() == null){
                             System.out.print(tairo.getTairo().getPseudo() + ", vous allez proposer un lot a " + player.getPseudo());
                             nbCarteMain = player.nombreDeCartesEnMain();
@@ -97,7 +113,8 @@ public class Shitenno {
                             System.out.println(aSoumettre.toString());
                             lot.soumettreLeLot(altitre, aSoumettre);
                         }
-                        // On demande au joueur s'il accepte ou non le lot et on affecte les cartes à sa main si oui
+                        // Si le joueur accepte le lot, on lui attribue les cartes de celui-ci et on affiche la nouvelle main
+                        // On mais le booléen à true et on casse la boucle pour ne pas soumettre le lot accepté aux autres joueurs
                         if(player.accepterRefuserLot(tairo.getTairo(), aSoumettre).equalsIgnoreCase("accepter")){
                             dernier--;
                             isAccepted = true;
@@ -141,11 +158,14 @@ public class Shitenno {
                 System.out.println(jou.getTitre().toString());
                 System.out.println("");
             }
-       //}
     }
-    
+
 /* Methods */
-    public static int nbJoueur() {
+    /**
+     * Choix du nombre de joueurs dans la partie
+     * @return 
+     */
+    public int nbJoueur() {
         int nb = 0;
         boolean isNumber = false;
 
@@ -169,5 +189,6 @@ public class Shitenno {
         }
         
         return nb;
-    }    
+    }
+    
 }

@@ -18,6 +18,10 @@ public class Province {
     private LinkedList<TuileBonus> lltuilebonus;
 
     /* Constructor */
+    public Province() {
+    }
+    
+    
     public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes) {
         this.nom = nom;
         this.faveur1 = faveur1;

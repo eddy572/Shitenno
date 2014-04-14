@@ -6,7 +6,7 @@ import java.util.Objects;
  *
  * @author Damien
  */
-public class CarteTroupe {
+public class CarteTroupe{
     private Troupes troupe1;
     private Troupes troupe2;
     
@@ -68,6 +68,7 @@ public class CarteTroupe {
     }
 
 /* Methodes */
+    
     @Override
     public String toString() {
         if(troupe2 == null){

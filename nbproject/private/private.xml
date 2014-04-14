@@ -22,9 +22,18 @@
 <<<<<<< HEAD
         <group>
             <file>file:/Users/PaulineJngr/Documents/Shitenno/test/testunitaire/TestUnitaire.java</file>
+<<<<<<< HEAD
             <file>file:/Users/PaulineJngr/Documents/Shitenno/src/jeu/Shitenno.java</file>
             <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Initialisation.java</file>
             <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Troupes.java</file>
+=======
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Titre.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Initialisation.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/test/testunitaire/TestUnitaireSprint2.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Lot.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/classes/Troupes.java</file>
+            <file>file:/Users/PaulineJngr/Documents/Shitenno/src/fichierxml/Troupes.xml</file>
+>>>>>>> Partage
         </group>
 =======
         <group/>

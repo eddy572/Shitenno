@@ -5,11 +5,14 @@ package classes;
  * @author Damien
  * @version 1.0
  */
-public class Kokus {
+public class Kokus implements Comparable<Kokus>{
     private int nbkoku;
 
     public Kokus(int nbkoku) {
         this.nbkoku = nbkoku;
+    }
+
+    public Kokus() {
     }
 
     /* Getters & Setters */
@@ -44,7 +47,18 @@ public class Kokus {
         return true;
     }
 
-    /* Methodes */
+/* Methodes */
+    
+    @Override
+    public int compareTo(Kokus t) {
+        if(this.nbkoku > t.nbkoku)
+            return 1;
+        if(this.nbkoku < t.nbkoku)
+            return 1;
+        return 0;
+    }
+
+    
     @Override
     public String toString() {
         return new String(new StringBuilder().append("Carte ").append(Integer.toString(nbkoku)).append(" kokus"));
