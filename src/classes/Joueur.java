@@ -422,26 +422,63 @@ public class Joueur implements Comparable<Joueur>{
     }
     
     /**
-     * Soit on passe son tour, soit on prend le contrôle d'une province. Le contrôle se fait tel que :
-     * - on a les troupes nécessaires
-     * - on a les kokus nécessaires
-     * - on a les troupes ou kokus nécessaires et un(des) bonus 
+     * On vérifie que le joueur voulant prendre une province a bien les troupes nécessaires 
+     * On vérifie donc en fonction de la tuile bonus, des troupes et du nombre de celles-ci
+     * @param p
+     * @return 
      */
-    public void passerSonTourOuPas(){
-        String reponse = new String();
+    public boolean aLesTroupesNecessaires(Province p){
+        int nbTroupes = p.getNbtroupes();
+        Troupes troupe = p.getTroupe();
+        TuileBonus tb = p.bonusCommeTroupe();
+        int cpt = 0;
         
-        System.out.print("Voulez-vous envahir une province ou passer votre tour ?");
-        reponse = envahirOuPasser();
+        // On ne vérifie la présence des cartes que si la liste n'est pas vide
+        if(!this.alctroupe.isEmpty()){
+            // On compte le nombre de carte troupe ayant la troupe nécessaire à la prise de contrôle
+            for(CarteTroupe ct : this.alctroupe){
+                if(ct.getTroupe1().equals(troupe) || ct.getTroupe2().equals(troupe)){
+                    cpt++;
+                }
+            }
+            // On retourne vrai s'il n'y a pas de tuileBonus et que le joueur a assez de troupes
+            if(tb == null && (cpt > nbTroupes || cpt == nbTroupes)){
+                return true;
+            }
+            // S'il y a une tuile bonus dans la province, il faut que la joueur ait au moins nb - 1 troupes
+            // et la troupe correspondant à la tuile bonus
+            if(tb != null && (cpt > nbTroupes-1 || cpt == nbTroupes-1)){
+                for(CarteTroupe ct : this.alctroupe){
+                    if(ct.getTroupe1().equals(tb.getTroupe()) || ct.getTroupe2().equals(tb.getTroupe())){
+                        return true;
+                    }
+                }
+            }
+        }
         
-        // Soit on passe son tour, soit on prend le contrôle d'une province
-        if(reponse.equals("passer")){
-            System.out.println(this.pseudo + ", vous avez décidé de passer votre tour !");
-        }
-        else{
-            // On récupère le nom de la province à contrôler
-            Province provinceAControler = demandeProvinceAControler();
-            // TODO
-        }
+        return false;
     }
     
+    /**
+     * Lance les fonctions pour passer son tour ou prendre le contrôle d'une province
+     * Ceci est itéré 3 fois au maximum.
+     */
+    public void jouer(){
+        int i = 0;
+        String rep = new String();
+        
+        while(i < 3 && !rep.equals("passer")){
+            // Soit on décide contrôler une province, soit on passe son tour
+            rep = envahirOuPasser();
+            i++;
+        }
+        
+        // Affichage des messages de fin de tour
+        if(rep.equals("passer")){
+            System.out.println("Vous avez décidé de passer votre tour !");
+        }
+        if(i == 3){
+            System.out.println("Vous venez d'atteindre le nombre maximal de Kamons posés. Votre tour est fini ! ");
+        }
+    }
 }

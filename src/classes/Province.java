@@ -167,5 +167,16 @@ public class Province {
     public String toString() {
         return nom + " - " + faveur1 + ", " + faveur2 + ", " + faveur3 + ", " + faveur4 + " - " + nbtroupes + " troupes - " + troupe;
     }
+    
+    /**
+     * On estime que la tuile bonus visible est une troupe
+     * @return TuileBonus si la liste comprend encore des tuiles, null sinon
+     */
+    public TuileBonus bonusCommeTroupe(){
+        if(this.lltuilebonus.size() > 0){
+            return this.lltuilebonus.getLast();
+        }
+        return null;
+    }
    
 }
