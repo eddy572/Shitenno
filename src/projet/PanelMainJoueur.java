@@ -13,6 +13,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +37,30 @@ import javax.swing.JPanel;
 public class PanelMainJoueur extends JPanel implements ActionListener {
     private Image img;
     
+    
+MouseListener ml = new MouseListener(){
+
+       @Override
+       public void mousePressed(MouseEvent me) {}
+
+       @Override
+       public void mouseReleased(MouseEvent me) {}
+
+       @Override
+       public void mouseEntered(MouseEvent me) {
+           System.out.println(me.getSource());}
+
+       @Override
+       public void mouseExited(MouseEvent me) { }
+
+       @Override
+       public void mouseClicked(MouseEvent me) {}
+   };
+    
+    
+    
+    
+    
     // image titre
 
     private BufferedImage bgeneral;
@@ -43,7 +69,9 @@ public class PanelMainJoueur extends JPanel implements ActionListener {
     private JLabel label_image_general = new JLabel();
     
     private BufferedImage btroupes;
-    private JLabel label_image_troupes = new JLabel();
+    private Labeltroupes label_image_troupes = new Labeltroupes();
+    private BufferedImage bkokus;
+    private Labelkokus label_image_kokus = new Labelkokus();
     public PanelMainJoueur(Joueur J)
     {
         // fausse initialisation de joueurs
@@ -56,7 +84,18 @@ public class PanelMainJoueur extends JPanel implements ActionListener {
         llct.add(ct1);
         llct.add(ct1);
         llct.add(ct1);
+        llct.add(ct1);
+        llct.add(ct1);
+        llct.add(ct1);
         J.setAlctroupe(llct);
+        ArrayList<Kokus> llck = new ArrayList<Kokus>();
+        Kokus k = new Kokus(2);
+        llck.add(k);
+        llck.add(k);
+        llck.add(k);
+        llck.add(k);
+        llck.add(k);
+        J.setAlkokus(llck);
         System.out.println(J);
         
         
@@ -85,25 +124,49 @@ public class PanelMainJoueur extends JPanel implements ActionListener {
         }
            
             this.add(label_image_titre);   
+
+            
+            
+                    int xitsave = 700;
+        int xit = 500/(J.getAlctroupe().size()+J.getAlkokus().size());
+        if(xit > 90)
+            xit=90;
+        // carte kokus !
+        for(int i=0;i<J.getAlkokus().size();i++)
+        {
+                try {
+                    System.out.println(J.getTitre());
+                bkokus = ImageIO.read(new File("image/kokus/2.png"));
+                label_image_kokus = new Labelkokus(new ImageIcon(bkokus));
+                label_image_kokus.setBounds(xitsave, 5, 90, 110);
+                label_image_kokus.addMouseListener(ml);
+                } catch (IOException ex) {
+                    Logger.getLogger(PanelInvasion.class.getName()).log(Level.SEVERE, null, ex);
+                }
+           
+            this.add(label_image_kokus);   
+            xitsave=xitsave-xit;
+        }
+         
             
         // carte troupes !
         
-        int xit = 240;
-
         for(int i=0;i<J.getAlctroupe().size();i++)
         {
                 try {
                     System.out.println(J.getTitre());
-                btroupes = ImageIO.read(new File("image/troupes/bushi.png"));
-                label_image_troupes = new JLabel(new ImageIcon(btroupes));
-                label_image_troupes.setBounds(xit, 5, 90, 110);
+                bkokus = ImageIO.read(new File("image/troupes/bushi.png"));
+                label_image_troupes = new Labeltroupes(new ImageIcon(bkokus));
+                label_image_troupes.setBounds(xitsave, 5, 90, 110);
+                label_image_troupes.setOpaque(false);
                 } catch (IOException ex) {
                     Logger.getLogger(PanelInvasion.class.getName()).log(Level.SEVERE, null, ex);
                 }
-           xit=xit+40;
-            this.add(label_image_troupes);    
-        }
-         
+           
+            this.add(label_image_troupes);   
+            xitsave=xitsave-xit;
+        }   
+        
 
         this.setBounds(0,592,1200,210);
         this.setOpaque(false);

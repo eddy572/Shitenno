@@ -2,16 +2,17 @@ package projet;
 
 
 
-import classes.Initialisation;
-import classes.Joueur;
-import classes.Province;
-import classes.TuileBonus;
+import classes.*;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +23,8 @@ public class Fenetre extends JFrame implements ActionListener {
     
     JPanel panelplateau = new JPanel();
     JPanel mainjoueur = new JPanel();
+    Joueur tabJ[];
+    PanelConceptionPaquet pcp;
     private JButton quitter = new JButton("Menu");
     private JButton passer_tour = new JButton("Passer");
     private PanelInvasion pi;
@@ -55,7 +58,33 @@ public class Fenetre extends JFrame implements ActionListener {
    };
     private Joueur j1;
     private Initialisation init;
+
+    public Initialisation getInit() {
+        return init;
+    }
+    
     private Set<Province> Provinces;
+    private Set<Joueur> hjoueur= new HashSet<Joueur>();
+    
+    
+    // from le main de damien
+    
+    
+         private LinkedList<CarteTroupe> llct = new LinkedList<CarteTroupe>();
+        private LinkedList<Kokus> llk = new LinkedList<Kokus>();
+        private ArrayList<Titre> altitre = new ArrayList<Titre>();
+        private ArrayList<Joueur> aljoueur = new ArrayList<Joueur>();
+        int nbcartes = 0;
+        // Liste qui récupère toutes les cartes troupes jouées.
+        // Utile si le jeu n'est pas fini mais qu'il n'y a plus (assez) de cartes troupes à la pioche
+        private LinkedList<CarteTroupe> defaussetroupe = new LinkedList<CarteTroupe>();   
+    
+    
+    
+    //----------
+    
+    
+    
     
   public Fenetre(Menu m){     
       
@@ -66,19 +95,54 @@ public class Fenetre extends JFrame implements ActionListener {
     this.setLocationRelativeTo(null);
     this.setContentPane(new Panneau());
     this.setLayout(null);
-    this.add(new PanelMainJoueur(m.j1));
+    //  création du tableau des joueurs et du Hset
+    tabJ = new Joueur[m.nb_joueur];
+    for(int i=0;i<m.nb_joueur;i++)
+    {
+        if(i == 0)
+        {    
+        tabJ[i]=m.j1;
+        hjoueur.add(m.j1);
+        }
+        
+        if(i == 1)
+        {
+        tabJ[i]=m.j2;
+        hjoueur.add(m.j2);
+        }
+        if(i == 2)
+        {
+        tabJ[i]=m.j3;
+        hjoueur.add(m.j3);
+        }
+        if(i == 3)
+        {
+        tabJ[i]=m.j4;
+        hjoueur.add(m.j4);
+        }
+    }
+    init = new Initialisation();
+     // distribution des cartes de départ !
+    // init.distributionCartesDepart(hjoueur, init.getLlctroupe());
     
-    // personnalisation du panel recouvrant toute la frame
+            altitre = new ArrayList(init.getHashTitre());
+        init.distributionCartesDepart(hjoueur, init.getLlctroupe());
+        for(Joueur jo : hjoueur){
+            System.out.println(jo.toString());
+        }
+    
+    
+        // personnalisation du panel recouvrant toute la frame
     panelplateau.setOpaque(false);
     panelplateau.setBounds(0, 0, 1200, 588);
     panelplateau.setLayout(null);
-    this.add(panelplateau);
     
     
-// initialisation des provinces et mise en place des panels sur chaque province !
-      
-      init = new Initialisation();
-      Provinces = init.getHashProvince();
+    
+    
+    
+    // initialisation des provinces et mise en place des panels sur chaque province !
+    Provinces = init.getHashProvince();
               for(Province pro : Provinces){
             //System.out.println("\n" + p.toString());
                   PanelProvince pp = new PanelProvince();
@@ -115,10 +179,10 @@ public class Fenetre extends JFrame implements ActionListener {
             }
             
         }
-
-
+     // this.add(panelplateau);
+    //this.add(new PanelMainJoueur(m.j1));
     
-    // ajout des boutons passer sont tour et menu
+     // ajout des boutons passer sont tour et menu
     quitter.addActionListener(this);
     this.add(quitter);
     quitter.setBounds(1080,620,80,30);
@@ -135,6 +199,32 @@ public class Fenetre extends JFrame implements ActionListener {
     // affichage de la frame 
     
     this.setVisible(true);
+              
+              
+              
+              
+    
+    // définir les titres pour le début en random
+    while(true)
+    {
+        
+        // afficher le panel PanelConceptionpaquet avec paramètre 
+        pcp = new PanelConceptionPaquet(init,hjoueur);
+        break;
+    }
+
+    
+
+
+              
+              
+              
+    
+  
+                   
+    
+    
+
     
     
     

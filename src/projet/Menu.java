@@ -1,10 +1,11 @@
 package projet;
 
 import classes.General;
+import classes.Initialisation;
 import classes.Joueur;
 import javax.swing.*;
 import java.awt.*;
-
+import classes.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -42,6 +43,10 @@ import javax.swing.JTextField;
  
 public class Menu extends JFrame implements ActionListener {
     
+    
+    
+    
+    
    private JButton bouton = new JButton("Créer partie");
    private JButton credits = new JButton("Crédits");
    private JButton regles = new JButton("Règles");
@@ -71,22 +76,23 @@ public class Menu extends JFrame implements ActionListener {
    private JTextField jtf4 = new JTextField("Joueur 4");
    private JPanel minipanel1 = new JPanel();
    private ImageIcon i1 = new ImageIcon("");
-   private JLabel b1;
+   private LabelGeneral b1;
    private BufferedImage bufmini1;
    private JPanel minipanel2 = new JPanel();
    private ImageIcon i2 = new ImageIcon("");
-   private JLabel b2;
+   private LabelGeneral b2;
    private BufferedImage bufmini2;
    private JPanel minipanel3 = new JPanel();
    private ImageIcon i3 = new ImageIcon("");
-   private JLabel b3;
+   private LabelGeneral b3;
    private BufferedImage bufmini3;
    private JPanel minipanel4 = new JPanel();
    private ImageIcon i4 = new ImageIcon("");
-   private JLabel b4;
+   private LabelGeneral b4;
    private BufferedImage bufmini4;
    
    //déclaraton pour le panel des images des généraux
+   private Initialisation init;
    private JPanel p3 = new JPanel();
    private JPanel pimage1 = new JPanel();
             ImageIcon icone1 = new ImageIcon("");
@@ -106,21 +112,22 @@ public class Menu extends JFrame implements ActionListener {
             private BufferedImage buf4;
    private JLabel choix = new JLabel("Veuillez chosir votre général :");
    
-            MouseListener listener = new MouseAdapter(){
-            public void mousePressed(MouseEvent e)
-        {
+    MouseListener listener = new MouseAdapter() {
+        public void mousePressed(MouseEvent e) {
             drag = 1;
             JComponent c = (JComponent) e.getSource();
+            LabelGeneral lg= (LabelGeneral)e.getSource();
+
             TransferHandler handler = c.getTransferHandler();
-           // System.out.println(c.getParent().getBounds());
-            Rectangle r =c.getParent().getBounds();
+            // System.out.println(c.getParent().getBounds());
+            Rectangle r = c.getParent().getBounds();
             //System.out.println(r.x+" "+r.y);
-            Xsource=r.x;
-            Ysource=r.y;
+            Xsource = r.x;
+            Ysource = r.y;
             handler.exportAsDrag(c, e, TransferHandler.COPY);
-            
+
         }
-        };
+    };
             
             
         TransferHandler handler = new TransferHandler("icon") {
@@ -152,6 +159,11 @@ public class Menu extends JFrame implements ActionListener {
            Rectangle re = me.getComponent().getParent().getBounds();
            Xcible=re.x;
            Ycible=re.y;
+           /*
+            LabelGeneral lg= (LabelGeneral)me.getComponent();
+            General g = lg.getG();
+           */
+          
        if(drag == 1)
        {
            if(Ycible == 10)
@@ -233,19 +245,17 @@ public class Menu extends JFrame implements ActionListener {
            drag=0;
        }
        }
-
+        General g3 = new General("Yasumasa","Sakakibara","Bleu");
+        General g4 = new General("Naomasa","li","Noir");
+        General g1 = new General("Naomasa","Sakai","Vert");
+        General g2 = new General("Tadakatsu","Honda","Rouge");
        @Override
        public void mouseClicked(MouseEvent me) {}
    };
         
         // Variable initialisation du jeu
         int drag = 0;
-        // initialisation des généraux
-        
-        General g1 = new General("Yasumasa","Sakakibara","Bleu");
-        General g2 = new General("Naomasa","li","Noir");
-        General g3 = new General("Naomasa","Sakai","Vert");
-        General g4 = new General("Tadakatsu","Honda","Rouge");
+
         
         // initialisation des joueurs
         Joueur j1;
@@ -279,9 +289,12 @@ public class Menu extends JFrame implements ActionListener {
     }
         
         
-        
+        private Set<General> generaux;
         
   public Menu(){        
+      
+
+      
 
     this.setTitle("Shitenno");
     this.setSize(1200, 700);
@@ -394,12 +407,11 @@ public class Menu extends JFrame implements ActionListener {
             minipanel1.setBackground(new Color(255, 255, 255,200));
             minipanel1.setBorder(BorderFactory.createLineBorder(Color.black));
             minipanel1.setBounds(230, 10, 90, 110);
-            b1 = new JLabel();
             try
             { 
                 bufmini1 = ImageIO.read(new File("image/blanc.png"));
                 
-                b1 = new JLabel(new ImageIcon(bufmini1));
+                b1 = new LabelGeneral(null,new ImageIcon(bufmini1));
                 b1.setBounds(0, 0, 90, 110);
                 
                 minipanel1.add(b1);
@@ -423,7 +435,7 @@ public class Menu extends JFrame implements ActionListener {
             try
             { 
                 bufmini2 = ImageIO.read(new File("image/blanc.png"));
-                b2 = new JLabel(new ImageIcon(bufmini2));
+                b2 = new LabelGeneral(null,new ImageIcon(bufmini2));
                 b2.setBounds(0, 0, 90, 110);
                 minipanel2.add(b2);
                 b2.setTransferHandler(new TransferHandler("icon"));
@@ -442,6 +454,43 @@ public class Menu extends JFrame implements ActionListener {
             choix.setBounds(30, 30, 200, 30);
             choix.setOpaque(false);
             p3.add(choix);
+            
+            
+        // initialisation des généraux
+      
+      init = new Initialisation();
+      generaux = init.getHashGeneral();
+      int var12=0;
+                    for(General gen : generaux){
+                        var12=var12+1;
+                  JPanel pp = new JPanel();
+                  pp.setBackground(new Color(255, 255, 255,200));
+                  pp.setBorder(BorderFactory.createLineBorder(Color.black));
+                  if(var12 == 1)
+                       pp.setBounds(30, 90, 90, 110);
+                  if(var12 == 2)
+                       pp.setBounds(150, 90, 90, 110);
+                  if(var12 == 3)
+                       pp.setBounds(30, 230, 90, 110);
+                  if(var12 == 4)
+                       pp.setBounds(150, 230, 90, 110);
+                  
+try
+            { 
+                buf1 = ImageIO.read(new File("image/"+gen.getCouleur()+".jpg"));
+                image1 = new LabelGeneral(gen,new ImageIcon(buf1));
+                image1.setBounds(0, 0, 90, 110);
+                pp.add(image1);
+                image1.addMouseListener(listener);
+                image1.setTransferHandler(handler);    
+            }
+            catch(Exception e)
+            {}
+            p3.add(pp);
+        }
+            
+            
+            /*
             pimage1.setBackground(new Color(255, 255, 255,200));
             pimage1.setBorder(BorderFactory.createLineBorder(Color.black));
             pimage1.setBounds(30, 90, 90, 110);
@@ -528,7 +577,7 @@ public class Menu extends JFrame implements ActionListener {
             pimage4.add(image4);
             p3.add(pimage4);            
 
-            
+            */
             
             this.add(p3);
             // bouton retour
@@ -549,7 +598,7 @@ public class Menu extends JFrame implements ActionListener {
         }
         if(source == go)
         {
-
+               
                 j1.setPseudo(this.jtf1.getText());
                 j2.setPseudo(this.jtf2.getText());
                 if(nb_joueur == 2)
@@ -571,6 +620,7 @@ public class Menu extends JFrame implements ActionListener {
                 }
                 if(nb_joueur == 4)
                 {
+                    j3.setPseudo(this.jtf3.getText());
                     j4.setPseudo(this.jtf4.getText());
                     j4.setNbkamons(8);
                     j3.setNbkamons(8);
@@ -722,7 +772,7 @@ public class Menu extends JFrame implements ActionListener {
             try
             { 
                 bufmini3 = ImageIO.read(new File("image/blanc.png"));
-                b3 = new JLabel(new ImageIcon(bufmini3));
+                b3 = new LabelGeneral(null,new ImageIcon(bufmini3));
                 b3.setBounds(0, 0, 90, 110);
                 minipanel3.add(b3);
                 b3.setTransferHandler(new TransferHandler("icon"));
@@ -740,7 +790,7 @@ public class Menu extends JFrame implements ActionListener {
             
             // on modifie les variable des l'initialisation de la classe jeu
             
-            nb_joueur=3;
+            nb_joueur=4;
             
             check1.setSelected(false);
             check2.setSelected(false);
@@ -766,7 +816,7 @@ public class Menu extends JFrame implements ActionListener {
             try
             { 
                 bufmini3 = ImageIO.read(new File("image/blanc.png"));
-                b3 = new JLabel(new ImageIcon(bufmini3));
+                b3 = new LabelGeneral(null,new ImageIcon(bufmini3));
                 b3.setBounds(0, 0, 90, 110);
                 minipanel3.add(b3);
                 b3.setTransferHandler(new TransferHandler("icon"));
@@ -788,7 +838,7 @@ public class Menu extends JFrame implements ActionListener {
             try
             { 
                 bufmini4 = ImageIO.read(new File("image/blanc.png"));
-                b4 = new JLabel(new ImageIcon(bufmini4));
+                b4 = new LabelGeneral(null,new ImageIcon(bufmini4));
                 b4.setBounds(0, 0, 90, 110);
                 minipanel4.add(b4);
                 b4.setTransferHandler(new TransferHandler("icon"));
