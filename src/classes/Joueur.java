@@ -437,20 +437,43 @@ public class Joueur implements Comparable<Joueur>{
         if(!this.alctroupe.isEmpty()){
             // On compte le nombre de carte troupe ayant la troupe nécessaire à la prise de contrôle
             for(CarteTroupe ct : this.alctroupe){
-                if(ct.getTroupe1().equals(troupe) || ct.getTroupe2().equals(troupe)){
-                    cpt++;
+                if(ct.getTroupe2() == null){
+                    if(ct.getTroupe1().equals(troupe)){
+                        System.out.println("TROUPE : " + ct.toString());
+                        cpt++;
+                    }
+                }
+                else{
+                    if(ct.getTroupe1().equals(troupe) || ct.getTroupe2().equals(troupe)){
+                        System.out.println("TROUPESS : " + ct.toString());
+                        cpt++;
+                    }
+                    if(ct.getTroupe1().equals(troupe) && ct.getTroupe2().equals(troupe)){
+                        System.out.println("TROUPEAC : " + ct.toString());
+                        cpt++;
+                    }
                 }
             }
             // On retourne vrai s'il n'y a pas de tuileBonus et que le joueur a assez de troupes
             if(tb == null && (cpt > nbTroupes || cpt == nbTroupes)){
                 return true;
             }
+            
             // S'il y a une tuile bonus dans la province, il faut que la joueur ait au moins nb - 1 troupes
             // et la troupe correspondant à la tuile bonus
             if(tb != null && (cpt > nbTroupes-1 || cpt == nbTroupes-1)){
                 for(CarteTroupe ct : this.alctroupe){
-                    if(ct.getTroupe1().equals(tb.getTroupe()) || ct.getTroupe2().equals(tb.getTroupe())){
-                        return true;
+                    if(ct.getTroupe2() == null){
+                        if(ct.getTroupe1().equals(tb.getTroupe())){
+                            System.out.println("TROUPETB : " + ct.toString());
+                            return true;
+                        }
+                    }
+                    else{
+                        if(ct.getTroupe1().equals(tb.getTroupe()) || ct.getTroupe2().equals(tb.getTroupe())){
+                            System.out.println("TROUPETTBB : " + ct.toString());
+                            return true;
+                        }
                     }
                 }
             }
@@ -489,6 +512,36 @@ public class Joueur implements Comparable<Joueur>{
     }
     
     /**
+     * Fonction qui convertit une chaine de caractères en CarteTroupe
+     * @param carte
+     * @return 
+     */
+    public CarteTroupe convertirStringEnCarteTroupe(String carte){
+        boolean presque = false;
+        if(carte.contains("&")){
+            String[] split = carte.split("&");
+            for(CarteTroupe ct : this.alctroupe){
+                if(split[0].trim().equalsIgnoreCase(ct.getTroupe1().getNom()) && (!presque)){
+                    presque = true;
+                }
+                
+                if((ct.getTroupe2() != null) && (split[1].trim().equalsIgnoreCase(ct.getTroupe2().getNom())) && presque){
+                    return ct;
+                }
+                presque = false;
+            }
+        }
+        else{
+            for(CarteTroupe ct : this.alctroupe){
+                if(carte.equalsIgnoreCase(ct.getTroupe1().getNom()) && ct.getTroupe2() == null){
+                    return ct;
+                }
+            }
+        }
+        return null;
+   }
+    
+    /**
      * On demande au joueur la(les) cartes dont il souhaite se défausser pour prendre
      * le contrôle d'une province.
      * @return s, le nom de la carte troupe
@@ -500,15 +553,14 @@ public class Joueur implements Comparable<Joueur>{
         boolean existe = false;
         
         while(!existe){
-            System.out.print("De quelle carte Troupe voulez-vous vous défausser ?");
+            System.out.print("De quelle carte Troupe voulez-vous vous défausser ? ");
             s = sc.nextLine();
             existe = verifExistenceCarte(s);
             if(!existe){
                 System.err.println("Vous ne possédez pas cette carte !");
             }
         }
-        
-        return l.convertirStringEnCarteTroupe(s);
+        return convertirStringEnCarteTroupe(s);
     }
     
     /**
@@ -519,27 +571,38 @@ public class Joueur implements Comparable<Joueur>{
      */
     public boolean rapportCarteTroupeProvince(CarteTroupe ct, Province p){
         // Retourne true s'il s'agit d'une carte unitroupe et qu'elle correspond à la troupe de la province
-        if(ct.getTroupe2() == null && ct.getTroupe1().equals(p.getTroupe())){
-            return true;
+        if(ct != null){System.out.println("C'est pas nul mon pote !!! ");}
+        else{ System.out.println("Y a un putain de problème !!! ");}
+        
+        if(ct != null){
+            if(ct.getTroupe2() == null && ct.getTroupe1().equals(p.getTroupe())){
+                System.out.println("P : Troupe 2 == NULL");
+                return true;
+            }
+            // Retourne si la carte comprend deux troupes et que l'une d'elles correspond à la troupe de la province
+            if(ct.getTroupe2() != null && (ct.getTroupe1().equals(p.getTroupe()) || ct.getTroupe2().equals(p.getTroupe()))){
+                System.out.println("P : Troupe 2 != NULL");
+                return true;
+            }
+            System.err.println("Cette carte ne peut pas être utilisée pour prendre le contrôle de cette province !");
         }
-        // Retourne si la carte comprend deux troupes et que l'une d'elles correspond à la troupe de la province
-        if(ct.getTroupe2() != null && (ct.getTroupe1().equals(p.getTroupe()) || ct.getTroupe2().equals(p.getTroupe()))){
-            return true;
-        }
-        System.err.println("Cette carte ne peut pas être utilisée pour prendre le contrôle de cette province !");
         return false;
     }
     
     public boolean rapportCarteTroupeProvince(CarteTroupe ct, TuileBonus tb){
         // Retourne true s'il s'agit d'une carte unitroupe et qu'elle correspond à la troupe de la province
-        if(ct.getTroupe2() == null && ct.getTroupe1().equals(tb.getTroupe())){
-            return true;
+        if(ct != null){
+            if(ct.getTroupe2() == null && ct.getTroupe1().equals(tb.getTroupe())){
+                System.out.println("TB : Troupe 2 == NULL");
+                return true;
+            }
+            // Retourne si la carte comprend deux troupes et que l'une d'elles correspond à la troupe de la province
+            if(ct.getTroupe2() != null && (ct.getTroupe1().equals(tb.getTroupe()) || ct.getTroupe2().equals(tb.getTroupe()))){
+                System.out.println("TB : Troupe 2 != NULL");
+                return true;
+            }
+            System.err.println("Cette carte ne peut pas être utilisée pour prendre le contrôle de cette province !");
         }
-        // Retourne si la carte comprend deux troupes et que l'une d'elles correspond à la troupe de la province
-        if(ct.getTroupe2() != null && (ct.getTroupe1().equals(tb.getTroupe()) || ct.getTroupe2().equals(tb.getTroupe()))){
-            return true;
-        }
-        System.err.println("Cette carte ne peut pas être utilisée pour prendre le contrôle de cette province !");
         return false;
     }
     
@@ -677,9 +740,13 @@ public class Joueur implements Comparable<Joueur>{
             satisfait = false;
             satisfaitTroupe = false;
             isBonus = false;
+            
             // On demande au joueur la carte qu'il veut jouer jusqu'à ce que la carte ait une troupe en adéquation avec celle de la province ou de la tuile bonus
             while(!rapportCarteTroupeProvince(ct, p) && !rapportCarteTroupeProvince(ct, tb)){
                 ct = demandeCarteTroupeADefausser();
+                if(!rapportCarteTroupeProvince(ct, p) && !rapportCarteTroupeProvince(ct, tb)){
+                    System.err.println("C'est pas avec cette carte que tu vas prendre le contrôle man ! ");
+                }
             }
             
             // On voit si la carte est une carte double et si elle peut servir pour la tuile bonus et une troupe
@@ -739,24 +806,27 @@ public class Joueur implements Comparable<Joueur>{
         String rep = new String();
         // Il peut jouer tant qu'il n'a pas encore posé trois kamons et qu'il ne choisit pas de passer
         while(i < 3 && !rep.equals("passer")){
+            System.out.print(this.pseudo + ", désirez-vous passer votre tour ou envahir une province ? ");
             // Soit on décide contrôler une province, soit on passe son tour
             rep = envahirOuPasser();
             // On applique les fonctions nécessaires si on désire contrôler une province
             if(rep.equals("envahir")){
+                System.out.print("Quelle province voulez-vous contrôler ? ");
                 Province p = demandeProvinceAControler();
                 // On ne peut défausser que si le joueur a les troupes requises
                 if(aLesTroupesNecessaires(p)){
                     llct.addAll(defausserLesTroupes(p));
                 }
-                // TODO
-            }
-            
+                else{
+                    System.out.println("Vous n'avez pas les troupes nécessaires pour attaquer cette province ! ");
+                }
+            } 
             i++;
         }
         
         // Affichage des messages de fin de tour
         if(rep.equals("passer")){
-            System.out.println("Vous avez décidé de passer votre tour !");
+            System.out.println(this.pseudo + ", vous avez décidé de passer votre tour !");
         }
         if(i == 3){
             System.out.println("Vous venez d'atteindre le nombre maximal de Kamons posés. Votre tour est fini ! ");

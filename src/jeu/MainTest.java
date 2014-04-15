@@ -84,6 +84,7 @@ public class MainTest {
             // Tests de bon fonctionnement
             System.out.println(tairo.getTairo());
             tairo.piocheCartes(llct, llk, nbcartes);
+       /*
             System.out.println("Paquet de cartes Troupes piochées : " + tairo.getAlct());
             System.out.println("Paquet de cartes Kokus piochées : " + tairo.getAlk());
             System.out.println("");
@@ -145,19 +146,41 @@ public class MainTest {
                 }
 
             }
+        */
+            for(Joueur jj : hjoueur){
+                ArrayList<Kokus> alkk = new ArrayList<>();
+                alkk.add(tairo.getAlk().get(0));
+                tairo.getAlk().remove(0);
+                jj.setAlkokus(alkk);
+                jj.setTitre(altitre.get(0));
+                altitre.remove(0);
+                ArrayList<CarteTroupe> alctt = new ArrayList<>();
+                for(int i=0; i<3; i++){
+                    alctt.add(llct.getFirst());
+                    llct.removeFirst();
+                }
+                jj.getAlctroupe().addAll(alctt);
+            }
+            
+            aljoueur = new ArrayList<>(hjoueur);
+            Collections.sort(aljoueur);
+            
             System.out.println("************************");
             System.out.println("*** Fin de l'an " + an + " ***");
             System.out.println("************************");
             an++;
             
-            // A supprimer : vérification que les listes de cartes de chaque joueurs ont bien été modifiées
-            for(Joueur jou : hjoueur){
-                jou.changerHierachieEnTitre();
-                System.out.println(jou.getPseudo());
-                System.out.println(jou.getAlctroupe().toString());
-                System.out.println(jou.getAlkokus().toString());
-                System.out.println(jou.getTitre().toString());
-                System.out.println("");
+            System.out.println("\n\n\n***************************");
+            System.out.println("***** Début de l'an " + an + " *****");
+            System.out.println("*** (Prise de contrôle) ***");
+            System.out.println("***************************");
+            for(Province p : init.getHashProvince()){
+                System.out.println(p.toString());
+            }
+            
+            for(Joueur jo : aljoueur){
+                System.out.println(jo.toString());
+                jo.jouer(defaussetroupe);
             }
     }
 

@@ -165,7 +165,7 @@ public class Province {
 /* Methodes */
     @Override
     public String toString() {
-        return nom + " - " + faveur1 + ", " + faveur2 + ", " + faveur3 + ", " + faveur4 + " - " + nbtroupes + " troupes - " + troupe;
+        return nom + " - " + faveur1 + ", " + faveur2 + ", " + faveur3 + ", " + faveur4 + " - " + nbtroupes + " troupes - " + troupe + " / " + lltuilebonus.getLast();
     }
     
     /**
