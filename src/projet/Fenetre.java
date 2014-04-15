@@ -20,11 +20,17 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
  
 public class Fenetre extends JFrame implements ActionListener {
-    
+   
     JPanel panelplateau = new JPanel();
+
+    public JPanel getPanelplateau() {
+        return panelplateau;
+    }
+    
+    
     JPanel mainjoueur = new JPanel();
     Joueur tabJ[];
-    PanelConceptionPaquet pcp;
+    ThreadConceptionPaquet pcp;
     private JButton quitter = new JButton("Menu");
     private JButton passer_tour = new JButton("Passer");
     private PanelInvasion pi;
@@ -84,7 +90,7 @@ public class Fenetre extends JFrame implements ActionListener {
     //----------
     
     
-    
+    int teest = 0;
     
   public Fenetre(Menu m){     
       
@@ -139,7 +145,7 @@ public class Fenetre extends JFrame implements ActionListener {
     
     
     
-    
+/*    
     
     // initialisation des provinces et mise en place des panels sur chaque province !
     Provinces = init.getHashProvince();
@@ -195,23 +201,22 @@ public class Fenetre extends JFrame implements ActionListener {
     
     //this.setContentPane(new Panneau());
     //this.setContentPane(new Mainjoueur());
-    
+*/    
     // affichage de la frame 
     
     this.setVisible(true);
               
               
               
-              
+             
     
     // définir les titres pour le début en random
-    while(true)
-    {
         
         // afficher le panel PanelConceptionpaquet avec paramètre 
-        pcp = new PanelConceptionPaquet(init,hjoueur);
-        break;
-    }
+        new ThreadConceptionPaquet(this,init,hjoueur).start();
+        new ThreadInvasion(this,init,hjoueur,tabJ).start();
+
+
 
     
 
