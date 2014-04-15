@@ -67,8 +67,7 @@ public class CarteTroupe{
         return true;
     }
 
-/* Methodes */
-    
+/* Methodes */    
     @Override
     public String toString() {
         if(troupe2 == null){
