@@ -177,10 +177,11 @@ public class MainTest {
             for(Province p : init.getHashProvince()){
                 System.out.println(p.toString());
             }
-            
+            System.out.println("");
             for(Joueur jo : aljoueur){
                 System.out.println(jo.toString());
-                jo.jouer(defaussetroupe);
+                System.out.println("");
+                jo.jouer(defaussetroupe, init.getHashProvince());
             }
     }
 

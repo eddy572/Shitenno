@@ -165,7 +165,14 @@ public class Province {
 /* Methodes */
     @Override
     public String toString() {
-        return nom + " - " + faveur1 + ", " + faveur2 + ", " + faveur3 + ", " + faveur4 + " - " + nbtroupes + " troupes - " + troupe + " / " + lltuilebonus.getLast();
+        StringBuilder sb = new StringBuilder();
+        sb.append(nom).append(" - ").append(faveur1).append(", ").append(faveur2).append(", ").append(faveur3).append(", ").append(faveur4).append(" - ");
+        
+        // Affichage du nombre de troupes selon l'état de la liste de tuile bonus
+        if(this.lltuilebonus.isEmpty()){sb.append(this.nbtroupes).append(" troupes ").append(troupe);}
+        else{ sb.append(this.nbtroupes-1).append(" troupes ").append(troupe).append(" + ").append(lltuilebonus.getLast()); }
+
+        return new String(sb);
     }
     
     /**
