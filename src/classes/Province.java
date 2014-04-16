@@ -9,45 +9,37 @@ import java.util.*;
  */
 public class Province {
     private String nom;
-    private int faveur1;
-    private int faveur2;
-    private int faveur3;
-    private int faveur4;
+    private int[] pointsFaveur;
     private int nbtroupes;
     private Troupes troupe;
     private LinkedList<TuileBonus> lltuilebonus;
+    private Controle[] controle;
 
     /* Constructor */
-    public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes) {
+    public Province(String nom, int[] pointsFaveur, int nbtroupes) {
         this.nom = nom;
-        this.faveur1 = faveur1;
-        this.faveur2 = faveur2;
-        this.faveur3 = faveur3;
-        this.faveur4 = faveur4;
+        this.pointsFaveur = pointsFaveur;
         this.nbtroupes = nbtroupes;
         this.lltuilebonus = new LinkedList<TuileBonus>();
+        this.controle = new Controle[4];
     }
     
-    public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes, Troupes troupe) {
+    public Province(String nom, int[] pointsFaveur, int nbtroupes, Troupes troupe) {
         this.nom = nom;
-        this.faveur1 = faveur1;
-        this.faveur2 = faveur2;
-        this.faveur3 = faveur3;
-        this.faveur4 = faveur4;
+        this.pointsFaveur = pointsFaveur;
         this.nbtroupes = nbtroupes;
         this.troupe = troupe;
         this.lltuilebonus = new LinkedList<TuileBonus>();
+        this.controle = new Controle[4];
     }
 
-    public Province(String nom, int faveur1, int faveur2, int faveur3, int faveur4, int nbtroupes, Troupes troupe, LinkedList<TuileBonus> ltb) {
+    public Province(String nom, int[] pointsFaveur, int nbtroupes, Troupes troupe, LinkedList<TuileBonus> ltb, Controle[] controle) {
         this.nom = nom;
-        this.faveur1 = faveur1;
-        this.faveur2 = faveur2;
-        this.faveur3 = faveur3;
-        this.faveur4 = faveur4;
+        this.pointsFaveur = pointsFaveur;
         this.nbtroupes = nbtroupes;
         this.troupe = troupe;
         this.lltuilebonus = ltb;
+        this.controle = controle;
     }
 
     /* Getters & Setters */
@@ -59,36 +51,12 @@ public class Province {
         this.nom = nom;
     }
 
-    public int getFaveur1() {
-        return faveur1;
+    public int[] getPointsFaveur() {
+        return pointsFaveur;
     }
 
-    public void setFaveur1(int faveur1) {
-        this.faveur1 = faveur1;
-    }
-
-    public int getFaveur2() {
-        return faveur2;
-    }
-
-    public void setFaveur2(int faveur2) {
-        this.faveur2 = faveur2;
-    }
-
-    public int getFaveur3() {
-        return faveur3;
-    }
-
-    public void setFaveur3(int faveur3) {
-        this.faveur3 = faveur3;
-    }
-
-    public int getFaveur4() {
-        return faveur4;
-    }
-
-    public void setFaveur4(int faveur4) {
-        this.faveur4 = faveur4;
+    public void setPointsFaveur(int[] pointsFaveur) {
+        this.pointsFaveur = pointsFaveur;
     }
 
     public int getNbtroupes() {
@@ -114,18 +82,25 @@ public class Province {
     public void setLltuilebonus(LinkedList<TuileBonus> lltuilebonus) {
         this.lltuilebonus = lltuilebonus;
     }
+
+    public Controle[] getControle() {
+        return controle;
+    }
+
+    public void setControle(Controle[] controle) {
+        this.controle = controle;
+    }
     
 /* HashCode & Equals */
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 97 * hash + Objects.hashCode(this.nom);
-        hash = 97 * hash + this.faveur1;
-        hash = 97 * hash + this.faveur2;
-        hash = 97 * hash + this.faveur3;
-        hash = 97 * hash + this.faveur4;
-        hash = 97 * hash + this.nbtroupes;
-        hash = 97 * hash + Objects.hashCode(this.troupe);
+        hash = 13 * hash + Objects.hashCode(this.nom);
+        hash = 13 * hash + Arrays.hashCode(this.pointsFaveur);
+        hash = 13 * hash + this.nbtroupes;
+        hash = 13 * hash + Objects.hashCode(this.troupe);
+        hash = 13 * hash + Objects.hashCode(this.lltuilebonus);
+        hash = 13 * hash + Arrays.deepHashCode(this.controle);
         return hash;
     }
 
@@ -141,16 +116,7 @@ public class Province {
         if (!Objects.equals(this.nom, other.nom)) {
             return false;
         }
-        if (this.faveur1 != other.faveur1) {
-            return false;
-        }
-        if (this.faveur2 != other.faveur2) {
-            return false;
-        }
-        if (this.faveur3 != other.faveur3) {
-            return false;
-        }
-        if (this.faveur4 != other.faveur4) {
+        if (!Arrays.equals(this.pointsFaveur, other.pointsFaveur)) {
             return false;
         }
         if (this.nbtroupes != other.nbtroupes) {
@@ -159,15 +125,25 @@ public class Province {
         if (!Objects.equals(this.troupe, other.troupe)) {
             return false;
         }
+        if (!Objects.equals(this.lltuilebonus, other.lltuilebonus)) {
+            return false;
+        }
+        if (!Arrays.deepEquals(this.controle, other.controle)) {
+            return false;
+        }
         return true;
     }
+    
 
 /* Methodes */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(nom).append(" - ").append(faveur1).append(", ").append(faveur2).append(", ").append(faveur3).append(", ").append(faveur4).append(" - ");
-        
+        sb.append(nom).append(" - ");
+        for(int i=0; i<pointsFaveur.length; i++){
+            sb.append(pointsFaveur[i]).append(" ");
+        }
+        sb.append("- ");
         // Affichage du nombre de troupes selon l'état de la liste de tuile bonus
         if(this.lltuilebonus.isEmpty()){sb.append(this.nbtroupes).append(" troupes ").append(troupe);}
         else{ sb.append(this.nbtroupes-1).append(" troupes ").append(troupe).append(" + ").append(lltuilebonus.getLast()); }

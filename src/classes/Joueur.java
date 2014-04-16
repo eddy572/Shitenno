@@ -876,11 +876,49 @@ public class Joueur implements Comparable<Joueur>{
         return llct;
     }
 
+    /**
+     * On pose un kamon de contrôle sur le score le plus à gauche encore non pris
+     * @param p province dans laquelle on pose le kamon du joueur
+     */
+    public void poserKamonDeScore(Province p){
+        Controle controle = new Controle(this);
+        Controle[] tab = p.getControle();
+        
+        for(int i=0; i<tab.length; i++){
+            if(tab[i] == null){
+                tab[i] = controle;
+                break;
+            } 
+        }
+    }
     
+    /**
+     * Calcul du nombre de points marqués en fonction de la position du kamon de contrôle
+     * @param p
+     * @return 
+     */
+    public int pointsMarques(Province p){
+        Controle[] tab = p.getControle();
+        int[] tabFaveur = p.getPointsFaveur();
+        int points = 0;
+        
+        for(int i=0; i<tab.length; i++){
+            if(tab[i] != null){
+                points = tabFaveur[i];
+            }
+        }
+        
+        return points;
+    }
     
-    
-    
-    
+    /**
+     * On augmente le score du joueur une fois qu'il a posé un kamon de score.
+     * Le score est augmenté d'autant de points qu'il y a de points de faveurs
+     * @param p 
+     */
+    public void incrementerScore(Province p){
+        this.score += pointsMarques(p);
+    }
     
     
     
@@ -896,7 +934,7 @@ public class Joueur implements Comparable<Joueur>{
     public void jouer(LinkedList<CarteTroupe> llct, Set<Province> hProvince){
         Bonus bonus = null;
         String rep = new String();
-        int i = 0;
+        int i = 0, points = 0;
         
         // Il peut jouer tant qu'il n'a pas encore posé trois kamons et qu'il ne choisit pas de passer
         while(i < 3 && !rep.equals("passer")){
@@ -914,7 +952,11 @@ public class Joueur implements Comparable<Joueur>{
                 if(aLesTroupesNecessaires(p)){
                     llct.addAll(defausserLesTroupes(p));
                     bonus = recupererTuileBonus(p);
+                    poserKamonDeScore(p);
+                    points = pointsMarques(p);
+                    incrementerScore(p);
                     System.out.println("Félicitation, vous venez de prendre le contrôle de " + p.getNom() + " et vous récupérez le bonus " + bonus);
+                    System.out.println("Vous avez également marqué " + points + " points et votre score s'élève à " + this.score + " points !");
                 }
                 else{
                     System.out.println("Vous n'avez pas les troupes nécessaires pour attaquer cette province ! ");

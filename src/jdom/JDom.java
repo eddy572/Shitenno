@@ -117,8 +117,9 @@ public class JDom {
         int point2 = Integer.parseInt(current.getChild("point2").getText());
         int point3 = Integer.parseInt(current.getChild("point3").getText());
         int point4 = Integer.parseInt(current.getChild("point4").getText());
+        int[] pointsFaveur = {point1, point2, point3, point4};
         int nbtroupes = Integer.parseInt(current.getChild("nbtroupes").getText());
-        hset.add(new Province(nom, point1, point2, point3, point4, nbtroupes));
+        hset.add(new Province(nom, pointsFaveur, nbtroupes));
         
         return hset;
     }
