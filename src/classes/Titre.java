@@ -19,6 +19,9 @@ public class Titre {
         this.bonus = bonus;
     }
 
+    public Titre() {
+           }
+
     /* Getters & Setters */
     public String getNom() {
         return nom;

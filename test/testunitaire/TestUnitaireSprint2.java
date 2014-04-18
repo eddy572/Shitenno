@@ -423,5 +423,4 @@ public class TestUnitaireSprint2 {
         //Vérifie que le joueurs à des cartes
         assertEquals(7, nbcartes);
     }
-    
 }

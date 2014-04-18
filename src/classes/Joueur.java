@@ -21,6 +21,11 @@ public class Joueur implements Comparable<Joueur>{
     public Joueur(){
         
     }
+
+    public Joueur(String pseudo) {
+        this.pseudo = pseudo;
+    }
+    
     /**
      * Constructeur utile pour l'initialisation du joueur :
      * choix du pseudo, du général et nombre de kamons défini selon le nombre de joueurs
