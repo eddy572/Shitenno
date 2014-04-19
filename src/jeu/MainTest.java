@@ -147,11 +147,8 @@ public class MainTest {
 
             }
         */
+            // On donne deux cartes troupes à chaque joueur
             for(Joueur jj : hjoueur){
-                ArrayList<Kokus> alkk = new ArrayList<>();
-                alkk.add(tairo.getAlk().get(0));
-                tairo.getAlk().remove(0);
-                jj.setAlkokus(alkk);
                 jj.setTitre(altitre.get(0));
                 altitre.remove(0);
                 ArrayList<CarteTroupe> alctt = new ArrayList<>();
@@ -165,6 +162,26 @@ public class MainTest {
             aljoueur = new ArrayList<>(hjoueur);
             Collections.sort(aljoueur);
             
+            // On donne deux cartes kokus au daimyo, 1 aux deux suivants et rien au dernier
+            // (pour tester la prise de contrôle avec des kokus (uniquement))
+            int ini = 1;
+            for(Joueur jj : aljoueur){
+                ArrayList<Kokus> alkk = new ArrayList<>();
+                if(ini == 1){
+                    alkk.add(tairo.getAlk().get(0));
+                    tairo.getAlk().remove(0);
+                    alkk.add(tairo.getAlk().get(0));
+                    tairo.getAlk().remove(0);
+                    jj.setAlkokus(alkk);
+                }
+                if(ini == 2 || ini == 3){
+                    alkk.add(tairo.getAlk().get(0));
+                    tairo.getAlk().remove(0);
+                    jj.setAlkokus(alkk);
+                }
+                ini++;
+            }
+            
             System.out.println("************************");
             System.out.println("*** Fin de l'an " + an + " ***");
             System.out.println("************************");
@@ -174,11 +191,11 @@ public class MainTest {
             System.out.println("***** Début de l'an " + an + " *****");
             System.out.println("*** (Prise de contrôle) ***");
             System.out.println("***************************");
-            for(Province p : init.getHashProvince()){
-                System.out.println(p.toString());
-            }
+            
             System.out.println("");
             for(Joueur jo : aljoueur){
+                System.out.println("");
+                System.out.println("");
                 System.out.println(jo.toString());
                 System.out.println("");
                 jo.jouer(defaussetroupe, init.getHashProvince());

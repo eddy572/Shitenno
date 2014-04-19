@@ -379,16 +379,36 @@ public class Joueur implements Comparable<Joueur>{
         this.hierarchie = null;
     }
     
-    public void controleProvincePossible(Set<Province> hProvince){
-        int i = 0;
+    /**
+     * On compte le nombre de province pouvant être contrôlées avec la main du joueur (en cartes troupes uniquement)
+     * @param hProvince
+     * @return 
+     */
+    public int controleProvincePossibleAvecTroupes(Set<Province> hProvince){
+       int i = 0;
         
         System.out.println("Avec les cartes troupes que vous avez, vous pouvez prendre le contrôle de :");
-        for(Province p: hProvince){
-            if(aLesTroupesNecessaires(p)){
+        for (Province p : hProvince) {
+            if (aLesTroupesNecessaires(p) && !p.provinceSousControle()) {
                 System.out.println("* " + p.toString());
                 i++;
             }
         }
+        return i;
+    }
+    
+    /**
+     * Méthodes qui indique qu'elles sont les provinces susceptibles d'être contrôlées
+     * @param hProvince 
+     */
+    public void controleProvincePossible(Set<Province> hProvince){
+        int i = 0;
+        
+        i = controleProvincePossibleAvecTroupes(hProvince);       
+        if(i == 0){System.out.println("... Aucune province ...");}
+        System.out.println("");
+        
+        i = controleProvincePossibleAvecKokus(hProvince);
         if(i == 0){System.out.println("... Aucune province ...");}
         System.out.println("");
     }
@@ -462,7 +482,7 @@ public class Joueur implements Comparable<Joueur>{
             else {
                 if (troupe1.equals(tProvince) || troupe2.equals(tProvince)) {
                     // On incrémente de 1 s'il s'agit d'une carte avec 2x la même troupe
-                    if (troupe1.equals(tProvince) && troupe2.equals(tProvince)) {
+                    if (troupe1.equals(troupe2)) {
                         cpt++;
                     }
                     cpt++;
@@ -532,7 +552,7 @@ public class Joueur implements Comparable<Joueur>{
             // Les troupes bonus et de province sont équivalentes
             if(tProvince.equals(tBonus)){
                 cpt = troupeProvinceAndTroupeBonus(lct, tProvince);
-                if(cpt > nbTroupes){
+                if(cpt > nbTroupes+1 || cpt == nbTroupes+1){
                     return true;
                 }
             }
@@ -703,7 +723,7 @@ public class Joueur implements Comparable<Joueur>{
         // On redemande le choix si la saisie n'est pas un entier
         while(!isNumber){
             try{
-                System.out.print("De combien de cartes troupes '" + ct.toString() + "' voulez-vous vous défausser ?" );
+                System.out.print("De combien de cartes troupes '" + ct.toString() + "' voulez-vous vous défausser ? " );
                 isNumber = true;
                 nb = sc.nextInt();
 
@@ -859,6 +879,7 @@ public class Joueur implements Comparable<Joueur>{
                 }
                 if(ct.getTroupe2() == null){
                     cpt = nombreCarteTroupeADefausser(ct, nbTotal);
+                    nbTotal -= cpt-1;
                 }
                 nbTotal--;
             }
@@ -881,6 +902,186 @@ public class Joueur implements Comparable<Joueur>{
         return llct;
     }
 
+    
+/* Prise de contrôle avec les kokus uniquement */
+    public int nbKokusNecessairePourControle(Province p){
+        Controle[] controle = p.getControle();
+        int[] tab = p.getPointsFaveur();
+        
+        for(int i=0; i<tab.length; i++){
+            if(controle[i] == null){
+                return tab[i];
+            }
+        }
+        return 0;
+    }
+    
+    /**
+     * Méthodes qui vérifie que le joueur a assez de kokus en main pour pouvoir prendre le contrôle
+     * de la province p de cette manière
+     * @param p Province que dont on veut prendre le contrôle
+     * @return true si c'est possible, false sinon
+     */
+    public boolean verifPossibiliteControleProvinceAvecKokus(Province p){
+        int pointsFaveurs = nbKokusNecessairePourControle(p);
+        int nbKokus = 0;
+        
+        // On ne compte le nombre de kokus seulement si le joueur a des kokus en main
+        // Et on retourne true si le joueur a assez de kokus en main
+        if(!this.alkokus.isEmpty()){
+            for(Kokus k : this.alkokus){
+                nbKokus += k.getNbkoku();
+            }
+            if((nbKokus == pointsFaveurs) || (nbKokus > pointsFaveurs)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * On compte le nombre de province pouvant être contrôlées avec la main du joueur (en cartes kokus uniquement)
+     * @param hProvince liste des province
+     * @return le nombre de province pouvant être contrôlées avec des kokus
+     */
+    public int controleProvincePossibleAvecKokus(Set<Province> hProvince){
+        int i = 0;
+        
+        System.out.println("Avec les cartes kokus que vous avez, vous pouvez prendre le contrôle de :");
+        for (Province p : hProvince) {
+            if (verifPossibiliteControleProvinceAvecKokus(p) && !p.provinceSousControle()) {
+                System.out.println("* " + p.toString());
+                i++;
+            }
+        }
+        return i;
+    }
+    
+    /**
+     * Méthode qui vérifie que la carte kokus choisie existe bien dans la main du joueur
+     * @param nb nombre de sceaux qu'a la carte koku
+     * @return une carte koku si la carte existe, null sinon
+     */
+    public Kokus verifExistenceCarteKokus(int nb){
+        for(Kokus k : this.alkokus){
+            if(k.getNbkoku() == nb){
+                return k;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Méthode qui attend la saisie du joueur quant à la carte kokus à se défausser
+     * @return 
+     */
+    public Kokus demandeCarteKokusADefausser(){
+        Scanner sc = new Scanner(System.in);
+        int nb = 0;
+        boolean stop = false;
+        Kokus k = null;
+        
+        while(!stop){
+            try{
+                System.out.print("Quelle carte kokus voulez-vous utiliser (indiquer le nombre de kokus) ? ");
+                nb = sc.nextInt();
+                if((k = verifExistenceCarteKokus(nb)) == null){
+                    System.err.println("Vous n'avez pas cette carte dans votre main !");
+                }
+                else{
+                    stop = true;
+                }
+            }
+            catch(InputMismatchException e){
+                System.err.println("Vous n'avez pas saisie un nombre !");
+                sc.next();
+            }
+        }
+        return k;
+    }
+    
+    /**
+     * Méthode qui compte le nombre de cartes kokus ayant X sceaux bakufus dans la main du joueur
+     * @param k carte kokus dont on veut connaitre la quantité
+     * @return la quantité de carte kokus k
+     */
+    public int compteNbCarteKokus(Kokus k){
+        int cpt = 0;
+        
+        if(!this.alkokus.isEmpty()){
+            for(Kokus ko : this.alkokus){
+                if(ko.getNbkoku() == k.getNbkoku()){
+                    cpt++;
+                }
+            }
+        }
+        return cpt;
+    }
+    
+    /**
+     * Méthode qui demande le nombre de cartes kokus, dont le nombre de sceaux est égal à X,
+     * qu'on doit défausser
+     * @param k carte que l'on veut défausser
+     * @return le nombre de cartes k à défausser
+     */
+    public int nbCarteKokusADefausser(Kokus k){
+        Scanner sc = new Scanner(System.in);
+        int nb = 0;
+        boolean stop = false;
+        int nbEnMain = compteNbCarteKokus(k);
+        
+        while(!stop){
+            try{
+                System.out.print("Combien de cartes " + k.getNbkoku() + " kokus voulez-vous utiliser ? ");
+                nb = sc.nextInt();
+                if(nb == 0 || (nb > 0 && (nb < nbEnMain || nb == nbEnMain))){
+                    stop = true;
+                }
+                else{
+                    if(nbEnMain == 0){
+                        System.err.println("Vous n'avez pas cette carte dans votre main !");
+                    }
+                    if(nb > nbEnMain){
+                        System.err.println("Vous n'avez pas assez de cartes " + k.getNbkoku() + " kokus !");
+                    }
+                }
+            }
+            catch(InputMismatchException e){
+                System.err.println("Vous n'avez pas saisie un nombre !");
+                sc.next();
+            }
+        }
+        return nb;
+    }
+    
+    public void defausserCarteKokus(Province p){
+        Kokus k = null;
+        int nbTotal = nbKokusNecessairePourControle(p);
+        int nbADefausser = 0;
+        
+        while(nbTotal > 0 ){
+            k = demandeCarteKokusADefausser();
+            nbADefausser = nbCarteKokusADefausser(k)*k.getNbkoku();
+            if(nbADefausser > 1){
+                for(int i=0; i<nbADefausser; i++){
+                    this.alkokus.remove(k);
+                }
+            }
+            else{
+                if(nbADefausser == 1){
+                    this.alkokus.remove(k);
+                }
+                else{
+                    System.out.println("Vous avez décidez de ne pas jouer cette carte kokus !");
+                }
+            }
+            nbTotal -= nbADefausser;
+        }
+    }
+    
+    
+/* Pose du Kamons et comptage des points */    
     /**
      * On pose un kamon de contrôle sur le score le plus à gauche encore non pris
      * @param p province dans laquelle on pose le kamon du joueur
@@ -931,6 +1132,25 @@ public class Joueur implements Comparable<Joueur>{
     
     
     
+/* Lancement de la prise de contrôle */      
+    public String maniereDeControlerProvince(){
+        Scanner sc = new Scanner(System.in);
+        String s = new String();
+        boolean stop = false;
+        
+        System.out.print("Avec quel type de carte voulez-vous prendre la contrôle de la province (troupes / kokus / bonus) ? ");
+        while(!stop){
+            s = sc.nextLine();
+            if(s.equalsIgnoreCase("troupes") || s.equalsIgnoreCase("kokus") || s.equalsIgnoreCase("bonus")){
+                stop = true;
+            }
+            else{
+                System.err.println("Vous devez répondre par 'troupes', 'kokus' ou 'bonus' ! ");
+            }
+        }
+        return s.toLowerCase();
+    }
+    
     
     /**
      * Lance les fonctions pour passer son tour ou prendre le contrôle d'une province
@@ -939,10 +1159,18 @@ public class Joueur implements Comparable<Joueur>{
     public void jouer(LinkedList<CarteTroupe> llct, Set<Province> hProvince){
         Bonus bonus = null;
         String rep = new String();
+        String maniere = new String();
         int i = 0, points = 0;
+        boolean win = false;
         
         // Il peut jouer tant qu'il n'a pas encore posé trois kamons et qu'il ne choisit pas de passer
         while(i < 3 && !rep.equals("passer")){
+            /*for(Province p : hProvince){
+                System.out.println(p.toString());
+            }*/
+            System.out.println("");
+            win = false;
+            
             // Affiche les province qu'on peut contrôler avec la main du joueur
             controleProvincePossible(hProvince);
             System.out.print(this.pseudo + ", désirez-vous passer votre tour ou envahir une province ? ");
@@ -952,22 +1180,54 @@ public class Joueur implements Comparable<Joueur>{
             if(rep.equals("envahir")){
                 System.out.print("Quelle province voulez-vous contrôler ? ");
                 Province p = demandeProvinceAControler(hProvince);
-                
-                // On ne peut défausser que si le joueur a les troupes requises
-                if(aLesTroupesNecessaires(p)){
-                    llct.addAll(defausserLesTroupes(p));
-                    bonus = recupererTuileBonus(p);
-                    poserKamonDeScore(p);
-                    points = pointsMarques(p);
-                    incrementerScore(p);
-                    System.out.println("Félicitation, vous venez de prendre le contrôle de " + p.getNom() + " et vous récupérez le bonus " + bonus);
-                    System.out.println("Vous avez également marqué " + points + " points et votre score s'élève à " + this.score + " points !");
+                if(p.provinceSousControle()){
+                    System.err.println("Impossible d'essayer de contrôler cette province, elle est déjà pleine !"); 
                 }
                 else{
-                    System.out.println("Vous n'avez pas les troupes nécessaires pour attaquer cette province ! ");
+                    // Maniere de contrôler la province (tropes, kokus ou bonus)
+                    maniere = maniereDeControlerProvince();
+
+                    // Traitement relatif à la prise de contrôle qu'avec des cartes troupes
+                    if(maniere.equals("troupes")){
+                        // On ne peut défausser que si le joueur a les troupes requises
+                        if(aLesTroupesNecessaires(p)){
+                            llct.addAll(defausserLesTroupes(p));
+                            win = true;
+                        }
+                        else{
+                            System.out.println("Vous n'avez pas les troupes nécessaires pour attaquer cette province ! ");
+                        }
+                    }
+                    // Traitement relatif à la prise de contrôle qu'avec des kokus
+                    if(maniere.equals("kokus")){
+                        if(verifPossibiliteControleProvinceAvecKokus(p)){
+                            defausserCarteKokus(p);
+                            win=true;
+                        }
+                        else{
+                            System.err.println("Vous ne disposez pas d'assez de Kokus pour contrôler cette province !");
+                        }                    
+                    }
+                    if(maniere.equals("bonus")){
+                        //TODO
+                    }
+                    if(win){
+                        bonus = recupererTuileBonus(p);
+                        poserKamonDeScore(p);
+                        points = pointsMarques(p);
+                        incrementerScore(p);
+                        System.out.println("");
+                        System.out.print("Félicitation, vous venez de prendre le contrôle de " + p.getNom());
+                        if(bonus != null){System.out.println(" et vous récupérez le bonus " + bonus);}
+                        else{System.out.println(", mais vous ne récupérez aucun bonus (il n'y en a plus pour cette province) !");}
+                        System.out.println("Vous avez également marqué " + points + " points et votre score s'élève à " + this.score + " points !");
+                        System.out.println("");
+                        i++;
+                    }
                 }
             } 
-            i++;
+            System.out.println(this.toString());
+            System.out.println(llct.toString());
         }
         
         // Affichage des messages de fin de tour

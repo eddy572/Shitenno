@@ -141,7 +141,9 @@ public class Province {
         StringBuilder sb = new StringBuilder();
         sb.append(nom).append(" - ");
         for(int i=0; i<pointsFaveur.length; i++){
-            sb.append(pointsFaveur[i]).append(" ");
+            if(this.controle[i] == null){
+                sb.append(pointsFaveur[i]).append(" ");
+            }
         }
         sb.append("- ");
         // Affichage du nombre de troupes selon l'état de la liste de tuile bonus
@@ -161,5 +163,13 @@ public class Province {
         }
         return null;
     }
-   
+    /**
+     * Méthodes qui indique si on peut encore essayer de controler la province
+     * @return true si le province est déjà controlée (4 kamon sont déjà placés), false sinon
+     */
+    public boolean provinceSousControle(){
+        if(this.controle[3] != null)
+            return true;
+        return false;
+    }
 }
