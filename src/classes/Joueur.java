@@ -1055,6 +1055,10 @@ public class Joueur implements Comparable<Joueur>{
         return nb;
     }
     
+    /**
+     * Méthode qui supprime des mains les cartes kokus choisient
+     * @param p Province dans laquelle on vérifie que les cartes choisient sont correctes
+     */
     public void defausserCarteKokus(Province p){
         Kokus k = null;
         int nbTotal = nbKokusNecessairePourControle(p);
@@ -1079,6 +1083,14 @@ public class Joueur implements Comparable<Joueur>{
             nbTotal -= nbADefausser;
         }
     }
+    
+    
+    
+    
+/* Prise de contrôle avec des tuiles bonus */
+    
+    
+    
     
     
 /* Pose du Kamons et comptage des points */    
@@ -1211,6 +1223,9 @@ public class Joueur implements Comparable<Joueur>{
                     if(maniere.equals("bonus")){
                         //TODO
                     }
+                    
+                    // Le joueur a réussi à prendre le contrôle d'un province
+                    // On pose un kamon de score, on incrémente les points, on récupère la tuile bonus, etc...
                     if(win){
                         bonus = recupererTuileBonus(p);
                         poserKamonDeScore(p);
@@ -1233,9 +1248,11 @@ public class Joueur implements Comparable<Joueur>{
         // Affichage des messages de fin de tour
         if(rep.equals("passer")){
             System.out.println(this.pseudo + ", vous avez décidé de passer votre tour !");
+            // TODO
         }
         if(i == 3){
             System.out.println("Vous venez d'atteindre le nombre maximal de Kamons posés. Votre tour est fini ! ");
+            // TODO
         }
     }
 }

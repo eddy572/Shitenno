@@ -191,14 +191,42 @@ public class MainTest {
             System.out.println("***** Début de l'an " + an + " *****");
             System.out.println("*** (Prise de contrôle) ***");
             System.out.println("***************************");
-            
             System.out.println("");
-            for(Joueur jo : aljoueur){
+            
+            for(Bonus b : init.getHashBonus()){
+                aljoueur.get(0).getAlbonus().add(b);
+            }
+            /*for(Joueur jo : aljoueur){
                 System.out.println("");
                 System.out.println("");
                 System.out.println(jo.toString());
                 System.out.println("");
                 jo.jouer(defaussetroupe, init.getHashProvince());
+            }*/
+            System.out.println(aljoueur.get(0).toString());
+            for(int i=0; i<4; i++){
+                Bonus bonux = aljoueur.get(0).getAlbonus().get(i);
+                if(bonux.getNom().equals("Echange")){
+                    System.out.println("Bonus échange : ");
+                    bonux.bonusEchange(init, j, new Troupes("Bushi", "Bleu"));
+                }
+                if(bonux.getNom().equals("Pioche")){
+                    System.out.println("Bonus pioche : ");
+                    CarteTroupe pioche = bonux.bonusPioche(llct);
+                    aljoueur.get(0).getAlctroupe().add(pioche);
+                    System.out.println(aljoueur.get(0).getAlctroupe().toString());
+                }
+                if(bonux.getNom().equals("+1")){
+                    System.out.println("Bonus +1 Koku : ");
+                    Kokus kUn = bonux.bonusPlusUn();
+                    aljoueur.get(0).getAlkokus().add(kUn);
+                    System.out.println(aljoueur.get(0).getAlkokus().toString());
+                    
+                    System.out.println("Bonus +1 Troupe :");
+                    CarteTroupe ctUn = bonux.bonusPlusUn(new Troupes("Bushi", "Bleu"));
+                    aljoueur.get(0).getAlctroupe().add(ctUn);
+                    System.out.println(aljoueur.get(0).getAlctroupe().toString());
+                }
             }
     }
 
