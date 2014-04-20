@@ -389,7 +389,8 @@ public class Joueur implements Comparable<Joueur>{
         
         System.out.println("Avec les cartes troupes que vous avez, vous pouvez prendre le contrôle de :");
         for (Province p : hProvince) {
-            if (aLesTroupesNecessaires(p) && !p.provinceSousControle()) {
+            // if (aLesTroupesNecessairesAvecBonus(p) && !p.provinceSousControle()) {
+            if (aLesTroupesNecessairesSeules(p) && !p.provinceSousControle()) {
                 System.out.println("* " + p.toString());
                 i++;
             }
@@ -398,16 +399,74 @@ public class Joueur implements Comparable<Joueur>{
     }
     
     /**
+     * Méthode qui compte le nombre de kokus qu'à en main le joueur
+     * @return le nombre de kokus en main
+     */
+    public int compteNbKokusEnMain(){
+        int cpt = 0;
+        if(!this.getAlkokus().isEmpty()){
+            for(Kokus k : this.getAlkokus()){
+                cpt += k.getNbkoku();
+            }
+        }
+        return cpt;
+    }
+    
+    /**
+     * Méthode qui compte le nombre de troupe que le joueur a en main
+     * @return le nombre de troupes (/!\ 1 carte troupe double = 2 troupes /!\)
+     */
+    public int compteTroupesEnMain(){
+        int cpt = 0;
+        for(CarteTroupe ct : this.getAlctroupe()){
+            if(ct.getTroupe2() == null){cpt++;}
+            else{cpt += 2;}
+        }
+        
+        return cpt;
+    }
+    
+    /**
+     * Méthodes qui compte le nombre de troupes susceptibles d'être jouées qu'a le joueur
+     * @param p province dans laquelle on vérifie les troupes
+     * @return nombre de troupes susceptibles d'être jouées
+     */
+    public int compteTroupesNecessaire(Province p){
+        int cpt = 0;
+        Troupes troupe1 = null, troupe2 = null;
+        Troupes tProvince = p.getTroupe(), tBonus = p.getLltuilebonus().isEmpty() ? null : p.getLltuilebonus().getLast().getTroupe();
+        
+        // On compte le nombre de troupe correspondant à celle
+        if(tProvince.equals(tBonus)){
+            for(CarteTroupe ct : this.getAlctroupe()){
+                troupe1 = ct.getTroupe1();
+                troupe2 = ct.getTroupe2();
+                if(troupe1.equals(tProvince) || troupe2.equals(tProvince)){
+                    if(troupe2 == null){cpt++;}
+                    else{
+                        cpt++;
+                        if(troupe1.equals(troupe2)){
+                            cpt++;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return cpt;
+    }
+            
+    /**
      * Méthodes qui indique qu'elles sont les provinces susceptibles d'être contrôlées
      * @param hProvince 
      */
     public void controleProvincePossible(Set<Province> hProvince){
         int i = 0;
-        
+        // Affichage des provinces susceptibles d'être contrôlées par des troupes uniquement
         i = controleProvincePossibleAvecTroupes(hProvince);       
         if(i == 0){System.out.println("... Aucune province ...");}
         System.out.println("");
-        
+        // Affichage des provinces susceptibles d'être contrôlées par des kokus uniquement
         i = controleProvincePossibleAvecKokus(hProvince);
         if(i == 0){System.out.println("... Aucune province ...");}
         System.out.println("");
@@ -441,23 +500,17 @@ public class Joueur implements Comparable<Joueur>{
     public Province demandeProvinceAControler(Set<Province> hProvinces){
         Scanner sc = new Scanner(System.in);
         String s = new String();
-        boolean stop = false;
-        Initialisation init = new Initialisation();
         
-        while(!stop){
+        while(true){
             s = sc.nextLine();
             for(Province p : hProvinces){
                 if(p.getNom().equalsIgnoreCase(s)){
                     return p;
                 }
             }
-            if(!stop){
-                System.err.println("Cette province n'est pas connue de nos services !");
-                System.err.print("Veuillez en saisir une de connue : ");
-            }
+            System.err.println("Cette province n'est pas connue de nos services !");
+            System.err.print("Veuillez en saisir une de connue : ");
         }
-        
-        return null;
     }
     
     /**
@@ -494,7 +547,7 @@ public class Joueur implements Comparable<Joueur>{
     
     /**
      * Dans la cas où les troupes sont différentes (entre province et bonus) on compte le nombre de troupe trouvées pour la province
-     * Et on supprimer les cartes correspondantes pour ne plus les avoir lors de la vérif d'existence pour la tuile bonus
+     * et on supprime les cartes correspondantes pour ne plus les avoir lors de la vérif d'existence pour la tuile bonus
      * @param lct liste des cartes troupes du joueur
      * @param tProvince troupe de la province
      * @return le nombre de troupe nécessaire pour prendre le contrôle de la province (bonus exclue)
@@ -539,7 +592,56 @@ public class Joueur implements Comparable<Joueur>{
      * @param p
      * @return 
      */
-    public boolean aLesTroupesNecessaires(Province p){
+    public boolean aLesTroupesNecessairesAvecBonus(Province p){
+        Troupes tProvince = p.getTroupe();
+        Troupes tBonus = p.getLltuilebonus().isEmpty() ? null : p.getLltuilebonus().getLast().getTroupe();
+        List<CarteTroupe> lct = new ArrayList<>(this.alctroupe);
+        Troupes troupe1 = null, troupe2 = null;
+        int nbTroupes = p.getLltuilebonus().isEmpty() ? p.getNbtroupes() : p.getNbtroupes()-1;
+        int cpt = 0;
+        
+        // On ne fait du traitement que si la liste de carte n'est pas vide
+        if(!this.alctroupe.isEmpty()){
+            // Les troupes bonus et de province sont équivalentes
+            if(tProvince.equals(tBonus)){
+                cpt = troupeProvinceAndTroupeBonus(lct, tProvince);
+                if(cpt > nbTroupes+1 || cpt == nbTroupes+1){
+                    return true;
+                }
+                if(cpt == nbTroupes && verifBonusDansMain("+1")){
+                    return true;
+                }
+            }
+            // Les troupes bonus et province sont différentes, on regarde donc si on a les cartes pour satisfaire les deux conditions
+            else{        
+                cpt = troupeProvinceOrTroupeBonus(lct, tProvince);
+                // On retourne true s'il n'y a pas de tuiles bonus et qu'on a assez de cartes troupes utiles
+                if(tBonus == null && ((cpt == nbTroupes || cpt > nbTroupes) || (cpt == nbTroupes-1 && verifBonusDansMain("+1")))){
+                    return true;
+                }
+                if(tBonus != null && ((cpt == nbTroupes || cpt > nbTroupes) || (cpt == nbTroupes-1 && verifBonusDansMain("+1")))){
+                    for(CarteTroupe ct : lct){
+                        troupe1 = ct.getTroupe1();
+                        troupe2 = ct.getTroupe2();
+                        if(troupe2 == null){
+                            if(troupe1.equals(tBonus)){
+                                return true;
+                            }
+                        }
+                        else{
+                            if(troupe1.equals(tBonus) || troupe2.equals(tBonus)){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean aLesTroupesNecessairesSeules(Province p){
         Troupes tProvince = p.getTroupe();
         Troupes tBonus = p.getLltuilebonus().isEmpty() ? null : p.getLltuilebonus().getLast().getTroupe();
         List<CarteTroupe> lct = new ArrayList<>(this.alctroupe);
@@ -573,7 +675,7 @@ public class Joueur implements Comparable<Joueur>{
                             }
                         }
                         else{
-                            if(troupe1.equals(tBonus) || troupe1.equals(tBonus)){
+                            if(troupe1.equals(tBonus) || troupe2.equals(tBonus)){
                                 return true;
                             }
                         }
@@ -922,7 +1024,25 @@ public class Joueur implements Comparable<Joueur>{
      * @param p Province que dont on veut prendre le contrôle
      * @return true si c'est possible, false sinon
      */
-    public boolean verifPossibiliteControleProvinceAvecKokus(Province p){
+    public boolean verifPossibiliteControleProvinceAvecKokusEtBonus(Province p){
+        int pointsFaveurs = nbKokusNecessairePourControle(p);
+        int nbKokus = 0;
+        
+        // On ne compte le nombre de kokus seulement si le joueur a des kokus en main
+        // Et on retourne true si le joueur a assez de kokus en main
+        if(!this.alkokus.isEmpty()){
+            for(Kokus k : this.alkokus){
+                nbKokus += k.getNbkoku();
+            }
+            if((nbKokus == pointsFaveurs) || (nbKokus > pointsFaveurs) || (nbKokus == pointsFaveurs-1 && referenceDuBonus("+1") != null)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean verifPossibiliteControleProvinceAvecKokusSeuls(Province p){
         int pointsFaveurs = nbKokusNecessairePourControle(p);
         int nbKokus = 0;
         
@@ -950,7 +1070,8 @@ public class Joueur implements Comparable<Joueur>{
         
         System.out.println("Avec les cartes kokus que vous avez, vous pouvez prendre le contrôle de :");
         for (Province p : hProvince) {
-            if (verifPossibiliteControleProvinceAvecKokus(p) && !p.provinceSousControle()) {
+            // if (verifPossibiliteControleProvinceAvecKokusEtBonus(p) && !p.provinceSousControle()) {
+            if (verifPossibiliteControleProvinceAvecKokusSeuls(p) && !p.provinceSousControle()) {
                 System.out.println("* " + p.toString());
                 i++;
             }
@@ -964,9 +1085,11 @@ public class Joueur implements Comparable<Joueur>{
      * @return une carte koku si la carte existe, null sinon
      */
     public Kokus verifExistenceCarteKokus(int nb){
-        for(Kokus k : this.alkokus){
-            if(k.getNbkoku() == nb){
-                return k;
+        if(!this.alkokus.isEmpty()){
+            for(Kokus k : this.alkokus){
+                if(k.getNbkoku() == nb){
+                    return k;
+                }
             }
         }
         return null;
@@ -1084,13 +1207,125 @@ public class Joueur implements Comparable<Joueur>{
         }
     }
     
+
+/* Jouer des tuiles bonus */
+    /**
+     * Suppression de la tuile bonus jouée pour ne plus la jouer dans le futur
+     * @param b 
+     */
+    public void supprimerBonusDeLaMain(Bonus b){
+        this.albonus.remove(b);
+    }
     
+    /**
+     * Méthode qui demande si le joueur veut jouer des tuiles bonus
+     * @return oui s'il est d'accord, non sinon
+     */
+    public String demandeActivationTuileBonus(){
+        Scanner sc = new Scanner(System.in);
+        String rep = new String();
+        
+        while(true){
+            System.out.println("Voici les bonus dont vous disposez : " + this.albonus.toString());
+            System.out.print("Voulez-vous jouer une tuile bonus ? ");
+            rep = sc.nextLine().toLowerCase();
+            if(rep.equals("oui") || rep.equals("non")){
+                return rep;
+            }
+            System.err.println("C'est une question où l'on répond par 'oui' ou 'non' !");
+        }
+    }
     
+    /**
+     * Méthode qui vérifie si un bonus choisi est bien dans la main du joueur et donc possible à jouer
+     * @param bonus
+     * @return 
+     */
+    public Bonus verifBonusExisteDansLaMain(String bonus){
+        for(Bonus b : this.albonus){
+            if(b.getNom().equalsIgnoreCase(bonus)){
+                return b;
+            }
+        }
+        return null;
+    }
     
-/* Prise de contrôle avec des tuiles bonus */
+    /**
+     * Méthode qui permet de choisir le bonus qu'on veut jouer
+     * @return le bonus à jouer
+     */
+    public Bonus demandeBonusAJouer(){
+        Scanner sc = new Scanner(System.in);
+        String rep = new String();
+        Bonus b = null;
+        
+        while(true){
+            System.out.print("Quel bonus voulez-vous activer ? ");
+            rep = sc.nextLine().toLowerCase();
+            if((b = verifBonusExisteDansLaMain(rep)) != null){
+                return b;
+            }
+            System.err.println("Idiot, tu n'as pas ce bonus dans ta main ! Réfléchis un peu !");
+        }
+    }
     
+    /**
+     * On voit si le joueur à au moins un bonus "Pioche" dans sa main
+     * @return 
+     */
+    public boolean verifBonusDansMain(String type){
+        if(!this.albonus.isEmpty()){
+            for(Bonus b : this.albonus){
+                if(b.getNom().equals(type)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
+    public String demandeActivationBonus(String type){
+        Scanner sc = new Scanner(System.in);
+        String rep = new String();
+        
+        while(true){
+            System.out.print("Voulez-vous jouer l'un de vos bonus '"+type+"' ? ");
+            rep = sc.nextLine().toLowerCase();
+            if(rep.equals("oui") || rep.equals("non")){
+                return rep;
+            }
+            System.err.println("Merci de répondre par 'oui' ou 'non' !");
+        }
+    }
     
+    public Bonus referenceDuBonus(String type){
+        for(Bonus b : this.albonus){
+            if(b.getNom().equalsIgnoreCase(type)){
+                return b;
+            }
+        }
+        return null;
+    }
+    
+    public void jouerBonus(LinkedList<CarteTroupe> llct, String type){
+        String rep = new String();
+        Bonus b = new Bonus(type);
+        
+        while(verifBonusDansMain(type) && (!rep.equals("non"))){
+            rep = demandeActivationBonus(type);
+            if(rep.equals("oui")){
+                // On ajoute la carte piochée s'il s'agit d'un bonus 'pioche'
+                if(type.equals("Pioche")){this.alctroupe.add(b.bonusPioche(llct));}
+                // On ajoute une troupe équivalente à celle de la province s'il s'agit d'un bonus '+1'
+                
+                this.albonus.remove(referenceDuBonus(type));
+                System.out.print("Vous venez de jouer votre bonus '"+type+"'. Voici votre nouvelle main : ");
+                System.out.println(this.toString());
+                System.out.println("");
+            }
+        }
+    }
+   
     
     
 /* Pose du Kamons et comptage des points */    
@@ -1108,6 +1343,7 @@ public class Joueur implements Comparable<Joueur>{
                 break;
             } 
         }
+        decrementerNbKamon();
     }
     
     /**
@@ -1122,7 +1358,8 @@ public class Joueur implements Comparable<Joueur>{
         
         for(int i=0; i<tab.length; i++){
             if(tab[i] != null){
-                points = tabFaveur[i];
+                points = tabFaveur[i];                
+                return points;
             }
         }
         
@@ -1138,29 +1375,49 @@ public class Joueur implements Comparable<Joueur>{
         this.score += pointsMarques(p);
     }
     
+    public void decrementerNbKamon(){
+        this.nbkamons--;
+    }
+  
     
     
     
     
+/* Lancement de la prise de contrôle */        
+    public String activationTuileTitre(){
+        Scanner sc = new Scanner(System.in);
+        String rep = new String();
+        String nomTitre = this.getTitre().getNom();
+        String roleTitre = new String();
+        
+        if(nomTitre.equals("Sensei")){roleTitre = " retourne un kamon sur sa face dorée.";}
+        if(nomTitre.equals("Hatamoto")){roleTitre = " remplace n'importe quelle troupe lors de la prise de contrôle d'une province.";}
+        
+        while(true){
+            System.out.println("Souhaitez-vous activer votre tuile titre '"+nomTitre+"' qui " + roleTitre);
+            rep = sc.nextLine().toLowerCase();
+            if(rep.equals("oui") || rep.equals("non")){
+                return rep;
+            }
+            System.err.println("Répondre par 'oui' ou 'non', c'est pas bien compliqué quand même...");
+        }
+    }
     
     
-/* Lancement de la prise de contrôle */      
     public String maniereDeControlerProvince(){
         Scanner sc = new Scanner(System.in);
         String s = new String();
-        boolean stop = false;
         
         System.out.print("Avec quel type de carte voulez-vous prendre la contrôle de la province (troupes / kokus / bonus) ? ");
-        while(!stop){
+        while(true){
             s = sc.nextLine();
             if(s.equalsIgnoreCase("troupes") || s.equalsIgnoreCase("kokus") || s.equalsIgnoreCase("bonus")){
-                stop = true;
+                return s.toLowerCase();
             }
             else{
                 System.err.println("Vous devez répondre par 'troupes', 'kokus' ou 'bonus' ! ");
             }
         }
-        return s.toLowerCase();
     }
     
     
@@ -1168,18 +1425,21 @@ public class Joueur implements Comparable<Joueur>{
      * Lance les fonctions pour passer son tour ou prendre le contrôle d'une province
      * Ceci est itéré 3 fois au maximum.
      */
-    public void jouer(LinkedList<CarteTroupe> llct, Set<Province> hProvince){
+    public void jouer(LinkedList<CarteTroupe> llPioche, LinkedList<CarteTroupe> llct, Set<Province> hProvince){
         Bonus bonus = null;
         String rep = new String();
         String maniere = new String();
-        int i = 0, points = 0;
+        int i = 0, points = 0, pointsTitre = 0;
         boolean win = false;
+        
+        // Le joueur choisi (ou non) de piocher une carte troupe grâce à sa tuile bonus
+        // jouerBonus(llPioche, "Pioche");
         
         // Il peut jouer tant qu'il n'a pas encore posé trois kamons et qu'il ne choisit pas de passer
         while(i < 3 && !rep.equals("passer")){
-            /*for(Province p : hProvince){
+            for(Province p : hProvince){
                 System.out.println(p.toString());
-            }*/
+            }
             System.out.println("");
             win = false;
             
@@ -1202,18 +1462,32 @@ public class Joueur implements Comparable<Joueur>{
                     // Traitement relatif à la prise de contrôle qu'avec des cartes troupes
                     if(maniere.equals("troupes")){
                         // On ne peut défausser que si le joueur a les troupes requises
-                        if(aLesTroupesNecessaires(p)){
+                        if(aLesTroupesNecessairesSeules(p)){
                             llct.addAll(defausserLesTroupes(p));
                             win = true;
+                            /*if(aLesTroupesNecessairesSeules(p)){
+                                llct.addAll(defausserLesTroupes(p));
+                                win = true;
+                            }
+                            else{
+                                System.out.println("Vous devez obligatoirement jouer un bonus de type '+1' si vous voulez prendre le contrôle de cette province.");
+                                jouerBonus(llPioche, "+1");
+                            }*/
                         }
                         else{
-                            System.out.println("Vous n'avez pas les troupes nécessaires pour attaquer cette province ! ");
+                            System.out.println("Vous n'avez pas les cartes nécessaires pour attaquer cette province ! ");
                         }
                     }
                     // Traitement relatif à la prise de contrôle qu'avec des kokus
                     if(maniere.equals("kokus")){
-                        if(verifPossibiliteControleProvinceAvecKokus(p)){
+                        if(verifPossibiliteControleProvinceAvecKokusSeuls(p)){
                             defausserCarteKokus(p);
+                            /*if(verifPossibiliteControleProvinceAvecKokusSeuls(p)){
+                                defausserCarteKokus(p);
+                            }
+                            else{
+                                // TODO obligation de jouer le bonus +1
+                            }*/
                             win=true;
                         }
                         else{
@@ -1227,20 +1501,47 @@ public class Joueur implements Comparable<Joueur>{
                     // Le joueur a réussi à prendre le contrôle d'un province
                     // On pose un kamon de score, on incrémente les points, on récupère la tuile bonus, etc...
                     if(win){
+                        pointsTitre = 0;
                         bonus = recupererTuileBonus(p);
                         poserKamonDeScore(p);
                         points = pointsMarques(p);
+                        // Activation de la tuile Titre Daimyo
+                        if(this.getTitre().getNom().equals("Daimyo")){System.out.println("DAIMYO !!!");pointsTitre = this.getTitre().tuileDaimyo();}
+                        // Activation de la tuile Titre Shomyo
+                        if(this.getTitre().getNom().equals("Shomyo")){pointsTitre = this.getTitre().tuileShomyo();}
                         incrementerScore(p);
+                        // On affiche un message indiquant la prise de contrôle
                         System.out.println("");
                         System.out.print("Félicitation, vous venez de prendre le contrôle de " + p.getNom());
+                        // On affiche un message en fonction de la récupération d'une tuile bonus ou non
                         if(bonus != null){System.out.println(" et vous récupérez le bonus " + bonus);}
                         else{System.out.println(", mais vous ne récupérez aucun bonus (il n'y en a plus pour cette province) !");}
-                        System.out.println("Vous avez également marqué " + points + " points et votre score s'élève à " + this.score + " points !");
+                        // On affiche le nombre de points gagnés
+                        System.out.print("Vous avez gagné " + points + " points en prenant le contrôle de la province");
+                        if(pointsTitre > 0){
+                            String avecS = pointsTitre > 1 ? "points" : "point";
+                            System.out.println(" et " + pointsTitre + " " + avecS + " grâce à votre tuile titre " + this.getTitre().getNom() +".");
+                            this.score += pointsTitre;
+                        }
+                        else{
+                            System.out.println(".");
+                        }
+                        // On affiche la nouveau score du joueur
+                        System.out.println("Votre score s'élève maintenant à " + this.score + " points !");
                         System.out.println("");
                         i++;
                     }
                 }
             } 
+                        
+            // Avant que le tour du joueur ne se finisse vraiment, on lui demande s'il veut activer sa tuile titre Sensei
+            if(i==3 || rep.equals("passer")){
+                if(this.getTitre().getNom().equals("Sensei") && this.getScore() > 0){
+                    if(activationTuileTitre().equals("oui")){
+                        this.getTitre().tuileSensei(hProvince, this);
+                    }
+                }
+            }
             System.out.println(this.toString());
             System.out.println(llct.toString());
         }

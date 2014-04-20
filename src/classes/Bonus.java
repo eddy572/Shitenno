@@ -1,6 +1,7 @@
 package classes;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Set;
@@ -12,7 +13,9 @@ import java.util.Set;
  */
 public class Bonus {
     private String nom;
-
+    private final String KOKU = "koku";
+    private final String TROUPES = "troupe";
+    
     /* Constructor */
     public Bonus(String nom) {
         this.nom = nom;
@@ -40,21 +43,19 @@ public class Bonus {
     public String demandeCarteAEchanger(String type){
         Scanner sc = new Scanner(System.in);
         String rep = new String();
-        boolean stop = false;
         
-        while(!stop){
+        while(true){
             if(type.equals("Echanger")){System.out.print("Que voulez-vous échanger ? Une troupe ou un koku ? ");}
             else{System.out.print("Par quoi voulez-vous l'échanger ? Une troupe ou un koku ? ");}
             
             rep = sc.nextLine().toLowerCase();
-            if(!rep.equals("troupe") && !rep.equals("koku")){
+            if(!rep.equals(this.TROUPES) && !rep.equals(this.KOKU)){
                 System.err.println("Vous ne pouvez pas remplacer autre chose qu'une troupe ou un koku !");
             }
             else{
-                stop = true;
+                return rep;
             }
         }
-        return rep;
     }
     
     /**
@@ -75,7 +76,8 @@ public class Bonus {
                     return new CarteTroupe(t);
                 }
             }
-            System.err.println("Cette troupe n'existe pas dans le jeu idiot !");
+            if(rep.contains("&")){System.out.println("On t'a demandé une troupe pas une carte troupe !!!");}
+            else{System.err.println("Cette troupe n'existe pas dans le jeu idiot !");}
         }
     }
     
@@ -89,6 +91,7 @@ public class Bonus {
         int rep = 0;
         
         while(true){
+            try{
             System.out.print("Quelle carte koku voulez-vous utiliser pour l'échange ? (saisir le nombre de kokus) ");
             rep = sc.nextInt();
             
@@ -98,6 +101,11 @@ public class Bonus {
                 }
             }
             System.err.println("Cette carte koku n'existe pas dans le jeu idiot !");
+            }
+            catch(InputMismatchException ime){
+                System.err.println("Vous devez saisir un entier est rien d'autre, merci !!!");
+                sc.next();
+            }
         }
     }
     
@@ -114,7 +122,7 @@ public class Bonus {
                 String split[] = rep.split("&");
                 for(Troupes t1 : sTroupes){
                     for(Troupes t2 : sTroupes){
-                        if(split[0].equalsIgnoreCase(t1.getNom()) && split[1].equalsIgnoreCase(t2.getNom())){
+                        if(split[0].trim().equalsIgnoreCase(t1.getNom()) && split[1].trim().equalsIgnoreCase(t2.getNom())){
                             return new CarteTroupe(t1, t2);
                         }
                     } 
@@ -175,7 +183,7 @@ public class Bonus {
         String choixEchange = null;
         
         // Echange d'un koku = choix de la carte à modifier + choix de la troupe désirée + modification de la carte koku + ajout de la carte troupe
-        if(choix.equalsIgnoreCase("kokus")){
+        if(choix.equalsIgnoreCase(this.KOKU)){
             CarteTroupe ct = choixDeLaTroupePourEchange(init.getHashTroupes());
             Kokus k = choixDeLaCarteKokuAModifier(init.getHashKokus());
             // On boucle jusqu'à que le joueur choisisse une carte koku qu'il a dans sa main
@@ -194,14 +202,14 @@ public class Bonus {
         }
         else{
             CarteTroupe ctAModif = choixDeLaCarteTroupeAModifier(init.getHashTroupes());
-            while(j.verifExistenceCarte(ctAModif.toString())){
+            while(!j.verifExistenceCarte(ctAModif.toString())){
                 System.err.println("Comment veux-tu modifier une carte troupe que tu n'as pas, tu m'expliques ?!");
                 ctAModif = choixDeLaCarteTroupeAModifier(init.getHashTroupes());
             }
             // On demande par quoi la troupe doit-être échangée : une autre troupe ou un koku ?
             choixEchange = demandeCarteAEchanger("Contre");
             
-            if(choixEchange.equals("kokus")){
+            if(choixEchange.equals(this.KOKU)){
                 j.getAlctroupe().remove(ctAModif);
                 if(ctAModif.getTroupe2() != null){
                     CarteTroupe cNew = carteTroupeDivise(ctAModif);

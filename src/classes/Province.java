@@ -172,4 +172,40 @@ public class Province {
             return true;
         return false;
     }
+    
+    /**
+     * Méthodes qui calcul le nombre de kokus nécessaires pour prendre la province
+     * @return 
+     */
+    public int nbKokusNecessaires(){
+        if(!provinceSousControle()){
+            for(int i=0; i<controle.length; i++){
+                if(controle[i] == null && i > 0){
+                    return pointsFaveur[i-1];
+                }
+                if(controle[i] == null && i == 0){
+                    return pointsFaveur[i];
+                }
+            }
+        }
+        return 0;
+    }
+    
+    /**
+     * Méthode qui vérifie que le joueur j a bien posé un kamon dans cette province
+     * @param j
+     * @return 
+     */
+    public boolean aUnKamonDansLaProvince(Joueur j){
+        if(this.controle[0] != null){
+            for(Controle c : this.controle){
+                if(c.getJoueur().getPseudo().equals(j.getPseudo())){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
 }
