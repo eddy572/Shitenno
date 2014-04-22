@@ -4,6 +4,7 @@ import classes.*;
 import jdom.*;
 import java.util.*;
 import java.io.*;
+import static jeu.MainTest.classementDesJoueurs;
 /**
  *
  * @author Damien
@@ -59,7 +60,7 @@ public class Shitenno {
      /*********/
         // On commence réellement la partie
         // Elle s'arrête si le paquet de Kokus est vide (la LinkedList)
-        //while(init.getLlkokus().size() > 0){
+        while(!init.getLlkokus().isEmpty()){
             System.out.println("");
             System.out.println("***************************");
             System.out.println("*** Début de l'an " + an + " ***");
@@ -141,9 +142,28 @@ public class Shitenno {
             System.out.println("*** (Prise de contrôle) ***");
             System.out.println("************************");
             for(Joueur jo : hjoueur){
-                
+                System.out.println("");
+                System.out.println("");
+                System.out.println(jo.toString());
+                System.out.println("");
+                jo.jouer(llct, defaussetroupe, init.getHashProvince());
             }
-       //}
+       }
+        
+        System.out.println("");
+        System.out.println("");
+        System.out.println("************************");
+        System.out.println("*** FIN DE LA PARTIE ***");
+        System.out.println("************************");
+        System.out.println("");
+        // Ajout des derniers points de score (provinces contrôlées, cartes encore en main, etc...)
+        for(Joueur joueur : hjoueur){
+            System.out.println("");
+            System.out.println("");
+            joueur.scoreFinal(init.getHashProvince());
+        }
+        // Affichage du classement final
+        classementDesJoueurs(hjoueur);
     }
     
 /* Methods */
@@ -191,5 +211,38 @@ public class Shitenno {
             Collections.shuffle(llPioche);
             llDefausse.clear();
         } 
+    }
+    
+    /**
+     * Affichage du classement des joueurs selon leur score afin de connaitre le vainqueur
+     * @param sJoueur liste des joueurs participants
+     */
+    public static void classementDesJoueurs(Set<Joueur> sJoueur){
+        List<Joueur> lJoueur = new ArrayList<>(sJoueur);
+        int i = 0, suppr = 0, score = 0, classement = 1;
+        boolean stop = false;
+        
+        System.out.println("Voici le classement final : ");
+        while(!stop){
+            i = 0; suppr = 0; score = 0;
+            if(lJoueur.size() > 1){
+                for(Joueur j : lJoueur){
+                    if(j.getScore() > score){
+                        score = j.getScore();
+                        suppr = i;
+                    }
+                    i++;
+                }
+            }
+            else{
+                stop = true;
+            }
+            // Affichage du classement et suppression de la personne affichée
+            System.out.println(classement + ". " + lJoueur.get(suppr).getPseudo() + " avec " + lJoueur.get(suppr).getScore() + " points.");
+            // On enlève le joueur de la liste pour ne pas l'afficher à nouveau
+            lJoueur.remove(suppr);
+            // On augmente le numéro du classement
+            classement++;
+        }
     }
 }

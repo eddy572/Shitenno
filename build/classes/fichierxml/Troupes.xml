@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<troupes>
+    <troupe>
+        <nom>Bushi</nom>
+        <couleur>Bleu</couleur>
+    </troupe>
+    
+    <troupe>
+        <nom>Samourai</nom>
+        <couleur>Vert</couleur>
+    </troupe>
+    
+    <troupe>
+        <nom>Shinobi</nom>
+        <couleur>Noir</couleur>
+    </troupe>
+    
+    <troupe>
+        <nom>Sohei</nom>
+        <couleur>Orange</couleur>
+    </troupe>
+</troupes>

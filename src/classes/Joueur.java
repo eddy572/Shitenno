@@ -56,13 +56,6 @@ public class Joueur implements Comparable<Joueur>{
         this.titre = null;
     }
 
-    public Joueur(String pseudo, Titre titre) {
-        this.pseudo = pseudo;
-        this.titre = titre;
-    }
-    
-    
-
     /* Getters & Setters */
     public String getPseudo() {
         return pseudo;
@@ -1386,6 +1379,42 @@ public class Joueur implements Comparable<Joueur>{
         this.nbkamons--;
     }
   
+    /**
+     * Méthode qui compte le nombre de tuile bonus qu'à le joueur dans sa main
+     * @return le nombre de tuile bonus dans la main du joueur
+     */
+    public int nbPiocheEnMain(){
+        int i = 0;
+        
+        for(Bonus b : this.albonus){
+            if(b.getNom().equals("Pioche")){
+                i++;
+            }
+        }
+        
+        return i;
+    }
+    
+    /**
+     * Méthode qui calcul le score final du joueur selon les kokus restants, les tuiles bonus (autre que pioche) et les provinces contrôlées
+     * @param hProvince liste des provinces à vérifier si le joueur à la contrôle
+     */
+    public void scoreFinal(Set<Province> hProvince){
+        /*this.score += compteNbKokusEnMain();
+        // On compte le nombre de tuile bonus Pioche en main
+        int nbPioche = nbPiocheEnMain();
+        // On transforme toutes les tuiles bonus en koku (en point donc) sauf les tuiles Pioches
+        this.score += this.albonus.size() - nbPioche;*/
+        
+        for(Province p : hProvince){
+            Joueur jMajoritaire = p.joueurMajoritaire();
+            if(jMajoritaire != null){
+                if(this.pseudo.equals(jMajoritaire.getPseudo())){
+                    this.score += 6;
+                }
+            }
+        }
+    }
     
     
     

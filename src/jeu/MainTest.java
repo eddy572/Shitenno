@@ -60,13 +60,59 @@ public class MainTest {
         // Distribution de deux cartes Troupes au début du jeu
         altitre = new ArrayList(init.getHashTitre());
         init.distributionCartesDepart(hjoueur, init.getLlctroupe(), altitre);
+        
+        
+        Joueur j1 = null;
+        Joueur j2 = null;
+        Joueur j3 = null;
+        Joueur j4 = null;
         for(Joueur jo : hjoueur){
             System.out.println(jo.toString());
+            if(jo.getPseudo().equals("J1")){j1 = jo;}
+            if(jo.getPseudo().equals("J2")){j2 = jo;}
+            if(jo.getPseudo().equals("J3")){j3 = jo;}
+            if(jo.getPseudo().equals("J4")){j4 = jo;}
+        }
+        
+        for(Province p : init.getHashProvince()){
+            Controle[] c = p.getControle();
+            switch(p.getNom()){
+                case "Kanto" : c[0] = new Controle(j1);
+                    break;
+                case "Hokkaido" : c[0] = new Controle(j1);
+                                  c[1] = new Controle(j2);
+                    break;
+                case "Shikoku" : c[0] = new Controle(j1);
+                                 c[1] = new Controle(j2, true);
+                    break;
+                case "Chubu" : c[0] = new Controle(j1);
+                               c[1] = new Controle(j2, true);
+                               c[2] = new Controle(j1);
+                    break;
+                case "Kyushu" : c[0] = new Controle(j1);
+                                c[1] = new Controle(j3);
+                                c[2] = new Controle(j2, true);
+                                c[3] = new Controle(j2);
+                    break;
+                case "Kansai" : c[0] = new Controle(j1, true);
+                                c[1] = new Controle(j2);
+                                c[2] = new Controle(j3);
+                                c[3] = new Controle(j4);
+                    break;
+            }
+            p.setControle(c);
+        }
+        
+        for(Joueur joueur : hjoueur){
+            System.out.println("");
+            System.out.println("");
+            joueur.scoreFinal(init.getHashProvince());
         }
         
      /*********/
      /* Jouer */
      /*********/
+     /*
         // On commence réellement la partie
         // Elle s'arrête si le paquet de Kokus est vide (la LinkedList)
         //while(init.getLlkokus().size() > 0){
@@ -149,6 +195,7 @@ public class MainTest {
 
             }
         */
+/*
             // On donne deux cartes troupes à chaque joueur
             for(Joueur jj : hjoueur){
                 jj.setTitre(altitre.get(0));
@@ -247,7 +294,13 @@ public class MainTest {
         System.out.println("*** FIN DE LA PARTIE ***");
         System.out.println("************************");
         System.out.println("");
-        classementDesJoueurs(hjoueur);
+        for(Joueur joueur : hjoueur){
+            System.out.println("");
+            System.out.println("");
+            joueur.scoreFinal(init.getHashProvince());
+        }
+        
+        classementDesJoueurs(hjoueur, init.getHashProvince());
     }
 
 /* Methods */
@@ -299,7 +352,7 @@ public class MainTest {
      * Affichage du classement des joueurs selon leur score afin de connaitre le vainqueur
      * @param sJoueur liste des joueurs participants
      */
-    public static void classementDesJoueurs(Set<Joueur> sJoueur){
+    public static void classementDesJoueurs(Set<Joueur> sJoueur, Set<Province> sProvince){
         List<Joueur> lJoueur = new ArrayList<>(sJoueur);
         int i = 0, suppr = 0, score = 0, classement = 1;
         boolean stop = false;

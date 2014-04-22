@@ -14,6 +14,7 @@ public class Province {
     private Troupes troupe;
     private LinkedList<TuileBonus> lltuilebonus;
     private Controle[] controle;
+    private final int POINTSFINAUX = 6;
 
     /* Constructor */
     public Province(String nom, int[] pointsFaveur, int nbtroupes) {
@@ -41,20 +42,6 @@ public class Province {
         this.lltuilebonus = ltb;
         this.controle = controle;
     }
-
-    public Province() {
-    }
-
-    public Province(String nom, int nbtroupes, Troupes troupe) {
-        this.nom = nom;
-        this.nbtroupes = nbtroupes;
-        this.troupe = troupe;
-        this.pointsFaveur = null;
-        this.lltuilebonus = new LinkedList<TuileBonus>();
-        this.controle = new Controle[4];
-    }
-    
-    
 
     /* Getters & Setters */
     public String getNom() {
@@ -222,4 +209,119 @@ public class Province {
         return false;
     }
     
+    /**
+     * Nombre de kamons posés dans la province (entre 0 et 4)
+     * @return le nombre de kamons posés
+     */
+    public int tauxDeRemplissageControle(){
+        int i = 0;
+        for(Controle c : this.controle){
+            if(c != null){i++;}
+            else{break;}
+        }
+        return i;
+    }
+    
+    /**
+     * Méthode qui retourne une liste de tous les joueurs ayant envahie la province 
+     * @return liste des joueurs ayant envahies la province
+     */
+    public ArrayList<Joueur> tousLesJoueursAyantUnKamon(){
+        ArrayList<Joueur> alj = new ArrayList<>();
+        int nbKamons = tauxDeRemplissageControle();
+        boolean stop = false;
+
+        for (int i = 0; i < nbKamons; i++) {
+            Joueur j = this.controle[i].getJoueur();
+            // On ajoute dans la liste le premier joueur ayant pris le controle de la province
+            if (!alj.isEmpty()) {
+                if(alj.size() > 1){
+                    stop = false;
+                    for (Joueur jo : alj) {
+                        if (jo.getPseudo().equals(j.getPseudo())) {
+                            stop = true;
+                            break;
+                        }
+                    }
+                    if(!stop){
+                        alj.add(j);
+                    }
+                }
+                else{
+                    if(!alj.get(0).getPseudo().equals(j.getPseudo())){
+                        alj.add(j);
+                    }
+                }
+            } 
+            else {
+                alj.add(j);
+            }
+        }
+        return alj;
+    }
+    
+    /**
+     * Méthode qui renvoie un tableau de score. Chaque cellule de ce tableau correspond au score d'un joueur
+     * @param tauxRemplissage nombre de kamons posés dans la province
+     * @return un tableau de score (supposé lié à la liste de joueurs ayant envahie la province)
+     */
+    public int[] compteLesPointsParJoueur(ArrayList<Joueur> alj, int tauxRemplissage){
+        int[] tabNbKamon = new int[alj.size()];
+        int inc = 0, cpt = 0;
+           
+        // Pour chaque joueur répertorié dans la province, on compte les points qu'il a (1 = kamon simple, 2 = kamon doré)
+        // Le résultat est mis dans un tableau (on respecte l'ordre de l'arraylist pour garder le trie
+        for(Joueur j : alj){
+            cpt = 0;
+            for(int i=0; i<tauxRemplissage; i++){
+                String pseudo = this.controle[i].getJoueur().getPseudo();
+                if(j.getPseudo().equals(pseudo)){
+                    if(this.controle[i].isIsGolden()){
+                        cpt++;
+                    }
+                    cpt++;
+                }
+            }
+            tabNbKamon[inc++] = cpt;
+        }
+        return tabNbKamon;
+    }
+    
+    
+    public int indiceDuMeilleurScoreur(int[] tabNbKamon){
+        // On retourne le joueur qui a le plus grand score ou celui qui est le plus à gauche (si égalité)
+        int meilleur = 0, indice = 0;    
+        for(int i=0; i<tabNbKamon.length; i++){
+            if(tabNbKamon[i] > meilleur){
+                meilleur = tabNbKamon[i];
+                indice = i;
+            }
+        }
+        return indice;
+    }
+    
+    
+    public Joueur joueurMajoritaire(){
+        int tauxRemplissage = tauxDeRemplissageControle();
+        
+        // Un seul kamon de placé dans la province ou alors deux et qu'aucun n'est retourné face doré, on retourne le joueur du premier kamon
+        if(tauxRemplissage == 1 || (tauxRemplissage == 2 && !this.controle[1].isIsGolden())){
+            return this.controle[0].getJoueur();
+        }
+        // On a deux kamons de posé et celui le plus a droite est face dorée (pour le plus à gauche, c'est le cas au-dessus)
+        if(tauxRemplissage == 2 && this.controle[1].isIsGolden()){
+            return this.controle[1].getJoueur();
+        }
+        
+        if(tauxRemplissage > 2){
+            ArrayList<Joueur> alj = tousLesJoueursAyantUnKamon();
+            
+            int[] tabNbKamon = compteLesPointsParJoueur(alj, tauxRemplissage);
+            int indice = indiceDuMeilleurScoreur(tabNbKamon);
+            
+            return alj.get(indice);
+            
+        }
+        return null;
+    }
 }
