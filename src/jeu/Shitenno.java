@@ -23,6 +23,7 @@ public class Shitenno {
         ArrayList<Titre> altitre = new ArrayList<Titre>();
         ArrayList<Joueur> aljoueur = new ArrayList<Joueur>();
         int nbcartes = 0;
+        int nbJoueur = 0;
         // Liste qui récupère toutes les cartes troupes jouées.
         // Utile si le jeu n'est pas fini mais qu'il n'y a plus (assez) de cartes troupes à la pioche
         LinkedList<CarteTroupe> defaussetroupe = new LinkedList<CarteTroupe>();
@@ -38,8 +39,10 @@ public class Shitenno {
         llct = init.initialisationPaquetTroupe();
         llk = init.initialisationPaquetKokus();
         
+        // Choix du nombre de joueurs
+        nbJoueur = nbJoueur();
         // Choix des pseudos       
-        hjoueur = j.pseudoAlreadyUse(nbJoueur());
+        hjoueur = j.pseudoAlreadyUse(nbJoueur);
         // Initialisation du nombre de cartes troupes à piocher chaque année paire
         nbcartes = init.nombreDeCartesTroupesAPiocher(hjoueur);
         // Choix des généraux pour chaque joueur
@@ -70,6 +73,7 @@ public class Shitenno {
             tairo.devientLeTairo(aljoueur);
             // Tests de bon fonctionnement
             System.out.println(tairo.getTairo());
+            remplirPiocheVide(llct, defaussetroupe, nbJoueur);
             tairo.piocheCartes(llct, llk, nbcartes);
             System.out.println("Paquet de cartes Troupes piochées : " + tairo.getAlct());
             System.out.println("Paquet de cartes Kokus piochées : " + tairo.getAlk());
@@ -174,4 +178,18 @@ public class Shitenno {
         
         return nb;
     }    
+    
+    /**
+     * Remplit la pioche avec toutes les cartes troupes défaussées si celle-ci est vide.
+     * On vide la pile de défausse et on mélange la nouvelle pioche
+     * @param llPioche est la pioche
+     * @param llDefausse est la pile de cartes défaussées
+     */
+    public static void remplirPiocheVide(LinkedList<CarteTroupe> llPioche, LinkedList<CarteTroupe> llDefausse, int nbJoueur){
+        if(llPioche.isEmpty() || llPioche.size() < nbJoueur * 2){
+            llPioche.addAll(llDefausse);
+            Collections.shuffle(llPioche);
+            llDefausse.clear();
+        } 
+    }
 }

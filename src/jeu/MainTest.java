@@ -83,6 +83,8 @@ public class MainTest {
             tairo.devientLeTairo(aljoueur);
             // Tests de bon fonctionnement
             System.out.println(tairo.getTairo());
+            // Si la pioche est vide, on lui affecte toutes les cartes défaussées (et mélangées)
+            remplirPiocheVide(llct, defaussetroupe, 4);
             tairo.piocheCartes(llct, llk, nbcartes);
        /*
             System.out.println("Paquet de cartes Troupes piochées : " + tairo.getAlct());
@@ -147,11 +149,8 @@ public class MainTest {
 
             }
         */
+            // On donne deux cartes troupes à chaque joueur
             for(Joueur jj : hjoueur){
-                ArrayList<Kokus> alkk = new ArrayList<>();
-                alkk.add(tairo.getAlk().get(0));
-                tairo.getAlk().remove(0);
-                jj.setAlkokus(alkk);
                 jj.setTitre(altitre.get(0));
                 altitre.remove(0);
                 ArrayList<CarteTroupe> alctt = new ArrayList<>();
@@ -165,6 +164,26 @@ public class MainTest {
             aljoueur = new ArrayList<>(hjoueur);
             Collections.sort(aljoueur);
             
+            // On donne deux cartes kokus au daimyo, 1 aux deux suivants et rien au dernier
+            // (pour tester la prise de contrôle avec des kokus (uniquement))
+            int ini = 1;
+            for(Joueur jj : aljoueur){
+                ArrayList<Kokus> alkk = new ArrayList<>();
+                if(ini == 1){
+                    alkk.add(tairo.getAlk().get(0));
+                    tairo.getAlk().remove(0);
+                    alkk.add(tairo.getAlk().get(0));
+                    tairo.getAlk().remove(0);
+                    jj.setAlkokus(alkk);
+                }
+                if(ini == 2 || ini == 3){
+                    alkk.add(tairo.getAlk().get(0));
+                    tairo.getAlk().remove(0);
+                    jj.setAlkokus(alkk);
+                }
+                ini++;
+            }
+            
             System.out.println("************************");
             System.out.println("*** Fin de l'an " + an + " ***");
             System.out.println("************************");
@@ -174,15 +193,61 @@ public class MainTest {
             System.out.println("***** Début de l'an " + an + " *****");
             System.out.println("*** (Prise de contrôle) ***");
             System.out.println("***************************");
-            for(Province p : init.getHashProvince()){
-                System.out.println(p.toString());
-            }
             System.out.println("");
+            
+            for(Bonus b : init.getHashBonus()){
+                aljoueur.get(0).getAlbonus().add(b);
+            }
+            
             for(Joueur jo : aljoueur){
+                System.out.println("");
+                System.out.println("");
                 System.out.println(jo.toString());
                 System.out.println("");
-                jo.jouer(defaussetroupe, init.getHashProvince());
+                jo.jouer(llct, defaussetroupe, init.getHashProvince());
             }
+            
+            
+            
+            /*System.out.println(aljoueur.get(0).toString());
+            for(int i=0; i<3; i++){
+                Bonus bonux = aljoueur.get(0).getAlbonus().get(i);
+                if(bonux.getNom().equals("Echange")){
+                    System.out.println("Bonus échange : ");
+                    bonux.bonusEchange(init, aljoueur.get(0), new Troupes("Bushi", "Bleu"));
+                    System.out.println(aljoueur.get(0).getAlctroupe().toString());
+                    System.out.println(aljoueur.get(0).getAlkokus().toString());
+                    System.out.println("");
+                }
+                if(bonux.getNom().equals("Pioche")){
+                    System.out.println("Bonus pioche : ");
+                    CarteTroupe pioche = bonux.bonusPioche(llct);
+                    aljoueur.get(0).getAlctroupe().add(pioche);
+                    System.out.println(aljoueur.get(0).getAlctroupe().toString());
+                    System.out.println("");
+                }
+                if(bonux.getNom().equals("+1")){
+                    System.out.println("Bonus +1 Koku : ");
+                    Kokus kUn = bonux.bonusPlusUn();
+                    aljoueur.get(0).getAlkokus().add(kUn);
+                    System.out.println(aljoueur.get(0).getAlkokus().toString());
+                    System.out.println("");
+                    
+                    System.out.println("Bonus +1 Troupe :");
+                    CarteTroupe ctUn = bonux.bonusPlusUn(new Troupes("Bushi", "Bleu"));
+                    aljoueur.get(0).getAlctroupe().add(ctUn);
+                    System.out.println(aljoueur.get(0).getAlctroupe().toString());
+                    System.out.println("");
+                }
+            }*/
+        //}
+        System.out.println("");
+        System.out.println("");
+        System.out.println("************************");
+        System.out.println("*** FIN DE LA PARTIE ***");
+        System.out.println("************************");
+        System.out.println("");
+        classementDesJoueurs(hjoueur);
     }
 
 /* Methods */
@@ -216,4 +281,48 @@ public class MainTest {
         return nb;
     }
     
+    /**
+     * Remplit la pioche avec toutes les cartes troupes défaussées si celle-ci est vide.
+     * On vide la pile de défausse et on mélange la nouvelle pioche
+     * @param llPioche est la pioche
+     * @param llDefausse est la pile de cartes défaussées
+     */
+    public static void remplirPiocheVide(LinkedList<CarteTroupe> llPioche, LinkedList<CarteTroupe> llDefausse, int nbJoueur){
+        if(llPioche.isEmpty() || llPioche.size() < nbJoueur * 2){
+            llPioche.addAll(llDefausse);
+            Collections.shuffle(llPioche);
+            llDefausse.clear();
+        } 
+    }
+    
+    /**
+     * Affichage du classement des joueurs selon leur score afin de connaitre le vainqueur
+     * @param sJoueur liste des joueurs participants
+     */
+    public static void classementDesJoueurs(Set<Joueur> sJoueur){
+        List<Joueur> lJoueur = new ArrayList<>(sJoueur);
+        int i = 0, suppr = 0, score = 0, classement = 1;
+        boolean stop = false;
+        
+        System.out.println("Voici le classement final : ");
+        while(!stop){
+            i = 0; suppr = 0; score = 0;
+            if(lJoueur.size() > 1){
+                for(Joueur j : lJoueur){
+                    if(j.getScore() > score){
+                        score = j.getScore();
+                        suppr = i;
+                    }
+                    i++;
+                }
+            }
+            else{
+                stop = true;
+            }
+            // Affichage du classement et suppression de la personne affichée
+            System.out.println(classement + ". " + lJoueur.get(suppr).getPseudo() + " avec " + lJoueur.get(suppr).getScore() + " points.");
+            lJoueur.remove(suppr);
+            classement++;
+        }
+    }
 }

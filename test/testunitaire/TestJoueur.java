@@ -1,8 +1,10 @@
 
+
 /* To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package testunitaire;
 
 import classes.*;
@@ -73,7 +75,7 @@ public class TestJoueur {
         }
 
         // Aucune troupe dans la main du joueur
-        assertFalse(joueur.aLesTroupesNecessaires(p));
+        assertFalse(joueur.aLesTroupesNecessairesSeules(p));
 
         Troupes bushi = new Troupes("Bushi", null);
         CarteTroupe ct1 = new CarteTroupe(bushi);
@@ -87,7 +89,7 @@ public class TestJoueur {
         // Le joueur a des troupes
         assertNotNull(alct.size());
         // Le joueur a les troupes qu'il faut
-        assertTrue(joueur.aLesTroupesNecessaires(p1));
+        assertTrue(joueur.aLesTroupesNecessairesSeules(p1));
 
     }
 
@@ -507,7 +509,7 @@ public class TestJoueur {
         System.out.println(controle.toString());
         assertNull(controle.getJoueur());
         System.out.println(joueur.toString());
-        joueur.aLesTroupesNecessaires(p1);
+        joueur.aLesTroupesNecessairesSeules(p1);
 
         controle = new Controle(joueur, false);
         joueur.poserKamonDeScore(p1);

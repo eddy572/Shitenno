@@ -157,7 +157,7 @@ public class Initialisation {
         for(Province p : this.hashProvince){
             switch(p.getNom()){
                 case "Chugoku" : 
-                case "Kanto" : p.setTroupe(new Troupes("Samouraï", "Vert"));
+                case "Kanto" : p.setTroupe(new Troupes("Samourai", "Vert"));
                     break;
                 case "Chubu" : 
                 case "Kansai" : p.setTroupe(new Troupes("Shinobi", "Noir"));
