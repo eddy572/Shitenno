@@ -42,6 +42,20 @@ public class Province {
         this.controle = controle;
     }
 
+    public Province() {
+    }
+
+    public Province(String nom, int nbtroupes, Troupes troupe) {
+        this.nom = nom;
+        this.nbtroupes = nbtroupes;
+        this.troupe = troupe;
+        this.pointsFaveur = null;
+        this.lltuilebonus = new LinkedList<TuileBonus>();
+        this.controle = new Controle[4];
+    }
+    
+    
+
     /* Getters & Setters */
     public String getNom() {
         return nom;

@@ -18,6 +18,11 @@ public class General {
         this.couleur = couleur;
     }
 
+    public General() {
+    }
+    
+    
+
     /* Getters & Setters */
     public String getNom() {
         return nom;
