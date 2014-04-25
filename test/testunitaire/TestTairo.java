@@ -53,7 +53,6 @@ public class TestTairo {
     /**
      *
      * On teste que le joueur ayant le plus haut titre devient le tairo
-     *
      * @assertNull au départ il n'y a pas de tairo
      * @assertNotNull il y a un tairo
      */
@@ -86,7 +85,6 @@ public class TestTairo {
     /**
      *
      * On teste le nombre de cartes restant dans la pioche
-     *
      * @assertEquals sur le nombre de cartes avant et après la pioche
      */
     @Test

@@ -12,7 +12,7 @@ import classes.*;
 
 /**
  *
- * @author Pauline
+ * @author PaulineJngr
  */
 public class TestLot {
 
@@ -45,7 +45,6 @@ public class TestLot {
     public void tearDown() {
     }
 
-    //SPRINT 2
     //************ CLASSE LOT ***************
     /**
      * TEST EFFECTUE SUR LA REPONSE OUI OU NON EN BRUT ET NON PAS PAR SCANNER
@@ -69,15 +68,6 @@ public class TestLot {
         //Vérifier que ouiOuNon() n'accepte pas "Bonjour" 
         assertFalse(lot.ouiOuNon().equalsIgnoreCase(s3));
 
-        //  boolean ok = false;
-        //Condition égalité
-        /*if (("OUI".equals(s1) || "Oui".equals(s1) || "OUi".equals(s1) || "oui".equals(s1))&&("NON".equals(s1) 
-         || "Non".equals(s1) || "NOn".equals(s1) || "non".equals(s1))){
-         ok = true;
-         assertTrue(ok);
-         }
-         assertFalse(ok);
-         */
     }
 
     /**
@@ -88,7 +78,6 @@ public class TestLot {
      */
     // @Test
     public void TestjoueurQuiRecoitLot() {
-        //---------------------NULL POINTER EXCEPTION----------------------
 
         Joueur j1 = new Joueur("J1");
         Joueur j2 = new Joueur("J2");
@@ -99,7 +88,6 @@ public class TestLot {
         joueur.add(j2);
         joueur.add(j3);
         joueur.add(j4);
-        
 
         lot.joueurQuiRecoitLot(joueur, tairo);
 
@@ -292,10 +280,11 @@ public class TestLot {
     }
 
     /**
+     * TEST EFFECTUE SUR LA REPONSE EN BRUT ET PAS PAR DES SCANNER Activer la
+     * fonction uniquement pour l'ajout en brut On teste le retour de la
+     * fonction
      *
-     * On teste le nombre de cartes troupes à piocher par joueurs
-     *
-     * @assertEquals sur le nombre de tuiles bonus sur la province
+     * @assertEquals sur la réponse donnée
      */
     //@Test
     public void TestsoumettreLeLot() {

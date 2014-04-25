@@ -5,7 +5,13 @@
  */
 package testunitaire;
 
-import java.util.*;
+import classes.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,13 +19,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import classes.*;
-
 /**
  *
  * @author PaulineJngr
  */
-public class TestProvince {
+public class TestBonus {
 
     //Set
     Set<Province> setp;
@@ -28,7 +32,7 @@ public class TestProvince {
     General general = new General();
     Lot lot = new Lot();
     Initialisation init = new Initialisation();
-    Province prov = new Province();
+    Bonus bonus = new Bonus();
     //LinkedList
     LinkedList<Kokus> llk = new LinkedList<Kokus>();
     LinkedList<CarteTroupe> llct = new LinkedList<CarteTroupe>();
@@ -48,7 +52,7 @@ public class TestProvince {
     ArrayList<CarteTroupe> alct = new ArrayList<CarteTroupe>(llct);
     ArrayList<Kokus> alk = new ArrayList<Kokus>(llk);
 
-    public TestProvince() {
+    public TestBonus() {
     }
 
     @BeforeClass
@@ -61,6 +65,9 @@ public class TestProvince {
 
     @Before
     public void setUp() {
+        general = new General("Naomasa", "Li", "Noir");
+        joueur = new Joueur("Joueur1", general, 10);
+        setp = init.getHashProvince();
     }
 
     @After
@@ -68,77 +75,47 @@ public class TestProvince {
     }
 
     /**
+     * ******************
+     */
+    /* TESTS DES METHODES*/
+    /**
+     * ******************
+     */
+    
+    /**
      *
-     * On teste que le joueur ayant le plus haut titre devient le tairo
-     *
-     * @assertNotNull il y a un tairo
+     * On teste le retour de la fonction
+     * @assertEquals sur la carte troupe retournée
      */
     @Test
-    public void TestbonusCommeTroupe() {
-
-        lltb = init.initialisationTuileBonus();
-        prov.setLltuilebonus(lltb);
-        //Il reste toutes les tuiles bonus donc bonusCommeTroupe() ne doit pas renvoyer null
-        assertNotNull(prov.bonusCommeTroupe());
+    public void testbonusPlusUn() {
+        //Vérifier que c'est la même carte troupe
+        assertEquals(ct2, bonus.bonusPlusUn(samourai));
 
     }
 
     /**
      *
-     * On teste si la province est sous contrôle
-     *
-     * @assertNotNull il y a un tairo
+     * On teste le retour de la fonction
+     * @assertEquals sur la carte koku retournée
      */
     @Test
-    public void testprovinceSousControle() {
-        Province p = new Province();
-
-        for (Province pr : init.getHashProvince()) {
-            p = pr;
-            break;
-
-        }
-        //Vérifier que la province n'est pas sous contrôle
-        assertFalse(p.provinceSousControle());
+    public void testbonusPlusun2() {
+        //Vérifier que c'est la même carte koku
+        assertEquals(k1, bonus.bonusPlusUn());
 
     }
 
     /**
      *
-     * On teste le nombre de kokus necessaire
-     *
-     * @assertEquals sur le nombre de kokus
+     * On teste la pioche des bonus
+     * @assertEquals sur la dernière carte de la liste
      */
     @Test
-    public void testnbKokusNecessaires() {
-
-        Province p = new Province();
-        for (Province pr : init.getHashProvince()) {
-            p = pr;
-            break;
-
-        }
-        //Il faut 3 kokus pour la province
-        assertEquals(3, p.nbKokusNecessaires());
-    }
-
-    /**
-     *
-     * On teste s'il y a un kamon dans la province
-     *
-     * @assertNotNull il y a un tairo
-     */
-    @Test
-    public void testaUnKamonDansLaProvince() {
-
-        Province p = new Province();
-        for (Province pr : init.getHashProvince()) {
-            p = pr;
-            break;
-
-        }
-        //Pas de kamon du joueur dans la province
-        assertFalse(p.aUnKamonDansLaProvince(joueur));
+    public void testbonusPioche() {
+        llct = init.initialisationPaquetTroupe();
+        //Vérifier que c'est bien la dernière carte de la liste
+        assertEquals(llct.getLast(), bonus.bonusPioche(llct));
     }
 
 }

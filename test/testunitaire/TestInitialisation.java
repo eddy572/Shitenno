@@ -12,7 +12,7 @@ import classes.*;
 
 /**
  *
- * @author Pauline
+ * @author PaulineJngr
  */
 public class TestInitialisation {
 
@@ -45,11 +45,9 @@ public class TestInitialisation {
     public void tearDown() {
     }
 
-    //SPRINT 1
     /**
      *
      * On teste l'initialisation du paquet Troupe
-     *
      * @assertEquals sur la taille du paquet
      */
     @Test
@@ -66,7 +64,6 @@ public class TestInitialisation {
     /**
      *
      * On teste l'initialisation du paquet Kokus
-     *
      * @assertEquals sur la taille du paquet
      */
     @Test
@@ -86,7 +83,6 @@ public class TestInitialisation {
     /**
      *
      * On teste l'initialisation du paquet Tuile Bonus
-     *
      * @assertEquals sur la taille du paquet
      */
     @Test
@@ -103,7 +99,7 @@ public class TestInitialisation {
     /**
      *
      * On teste l'initialisation des différentes provinces
-     *
+     * @assertEquals sur l'initialisation
      */
     @Test
     public void testinitialisationFinaleProvince() {
@@ -118,7 +114,6 @@ public class TestInitialisation {
     /**
      *
      * On teste la distributions de cartes troupes
-     *
      * @assertEquals nombre de cartes troupes
      * @assertEquals nombre de cartes troupes par main
      */
@@ -137,7 +132,6 @@ public class TestInitialisation {
     /**
      *
      * On teste la distribution du titre de départ
-     *
      * @assertEquals sur le nombre de titre à distribuer
      */
     @Test
@@ -155,7 +149,6 @@ public class TestInitialisation {
     /**
      *
      * On teste l'ajout de trois tuiles bonus sur chaque province
-     *
      * @assertEquals sur le nombre de tuiles bonus sur la province
      */
     @Test
@@ -176,7 +169,6 @@ public class TestInitialisation {
     /**
      *
      * On teste le nombre de cartes troupes à piocher par joueurs
-     *
      * @assertEquals sur le nombre de tuiles bonus sur la province
      */
     @Test
